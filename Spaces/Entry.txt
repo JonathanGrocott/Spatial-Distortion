@@ -1,0 +1,14 @@
+Visited: 0
+RoomType: Start
+RoomName: Entry
+LongDesc: This is the long description 
+ShortDesc: This is the short description
+NumObjects: 2
+Objects: Object1, Object2
+NumActions: 2
+Actions: Move, Pull
+NumExits: 2
+Exits: Forward, Left
+NumCharacters: 2
+Characters: Researcher1, Attendent
+Puzzle: Water

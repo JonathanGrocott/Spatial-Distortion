@@ -1,0 +1,14 @@
+Visited: 0
+RoomType: 
+RoomName: 
+LongDesc:
+ShortDesc:
+NumObjects:
+Objects:
+NumActions:
+Actions:
+NumExits:
+Exits:
+NumCharacters:
+Characters:
+Puzzle:
