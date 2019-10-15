@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "commands.h"
+#include "commands.hpp"
 
 int main() {
   bool valid = false;
