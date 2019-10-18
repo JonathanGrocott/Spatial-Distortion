@@ -7,6 +7,11 @@
 #include <cctype>
 #include "commands.hpp"
 
+// For reference and error checking
+const char *commandList[11] = {"help", "alt", "go", "look", "exit", "savegame",
+                              "loadgame", "take", "inventory", "use", "combine"};
+
+
 /*****************************************************
  * bool readCommand()
  * The main command parser that takes user input and
@@ -46,6 +51,15 @@ bool readCommand() {
     } else if (splitComs.at(0).compare("alt") == 0) {
       alt();
       return true;
+    } else if (splitComs.at(0).compare("look") == 0) {
+      look();
+      return true;
+    } else if (splitComs.at(0).compare("go") == 0) {
+      std::cout << "go requires a direction or room name" << std::endl << std::endl;
+      return false;
+    } else if (splitComs.at(0).compare("quit") == 0) {
+      //exit();
+      return true;
     } else {
       std::cout << "Invalid command. Type help for a list of commands." << std::endl << std::endl;
       return false;
@@ -55,6 +69,12 @@ bool readCommand() {
   // If the command was two words, handle the appropriate commands
   else if (splitComs.size() == 2) {
     if (splitComs.at(0).compare("alt") == 0) {
+      alt(splitComs.at(1));
+      return true;
+    } else if (splitComs.at(0).compare("look") == 0) {
+      look(splitComs.at(1));
+      return true;
+    } else if (splitComs.at(0).compare("go") == 0) {
       alt(splitComs.at(1));
       return true;
     } else {
@@ -103,12 +123,77 @@ void alt() {
 ****************************************************/
 
 void alt(std::string command) {
+  bool altFound;
   std::ifstream read("alt.txt");
-  for (std::string line; std::getline(read, line);) {
-    if (line.find(command) != std::string::npos) {
-      std::cout << "Alternate wording for " << line << std::endl << std::endl; 
+  
+  // Checks for valid commands  
+  for(const std::string &comm : commandList) {
+    if (command.compare(comm) == 0) {
+      altFound = true;
     }
-  }    
+  }  
+
+  // Search for the command
+  if (altFound) {
+    for (std::string line; std::getline(read, line);) {
+      if (line.find(command) != std::string::npos) {
+        std::cout << "Alternate wording for " << line << std::endl << std::endl;
+      }
+    }
+  } else {
+    std::cout << command << " is not valid. Please try again." << std::endl;
+  }      
+
   read.close();
 }
 
+
+/**************************************************
+ * void go(string room)
+ * Checks for valid rooms and then moves the player
+ * to the appropriate room.
+**************************************************/
+
+void go(std::string room) {
+
+// Check for valid rooms
+
+// Update player class to the correct room
+
+// Give description of new room
+
+
+}
+
+/***************************************************
+ * void look()
+ * Gives the user the short description of the room
+***************************************************/
+
+void look() {
+
+// Read current room description file
+
+// Send short description to stdout
+
+}
+
+/***************************************************
+ * void look(specifier)
+ * Used to specify if the user wants the longer
+ * description of a room (or short if they want
+ * to type more).
+***************************************************/
+
+void look(std::string specifier) {
+
+// Read current room description file
+
+// Send specified description to stdout
+  if (specifier.compare("long")) {
+     
+  } else {
+    
+  } 
+
+}
