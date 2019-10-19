@@ -2,7 +2,7 @@
 ** Program Filename: main.cpp
 ** Author: Jonathan Grocott
 ** Date: 10/15/19
-** Description: Main for Spatial Distortion Game. 
+** Description: Main for Spatial Distortion Game.
 *********************************************************************/
 
 #include"space.hpp"
@@ -47,9 +47,9 @@ int main()
     string pName;//player name
     int option;
 	bool quit=false;
-	
+
     GameEngine* game = new GameEngine;//default game engine
-    Space* space;//default pointer to space
+    Space* space = new Space;//default pointer to space
 
         do{
             cout<<"1) PLAY GAME" <<endl;
@@ -60,7 +60,7 @@ int main()
             cin>>option;
 
             if(option==1){//main game driver
-                
+
             }
 			if(option==2){//Load saved game
 
@@ -77,7 +77,7 @@ int main()
         }while(!quit);//quit game bool
 
 
-        
+
 		//deallocate memory
         delete game;
         delete space;

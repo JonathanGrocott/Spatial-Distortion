@@ -20,6 +20,8 @@ class Space
     public:
         /** Default constructor */
         Space();
+		//Constructor
+		Space(string n, string st, string ld, string sd, int no, int na, int ne, int nc, bool v);
         /** Default destructor */
         virtual ~Space();
 
@@ -29,24 +31,37 @@ class Space
 
         string getSpaceName();
         void setSpaceName(string n);
+		string getSpaceType();
+		void setSpaceType(string n);
+		string getLongDesc();
+		void setLongDesc(string n);
+		string getShortDesc();
+		void setShortDesc(string n);
+		bool getVisited();
+		void setVisited(bool b);
+		int getNumObjects();
+		void setNumObjects(int n);
+		int getNumActions();
+		void setNumActions(int n);
+		int getNumExits();
+		void setNumExits(int n);
+		int getNumCharacters();
+		void setNumCharacters(int n);
 
 
-        void setSpaceMoves(Space* xp, Space* xn, Space* yp,
-                        Space* yn, Space* zp, Space* zn);
+        void setSpaceMoves(Space* fp, Space* lp, Space* rp, Space* bp);
 
 
-        void setSpaceInfo(string sInfo);
         void displaySpaceInfo(Space* sp);
 
-        virtual void getLocationInfo(bool &xp, bool &yp, bool &yn, bool &zp, bool &zn, bool &xn);
+        virtual void getLocationInfo(bool &fp, bool &lp, bool &rp, bool &bp);
 
-        Space* xPositive;
-        Space* yNegative;
-        Space* yPositive;
-        Space* xNegative;
-        Space* zPositive;
-        Space* zNegative;
+        Space* Forward;
+        Space* Left;
+        Space* Right;
+        Space* Back;
 
+		void locationInteract(Space* cl);
 
         string getFileContents (ifstream& File);
 

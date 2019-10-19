@@ -3,6 +3,7 @@
 ** Author: Jonathan Grocott
 ** Date: 10/15/19
 ** Description: Implimentation of gameengine class. 
+
 *********************************************************************/
 
 #include "gameengine.hpp"
@@ -22,16 +23,14 @@ GameEngine::GameEngine()
 {
     //setup default world - Needs to read space and object files
 	//and create all of the spaces, objects, etc. 
-
-	//Example for adding Objects
-	//object1 = new Object("name");
     
     //Example for adding Spaces
 	//researchLab1 = new researchLab1("name");
 
-    
     //currentLocation = researchLab1;//set starting location
 
+	Entry = new Space("Entry", "Start", "You enter looking down a long dark hallway", "Long dark hallway", 2, 3, 3, 1, true);
+	
 
 }
 
@@ -39,9 +38,17 @@ GameEngine::~GameEngine()
 {
     //dtor
 	//delete all of the pointers
-
+	delete Entry;
     
 }
+int GameEngine::getNumMoves() {
+	return this->numMoves;
+}
+
+void GameEngine::setNumMoves(int n) {
+	numMoves = n; 
+}
+
 /*********************************************************************
 ** Description: Gets space info from file. 
 
@@ -85,8 +92,15 @@ void GameEngine::moveLocation(Space* temp){
 ** Output: 
 *********************************************************************/
 void GameEngine::displayMenu(Space* cL){
-        
-		
+	cout << endl << endl;
+	cout << "............................................" << endl;
+	cout << "Current Location: ";
+	currentLocation->displaySpaceInfo(currentLocation);
+	cout << "............................................" << endl;
+	cout << endl;
+
+	//Read Command
+
 }
 /*********************************************************************
 ** Description: Reads a text file into a ifstream and then returns

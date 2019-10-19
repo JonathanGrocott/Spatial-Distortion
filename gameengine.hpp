@@ -3,6 +3,7 @@
 ** Author: Jonathan Grocott
 ** Date: 10/15/19
 ** Description: Header file for gameengine class.
+
 *********************************************************************/
 
 #ifndef GAMEENGINE_HPP
@@ -22,6 +23,9 @@ class GameEngine
         /** Default destructor */
         virtual ~GameEngine();
 
+		int numMoves;
+		int getNumMoves();
+		void setNumMoves(int n);
 
 		void getSpaceContents(string file);
 		void getObjectContents(string file);
@@ -40,7 +44,11 @@ class GameEngine
 
 
         //space pointers
-        Space* prototypeRoom;
+		//Spaces: Entry, Prototype Room, Washroom, Electronics Lab, Imaging Room, Power control room,
+		//Hallway, Research Lab 1, Office 1, Hallway 2, Research Lab 2, Basement, Generator Room, Robtics Lab, Deck
+        Space* Entry, PrototypeRoom, Washroom, ElectronicsLab, ImagingRoom, PowerRoom, Hallway1, ResearchLab1, ResearchLab2, Office1,
+			Office2, Hallway2, Base;
+		
 
 };
 

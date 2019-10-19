@@ -4,6 +4,7 @@
 ** Date: 10/15/19
 ** Description: Implimentation of abstract base class space. Constructor
 is abstract and will not be instatiated.
+
 *********************************************************************/
 
 #include "space.hpp"
@@ -21,6 +22,19 @@ Space::Space()
     //constructor never called
 }
 
+Space::Space(string n, string st, string ld, string sd, int no, int na, int ne, int nc, bool v)
+{
+	setSpaceName(n);
+	setSpaceType(st);
+	setLongDesc(ld);
+	setShortDesc(sd);
+	setNumObjects(no);
+	setNumActions(na);
+	setNumExits(ne);
+	setNumCharacters(nc);
+	setVisited(v);
+}
+
 Space::~Space()
 {
     //dtor
@@ -34,10 +48,55 @@ void Space::setSpaceName(string n){
     spaceName = n;
 }
 
-void Space::setSpaceInfo(string sInfo){
 
+string Space::getSpaceType() {
+	return this->spaceType;
 }
-
+void Space::setSpaceType(string n) {
+	spaceType = n;
+}
+string Space::getLongDesc() {
+	return this->longDesc;
+}
+void Space::setLongDesc(string n) {
+	longDesc = n;
+}
+string Space::getShortDesc() {
+	return this->shortDesc;
+}
+void Space::setShortDesc(string n) {
+	shortDesc = n;
+}
+bool Space::getVisited() {
+	return this->visited;
+}
+void Space::setVisited(bool b) {
+	visited = b;
+}
+int Space::getNumObjects() {
+	return this->numObjects;
+}
+void Space::setNumObjects(int n) {
+	numObjects = n;
+}
+int Space::getNumActions() {
+	return this->numActions;
+}
+void Space::setNumActions(int n) {
+	numActions = n;
+}
+int Space::getNumExits() {
+	return this->numExits;
+}
+void Space::setNumExits(int n) {
+	numExits = n;
+}
+int Space::getNumCharacters() {
+	return this->numCharacters;
+}
+void Space::setNumCharacters(int n) {
+	numCharacters = n;
+}
 
 /*********************************************************************
 ** Description: Base function to set the space information and display
@@ -46,10 +105,8 @@ it to the console.
 ** Output: iostream
 *********************************************************************/
 void Space::displaySpaceInfo(Space* sp){
-    //cout<<endl;
-    cout<<sp->getSpaceName()<<endl<<endl;
-
-    //cout<<endl;
+	cout << sp->getSpaceName() << endl << endl;
+	cout << sp->longDesc << endl;
 }
 /*********************************************************************
 ** Description: Base function for setting each spaces possible
@@ -58,44 +115,45 @@ zpositive, and znegative.
 ** Input: Space* xp, xn, yp, yn, zp, zn.
 ** Output: none
 *********************************************************************/
-void Space::setSpaceMoves(Space* xp, Space* xn, Space* yp,
-                    Space* yn, Space* zp, Space* zn){
-    xPositive=xp;
-    xNegative=xn;
-    yPositive=yp;
-    yNegative=yn;
-    zPositive=zp;
-    zNegative=zn;
+void Space::setSpaceMoves(Space* fp, Space* lp, Space* rp, Space* bp){
+	Forward = fp;
+	Left = lp;
+	Right = rp;
+	Back = bp;
 }
 
 /*********************************************************************
 ** Description: Base function for getting possible moves that player
 can make from each location.
-** Input: bools as reference xp, xn, yp, yn, zp, zn.
+** Input: bools as reference
 ** Output: iostream
 *********************************************************************/
 
-void Space::getLocationInfo(bool &xp, bool &yp, bool &yn, bool &zp, bool &zn, bool &xn){
+void Space::getLocationInfo(bool &fp, bool &lp, bool &rp, bool &bp){
 
     //possible moves
-    if(this->xPositive!=NULL){
-        xp=true;
+    if(this->Forward!=NULL){
+        fp=true;
     }
-    if(this->yPositive!=NULL){
-        yp=true;
+    if(this->Left!=NULL){
+        lp=true;
     }
-    if(this->yNegative!=NULL){
-        yn=true;
+    if(this->Right!=NULL){
+        rp=true;
     }
-    if(this->zPositive!=NULL){
-        zp=true;
+    if(this->Back!=NULL){
+        bp=true;
     }
-    if(this->zNegative!=NULL){
-        zn=true;
-    }
-    if(this->xNegative!=NULL){
-        xn=true;
-    }
+
+}
+/*********************************************************************
+** Description: Interaction with the space
+
+** Input:
+** Output:
+*********************************************************************/
+void locationInteract(Space* cl) {
+
 
 }
 /*********************************************************************
