@@ -21,11 +21,11 @@ class Space
         /** Default constructor */
         Space();
 		//Constructor
-		Space(string n, string st, string ld, string sd, int no, int na, int ne, int nc, bool v);
+		Space(string n, string st, string ld, string sd, int no, int na, int ne, string exits, int nc, int v);
         /** Default destructor */
         virtual ~Space();
 
-		bool visited;
+		int visited;
 		string spaceName, spaceType, longDesc, shortDesc;
 		int numObjects, numActions, numExits, numCharacters;
 
@@ -37,8 +37,8 @@ class Space
 		void setLongDesc(string n);
 		string getShortDesc();
 		void setShortDesc(string n);
-		bool getVisited();
-		void setVisited(bool b);
+		int getVisited();
+		void setVisited(int b);
 		int getNumObjects();
 		void setNumObjects(int n);
 		int getNumActions();
@@ -48,6 +48,10 @@ class Space
 		int getNumCharacters();
 		void setNumCharacters(int n);
 
+		vector<string>exitVector;
+		void splitString(string str, string token);
+
+		void findExits(string exits);
 
         void setSpaceMoves(Space* fp, Space* lp, Space* rp, Space* bp);
 
@@ -56,6 +60,7 @@ class Space
 
         virtual void getLocationInfo(bool &fp, bool &lp, bool &rp, bool &bp);
 
+		//Space pointers for direction
         Space* Forward;
         Space* Left;
         Space* Right;

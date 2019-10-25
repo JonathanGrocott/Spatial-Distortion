@@ -1,0 +1,14 @@
+Visited: 0
+RoomType: Middle
+RoomName: ElectronicsLab
+LongDesc: This room has tools to repair the circuit
+ShortDesc: Tool room
+NumObjects: 1
+Objects: Tool
+NumActions: 2
+Actions: Move, Hit
+NumExits: 2
+Exits: Right, Back
+NumCharacters: 0
+Characters: None
+Puzzle: None

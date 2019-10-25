@@ -11,6 +11,7 @@
 
 
 #include"space.hpp"
+#include"boost/filesystem.hpp"
 
 #include<string>
 
@@ -26,7 +27,17 @@ class GameEngine
 		int numMoves;
 		int getNumMoves();
 		void setNumMoves(int n);
+		vector<string>result;
 
+		vector<string>files;
+		void get_file_list(const string& path);
+
+		vector<string> split(string str, string token);
+
+		void setAllPossibleMoves();
+
+		void createSpacesFromFiles(GameEngine* game, string dir);
+			
 		void getSpaceContents(string file);
 		void getObjectContents(string file);
 
@@ -38,7 +49,7 @@ class GameEngine
 
         void displayMenu(Space* cL);//menu for each location
 
-        bool xp, xn, yp, yn, zp, zn;
+        bool fp, lp, rp, bp;
 
         string getFileContents (ifstream& File);//ascii display
 
@@ -46,8 +57,21 @@ class GameEngine
         //space pointers
 		//Spaces: Entry, Prototype Room, Washroom, Electronics Lab, Imaging Room, Power control room,
 		//Hallway, Research Lab 1, Office 1, Hallway 2, Research Lab 2, Basement, Generator Room, Robtics Lab, Deck
-        Space* Entry, PrototypeRoom, Washroom, ElectronicsLab, ImagingRoom, PowerRoom, Hallway1, ResearchLab1, ResearchLab2, Office1,
-			Office2, Hallway2, Base;
+		Space* Entry;
+		Space* PrototypeRoom;
+		Space* Washroom;
+		Space* ElectronicsLab;
+		Space* ImagingRoom;
+		Space* PowerRoom;
+		Space* Hallway1;
+		Space* ResearchLab1;
+		Space* ResearchLab2;
+		Space* Office1;
+		Space* RoboticsLab;
+		Space* Hallway2;
+		Space* Basement;
+		Space* GeneratorRoom;
+		Space* Deck;
 		
 
 };

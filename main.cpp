@@ -49,7 +49,8 @@ int main()
 	bool quit=false;
 
     GameEngine* game = new GameEngine;//default game engine
-    Space* space = new Space;//default pointer to space
+    Space* space;//default pointer to space
+	space = game->getCurrentLocation();
 
         do{
             cout<<"1) PLAY GAME" <<endl;
@@ -60,7 +61,12 @@ int main()
             cin>>option;
 
             if(option==1){//main game driver
+				game->createSpacesFromFiles(game, "Spaces/");
 
+				game->setAllPossibleMoves();
+				
+				game->displayMenu(space);
+				
             }
 			if(option==2){//Load saved game
 
