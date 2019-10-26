@@ -63,7 +63,7 @@ int main()
             cin>>option;
 
             if(option==1){//main game driver
-				game->createSpacesFromFiles(game, "Spaces/");
+				game->createSpacesFromFiles(game, "Data/Spaces/");
 
 				game->setAllPossibleMoves();
 				

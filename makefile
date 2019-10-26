@@ -1,24 +1,37 @@
+#Majority of makefile copied from https://spin.atomicobject.com/2016/08/26/makefile-c-projects/
+TARGET_EXEC ?= spatial
 
-PROGS := SpatialDistortion
-CPPSTD = -std=c++11
-LIBS = -lboost_system -lboost_filesystem
+CC = g++
+BUILD_DIR ?= ./build
+SRC_DIRS ?= ./src
 
-all: $(PROGS)
+SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
+OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
+DEPS := $(OBJS:.o=.d)
 
-SpatialDistortion: gameengine.o space.o commands.o main.o
-	g++ ${CPPSTD} -g gameengine.o space.o commands.o main.o -o SpatialDistortion ${LIBS}
+INC_DIRS := $(shell find $(SRC_DIRS) -type d)
+INC_FLAGS := $(addprefix -I,$(INC_DIRS))
+LDLIBS := -lboost_system -lboost_filesystem
 
-main.o: main.cpp
-	g++ ${CPPSTD} -c main.cpp
-	
-gameengine.o: gameengine.cpp gameengine.hpp
-	g++ ${CPPSTD} -c gameengine.cpp
-	
-space.o: space.cpp space.hpp
-	g++ ${CPPSTD} -c space.cpp
+CPPFLAGS ?= $(INC_FLAGS) -MMD -MP -std=c++11
 
-commands.o: Commands/commands.cpp Commands/commands.hpp
-	g++ ${CPPSTD} -c Commands/commands.cpp
+
+$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
+	$(CP_AR) Data ./build
+	$(CC) $(OBJS) -o $@ $(LDLIBS) $(CPPFLAGS)
+
+
+# c++ source
+$(BUILD_DIR)/%.cpp.o: %.cpp
+	$(MKDIR_P) $(dir $@)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDLIBS) -c $< -o $@
+
+.PHONY: clean
 
 clean:
-	rm -f $(PROGS) *.o *~
+	$(RM) -r $(BUILD_DIR)
+
+-include $(DEPS)
+
+CP_AR ?= cp -ar
+MKDIR_P ?= mkdir -p

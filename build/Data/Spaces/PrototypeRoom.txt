@@ -1,0 +1,14 @@
+Visited: 0
+RoomType: Middle
+RoomName: PrototypeRoom
+LongDesc: This room has the infinity machine
+ShortDesc: Infity machine room
+NumObjects: 1
+Objects: InfinityMachine
+NumActions: 2
+Actions: Move, Hit
+NumExits: 1
+Exits: Back
+NumCharacters: 0
+Characters: None
+Puzzle: Infinity
