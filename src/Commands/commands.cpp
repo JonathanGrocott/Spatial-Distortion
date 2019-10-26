@@ -24,7 +24,7 @@ Commands::~Commands(){}
 ***************************************************/
 
 void Commands::help() {
-  std::ifstream read("Commands/help.txt");
+  std::ifstream read("Data/Commands/help.txt");
   for (std::string line; std::getline(read, line);) {
     std::cout << line << std::endl;
   }
@@ -39,7 +39,7 @@ void Commands::help() {
 **************************************************/
 
 void Commands::alt() {
-  std::ifstream read("Commands/alt.txt");
+  std::ifstream read("Data/Commands/alt.txt");
   for (std::string line; std::getline(read, line);) {
     std::cout << line << std::endl;
   }
@@ -55,7 +55,7 @@ void Commands::alt() {
 
 void Commands::alt(std::string command) {
   bool altFound;
-  std::ifstream read("Commands/alt.txt");
+  std::ifstream read("Data/Commands/alt.txt");
  
   // Checks for valid commands  
   for(const std::string &comm : commandList) {
