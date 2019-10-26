@@ -10,17 +10,16 @@
 #include "space.hpp"
 #include "boost/filesystem.hpp"
 
-#include<string>
-#include<iostream>
+#include <string>
+#include <iostream>
 #include <cstdlib>
-#include<fstream>
-#include<stdio.h>
-#include<sstream>
-#include<algorithm>
+#include <fstream>
+#include <stdio.h>
+#include <sstream>
+#include <algorithm>
 #include <iterator>
-#include<direct.h>
-#include<Windows.h>
-
+#include <cctype>
+#include <vector>
 
 using namespace std;
 
@@ -318,20 +317,21 @@ Space* GameEngine::getCurrentLocation(){
 
 void GameEngine::setCurrentLocation(Space* cl){
     currentLocation = cl;
-    cout<<"Current Location: " <<currentLocation->getSpaceName()<<endl; //debug out
+    //cout<<"Current Location: " <<currentLocation->getSpaceName()<<endl; //debug out
 }
 
 void GameEngine::moveLocation(Space* temp){
     this->currentLocation = temp;
 
 }
+
 /*********************************************************************
 ** Description: Main menu driver for game. 
 
-** Input: Space* cl(current location)
+** Input: Space* cl(current location), Commands* obj (to call commands)
 ** Output: 
 *********************************************************************/
-void GameEngine::displayMenu(Space* cL) {
+void GameEngine::displayMenu(GameEngine* game, Space* cL, Commands* obj) {
 	bool quit = false;
 	string choice;
 	do {
@@ -343,39 +343,122 @@ void GameEngine::displayMenu(Space* cL) {
 		cout << "Possible Moves: " << endl;
 		currentLocation->getLocationInfo(fp, lp, rp, bp);
 		cout << "............................................" << endl;
-		cin >> choice;
+                cout << "What next? ";
+		getline(cin, choice);
+		quit = readCommand(game, currentLocation, obj, choice);
 	} while (!quit);
 
-		//Read Command
 
 	
 }
-	/*********************************************************************
-	** Description: Reads a text file into a ifstream and then returns
-	the input as a string.
-	** Input: ifstream by reference
-	** Output: string of file contents
-	*********************************************************************/
-	string GameEngine::getFileContents(ifstream& File)
+
+/*********************************************************************
+** Description: Reads a text file into a ifstream and then returns
+the input as a string.
+** Input: ifstream by reference
+** Output: string of file contents
+*********************************************************************/
+string GameEngine::getFileContents(ifstream& File) {
+	string Lines = "";        //All lines
+
+	if (File)                      //Check if everything is good
 	{
-		string Lines = "";        //All lines
-
-		if (File)                      //Check if everything is good
+		while (File.good())
 		{
-			while (File.good())
-			{
-				string TempLine;                  //Temp line
-				getline(File, TempLine);        //Get temp line
-				TempLine += "\n";                      //Add newline character
+			string TempLine;                  //Temp line
+			getline(File, TempLine);        //Get temp line
+			TempLine += "\n";                      //Add newline character
 
-				Lines += TempLine;                     //Add newline
-			}
-			return Lines;
+			Lines += TempLine;                     //Add newline
 		}
-		else                           //Return error
-		{
-			return "ERROR File does not exist.";
+		return Lines;
+	}
+	else                           //Return error
+	{
+		return "ERROR File does not exist.";
+	}
+}
+
+/*********************************************************************
+** Description: Reads a player choice and validates the command.
+If valid it executes the appropriate command.
+** Input: GameEngine* game, Space* cL (current location),
+Commands* object, string command
+** Output: Varies depending on command
+*********************************************************************/
+
+bool GameEngine::readCommand(GameEngine* game, Space* cL, Commands* obj, string command) {
+	// Convert command to lowercase (doesn't handle non-ASCII at the moment)
+	for (auto& ch: command) {
+		ch = tolower(ch);
+	}
+ 	
+	// Split up the command into a vector delimited by spaces
+	istringstream split(command);
+	vector<string> splitComs(istream_iterator<string>{split},
+                                 istream_iterator<string>());
+
+	// If no command was entered, return false
+	if (splitComs.size() == 0) {
+		cout << "You didn't enter a command!" << endl;
+		return false;
+	}
+
+	// If the command was only one word, handle the appropriate commands
+	if (splitComs.size() == 1) {
+		if (splitComs.at(0).compare("help") == 0 ||
+	            splitComs.at(0).compare("guide") == 0 ||
+		    splitComs.at(0).compare("manual") == 0) {
+			obj->help();
+		} 
+		else if (splitComs.at(0).compare("alt") == 0 ||
+		         splitComs.at(0).compare("alternate") == 0) {
+			obj->alt();
+		}
+		else if (splitComs.at(0).compare("look") == 0 ||
+			 splitComs.at(0).compare("examine") == 0) {
+			obj->look(cL);
+		}
+		else if (splitComs.at(0).compare("go") == 0 ||
+			 splitComs.at(0).compare("move") == 0) {
+			cout << "go/move requires a direction or room name" << endl << endl;
+			return false;
+		}
+		else if (splitComs.at(0).compare("quit") == 0 ||
+			 splitComs.at(0).compare("exit") == 0) {
+			//obj->exit();
+			return true;
+		}
+		else {
+			cout << "Invalid command. Type help for a list of commands." << std::endl << std::endl;
+			return false;
 		}
 	}
+  
+	// If the command was two words, handle the appropriate commands
+	else if (splitComs.size() == 2) {
+		if (splitComs.at(0).compare("alt") == 0 ||
+		    splitComs.at(0).compare("alternate") == 0) {
+			obj->alt(splitComs.at(1));
+		}
+		else if (splitComs.at(0).compare("look") == 0 ||
+			 splitComs.at(0).compare("examine") == 0) {
+			obj->look(cL, splitComs.at(1));
+		}
+		else if (splitComs.at(0).compare("go") == 0 ||
+			 splitComs.at(0).compare("move") == 0) {
+			Space* moving = obj->go(cL, splitComs.at(1));
+                        if (moving) {
+				game->setCurrentLocation(moving);
+			}
+		}
+		else {
+			cout << "Invalid command. Type help for a list of commands." << endl << endl;
+			return false;
+		}
+	  }
+
+	return false;
+}
 
 

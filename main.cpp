@@ -50,6 +50,8 @@ int main()
 
     GameEngine* game = new GameEngine;//default game engine
     Space* space;//default pointer to space
+    Commands* com = new Commands; //default pointer to commands
+
 	space = game->getCurrentLocation();
 
         do{
@@ -65,7 +67,7 @@ int main()
 
 				game->setAllPossibleMoves();
 				
-				game->displayMenu(space);
+				game->displayMenu(game, space, com);
 				
             }
 			if(option==2){//Load saved game
@@ -87,7 +89,7 @@ int main()
 		//deallocate memory
         delete game;
         delete space;
-
+        delete com;
 
     return 0;
 }
