@@ -1,0 +1,14 @@
+Visited: 0
+RoomType: Start
+RoomName: Entry
+LongDesc: This is where you start the game 
+ShortDesc: Game start location
+NumObjects: 2
+Objects: Object1, Object2
+NumActions: 2
+Actions: Move, Pull
+NumExits: 2
+Exits: Forward, Right
+NumCharacters: 2
+Characters: Researcher1, Attendent
+Puzzle: Water

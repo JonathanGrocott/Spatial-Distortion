@@ -1,0 +1,34 @@
+                           #     #   #######   #         #######   ###
+                           #     #   #         #         #     #   ###
+                           #     #   #         #         #     #   ###
+                           #######   #######   #         #######    #
+                           #     #   #         #         #        
+                           #     #   #         #         #         ###
+                           #     #   #######   #######   #         ###
+                           
+
+                                         Player Commands
+-------------------------------------------------------------------------------------------------------
+help: This is how you got here. Shows all the main commands.
+help [command]: The more specific help. Shows details about a [command].
+savegame: Saves the current progress of the game to a default file.
+savegame [fileName]: Saves the current progress to a file name of your choice.
+loadgame: Loads up the save progress of the default save file.
+loadgame [fileName]: Loads the save progress of the indicated file name.
+exit: Quits the game. Will prompt to save before quitting.
+
+
+                                           Room Commands
+-------------------------------------------------------------------------------------------------------
+look: Gives the player the room's description again.
+look at [object]: Shows details about the specified object.
+go [roomName]: Moves to the specified room if possible.
+go [direction]: Moves to the specified cardinal direction if possible.
+take [object]: Takes an object from the room and adds it to your inventory if possible.
+
+                                         Inventory Commands
+-------------------------------------------------------------------------------------------------------
+inventory: Lists all the current items in your inventory.
+look at [item]: Shows details about the specified item.
+use [item]: Consumes the item if valid.
+combine [item1] [item2]: Combines the two items if valid and adds the combined item to your inventory.

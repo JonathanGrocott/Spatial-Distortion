@@ -12,6 +12,7 @@
 
 #include"space.hpp"
 #include"boost/filesystem.hpp"
+#include"Commands/commands.hpp"
 
 #include<string>
 
@@ -24,30 +25,31 @@ class GameEngine
         /** Default destructor */
         virtual ~GameEngine();
 
-		int numMoves;
-		int getNumMoves();
-		void setNumMoves(int n);
-		vector<string>result;
+	int numMoves;
+	int getNumMoves();
+	void setNumMoves(int n);
+	vector<string>result;
 
-		vector<string>files;
-		void get_file_list(const string& path);
+	vector<string>files;
+	void get_file_list(const string& path);
 
-		vector<string> split(string str, string token);
+	vector<string> split(string str, string token);
 
-		void setAllPossibleMoves();
+	void setAllPossibleMoves();
 
-		void createSpacesFromFiles(GameEngine* game, string dir);
+	void createSpacesFromFiles(GameEngine* game, string dir);
 			
-		void getSpaceContents(string file);
-		void getObjectContents(string file);
+	void getSpaceContents(string file);
+	void getObjectContents(string file);
 
-		Space* currentLocation;
+	Space* currentLocation;
         void moveLocation(Space* temp);
 
         Space* getCurrentLocation();
         void setCurrentLocation(Space* cl);
 
-        void displayMenu(Space* cL);//menu for each location
+        void displayMenu(GameEngine* game, Space* cL, Commands* obj);//menu for each location
+	bool readCommand(GameEngine* game, Space* cL, Commands* obj, string choice);
 
         bool fp, lp, rp, bp;
 

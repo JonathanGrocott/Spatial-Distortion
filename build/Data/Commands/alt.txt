@@ -1,0 +1,27 @@
+
+Alternate command wordings for the main commands:
+
+[] or <> means this is your own input.
+
+
+Player Commands
+--------------------
+alt: alternate
+help: guide, manual
+savegame: save
+loadgame: load
+exit: quit
+
+
+Room Commands
+-----------------------------------
+look: examine
+go: move, [roomName], [direction]
+take: grab
+
+
+Inventory Commands
+------------------------------------------------------
+inventory: bag, items
+use [item]: use [item] <preposition> [object]
+combine [item1] [item2]: combine [item1] with [item2]
