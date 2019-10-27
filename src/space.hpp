@@ -10,67 +10,41 @@
 #define SPACE_HPP
 
 
-#include<vector>
-#include<string>
+#include <vector>
+#include <string>
+#include <map>
 
-using namespace std;
 
 class Space
 {
+	private:
+		bool visited;
+		bool looped;
+		bool filledLiquid;
+		bool filledSolid;
+
+		std::string spaceName;
+		
+
     public:
         /** Default constructor */
-        Space();
-		//Constructor
-		Space(string n, string st, string ld, string sd, int no, int na, int ne, string exits, int nc, int v);
+        Space(std::string path);
         /** Default destructor */
-        virtual ~Space();
+        ~Space();
+		std::map<std::string, Space*>exitMap;
+        std::string getSpaceName();
+		bool getVisited();
+		bool getLooped();
+		bool getFilledLiquid();
+		bool getFilledSolid();
 
-		int visited;
-		string spaceName, spaceType, longDesc, shortDesc;
-		int numObjects, numActions, numExits, numCharacters;
+		void setVisited(bool b);
+		void setLooped(bool b);
+		void setFilledLiquid(bool b);
+		void setFilledSolid(bool b);
 
-        string getSpaceName();
-        void setSpaceName(string n);
-		string getSpaceType();
-		void setSpaceType(string n);
-		string getLongDesc();
-		void setLongDesc(string n);
-		string getShortDesc();
-		void setShortDesc(string n);
-		int getVisited();
-		void setVisited(int b);
-		int getNumObjects();
-		void setNumObjects(int n);
-		int getNumActions();
-		void setNumActions(int n);
-		int getNumExits();
-		void setNumExits(int n);
-		int getNumCharacters();
-		void setNumCharacters(int n);
-
-		vector<string>exitVector;
-		void splitString(string str, string token);
-
-		void findExits(string exits);
-
-        void setSpaceMoves(Space* fp, Space* lp, Space* rp, Space* bp);
-
-
-        void displaySpaceInfo(Space* sp);
-
-        virtual void getLocationInfo(bool &fp, bool &lp, bool &rp, bool &bp);
-
-		//Space pointers for direction
-        Space* Forward;
-        Space* Left;
-        Space* Right;
-        Space* Back;
-
-		void locationInteract(Space* cl);
-
-        string getFileContents (ifstream& File);
-
-
+		void linkExitMapPtr(std::map<std::string, Space*>);
+		std::string findExits();
 };
 
 #endif // SPACE_HPP

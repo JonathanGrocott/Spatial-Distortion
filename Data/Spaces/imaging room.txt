@@ -1,0 +1,17 @@
+<name>
+Imaging Room
+</name>
+<long_desc>
+Imaging Room long
+</long_desc>
+<short_desc>
+Imaging Room short
+</short_desc>
+<exits>
+Electronics Lab
+Power Control Room
+</exits>
+<items>
+</items>
+<special>
+</special>

@@ -1,0 +1,16 @@
+<name>
+Basement
+</name>
+<long_desc>
+Basement long
+</long_desc>
+<short_desc>
+Basement short
+</short_desc>
+<exits>
+Research Lab2
+</exits>
+<items>
+</items>
+<special>
+</special>

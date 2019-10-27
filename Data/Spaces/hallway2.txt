@@ -1,0 +1,18 @@
+<name>
+Hallway2
+</name>
+<long_desc>
+Hallway2 long
+</long_desc>
+<short_desc>
+Hallway2 short
+</short_desc>
+<exits>
+Office
+Robotics Lab
+Deck
+</exits>
+<items>
+</items>
+<special>
+</special>

@@ -87,83 +87,17 @@ void Commands::alt(std::string command) {
 **************************************************/
 
 Space* Commands::go(Space *currLoc, std::string room) {
-  // Get valid movements
-  bool fp = false, lp = false, rp = false, bp = false; 
-  Space *up, *down, *left, *right;
-  std::string upRoom, downRoom, leftRoom, rightRoom;
-  currLoc->getLocationInfo(fp, lp, rp, bp);
-  if (fp) {
-    up = currLoc->Forward;
-    upRoom = boost::algorithm::to_lower_copy(up->getSpaceName());
-  }
-  if (bp) {
-    down = currLoc->Back;
-    downRoom = boost::algorithm::to_lower_copy(down->getSpaceName());
-  }
-  if (lp) {
-    left = currLoc->Left;
-    leftRoom = boost::algorithm::to_lower_copy(left->getSpaceName());
-  }
-  if (rp) {
-    right = currLoc->Right;
-    rightRoom = boost::algorithm::to_lower_copy(right->getSpaceName());
-  }
 
-  // Check if user uses a direction instead of a room name
-  const char *cardinals[13] = {"up", "down", "left", "right",
-                               "north", "south", "west", "east",
-                               "forward", "backward", "forwards", "backwards",
-                               "back"}; 
-  bool isCardinal = false;
-  for(const std::string &dir : cardinals) {
-    if (room.compare(dir) == 0) {
-      isCardinal = true;
-    }
-  }
- 
-  // If a direction is indicated, check if room exists and move the player 
-  if (isCardinal) {
-    if ((room.compare("up") == 0 || room.compare("north") == 0 ||
-        room.compare("forward") == 0 || room.compare("forwards") == 0) && fp) {
-      return up;
-    } 
-    else if ((room.compare("down") == 0 || room.compare("south") == 0 ||
-             room.compare("backward") == 0 || room.compare("backwards") == 0 ||
-             room.compare("back") == 0) && bp) {
-      return down;
-    } 
-    else if ((room.compare("left") == 0 || room.compare("west") == 0) && lp) {
-      return left;
-    }
-    else if ((room.compare("right") == 0 || room.compare("east") == 0) && rp) {
-      return right;
-    }
-    else {
-      std::cout << room << " is currently not a valid direction. Please try again." << std::endl;
-      return NULL;
-    }
-  }
- 
   // Check if room name is a valid choice and move player 
+  if (currLoc->exitMap.count(room) == 1) {
+    return currLoc->exitMap.at(room);
+  }
   else {
-    if (room.compare(upRoom) == 0) {
-      return up;
-    }
-    else if (room.compare(downRoom) == 0) {
-      return down;
-    }
-    else if (room.compare(leftRoom) == 0) {
-      return left;
-    }
-    else if (room.compare(rightRoom) == 0) {
-      return right;
-    }
-    else {
-      std::cout << room << " is currently not a valid room name. Please try again." << std::endl;
-      return NULL;
-    }
+    std::cout << room << " is currently not a valid room name. Please try again." << std::endl;
+    return nullptr;
   }
 }
+
 
 /***************************************************
  * void look(Space *currentLocation)
@@ -171,10 +105,10 @@ Space* Commands::go(Space *currLoc, std::string room) {
 ***************************************************/
 
 void Commands::look(Space *currLoc) {
-  const std::string spaceName = currLoc->getSpaceName();
-  const std::string shortDesc = currLoc->getShortDesc();
-  std::cout << "Current Location: " << spaceName << std::endl;
-  std::cout << shortDesc << std::endl << std::endl;
+  //const std::string spaceName = currLoc->getSpaceName();
+  //const std::string shortDesc = currLoc->getShortDesc();
+  //std::cout << "Current Location: " << spaceName << std::endl;
+ // std::cout << shortDesc << std::endl << std::endl;
 }
 
 /***************************************************
@@ -189,12 +123,12 @@ void Commands::look(Space *currLoc, std::string specifier) {
   std::cout << "Current Location: " << spaceName << std::endl;
 
   if (specifier.compare("long") == 0) {
-    const std::string longDesc = currLoc->getLongDesc();
-    std::cout << longDesc << std::endl << std::endl;
+    //const std::string longDesc = currLoc->getLongDesc();
+    //std::cout << longDesc << std::endl << std::endl;
   } 
   else if (specifier.compare("short") == 0) {
-    const std::string shortDesc = currLoc->getShortDesc();
-    std::cout << shortDesc << std::endl << std::endl;;
+    //const std::string shortDesc = currLoc->getShortDesc();
+    //std::cout << shortDesc << std::endl << std::endl;;
   } 
   else {
     //TODO: Add inventory looking

@@ -1,0 +1,17 @@
+<name>
+Electronics Lab
+</name>
+<long_desc>
+Electronics Lab long
+</long_desc>
+<short_desc>
+Electronics Lab short
+</short_desc>
+<exits>
+Imaging Room
+Hallway
+</exits>
+<items>
+</items>
+<special>
+</special>

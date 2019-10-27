@@ -10,71 +10,54 @@
 #define GAMEENGINE_HPP
 
 
-#include"space.hpp"
-#include"boost/filesystem.hpp"
-#include"Commands/commands.hpp"
+#include "space.hpp"
+#include "boost/filesystem.hpp"
+#include "Commands/commands.hpp"
+#include "player.hpp"
+#include <map>
 
-#include<string>
+#include <string>
 
 
 class GameEngine
 {
+	private:
+		std::map<std::string, Space*> gameMap; //collection of pointers for all spaces in the game
+		//vector<Object*> items; //collection of pointers for all objects in the game
+		void initializeGameMap();
+		void linkExitPtrs();
+		bool gameState;
+		player gamePlayer;
+		
     public:
         /** Default constructor */
         GameEngine();
         /** Default destructor */
-        virtual ~GameEngine();
+        ~GameEngine();
 
 	int numMoves;
 	int getNumMoves();
-	void setNumMoves(int n);
-	vector<string>result;
 
-	vector<string>files;
-	void get_file_list(const string& path);
+	void testMap();
+	bool getGameState();
+	void setGameState(bool b);
 
-	vector<string> split(string str, string token);
+	std::vector<std::string> split(std::string str, std::string token);
 
-	void setAllPossibleMoves();
+	void get_file_list(const std::string& path);
 
-	void createSpacesFromFiles(GameEngine* game, string dir);
-			
-	void getSpaceContents(string file);
-	void getObjectContents(string file);
+	void getSpaceContents(std::string file);
+	void getObjectContents(std::string file);
 
-	Space* currentLocation;
-        void moveLocation(Space* temp);
-
-        Space* getCurrentLocation();
-        void setCurrentLocation(Space* cl);
-
-        void displayMenu(GameEngine* game, Space* cL, Commands* obj);//menu for each location
-	bool readCommand(GameEngine* game, Space* cL, Commands* obj, string choice);
-
-        bool fp, lp, rp, bp;
-
-        string getFileContents (ifstream& File);//ascii display
+    void moveLocation(Space* temp);
 
 
-        //space pointers
-		//Spaces: Entry, Prototype Room, Washroom, Electronics Lab, Imaging Room, Power control room,
-		//Hallway, Research Lab 1, Office 1, Hallway 2, Research Lab 2, Basement, Generator Room, Robtics Lab, Deck
-		Space* Entry;
-		Space* PrototypeRoom;
-		Space* Washroom;
-		Space* ElectronicsLab;
-		Space* ImagingRoom;
-		Space* PowerRoom;
-		Space* Hallway1;
-		Space* ResearchLab1;
-		Space* ResearchLab2;
-		Space* Office1;
-		Space* RoboticsLab;
-		Space* Hallway2;
-		Space* Basement;
-		Space* GeneratorRoom;
-		Space* Deck;
-		
+    void setCurrentLocation(Space* cl);
+
+	void displayMenu(Commands* obj);//menu for each location
+	bool readCommand(Space* cL, Commands* obj, std::string choice);
+
+	std::string getFileContents (std::ifstream& File);//ascii display
 
 };
 

@@ -1,0 +1,17 @@
+<name>
+Entry
+</name>
+<long_desc>
+Entry long
+</long_desc>
+<short_desc>
+Entry short
+</short_desc>
+<exits>
+Prototype Room
+Hallway
+</exits>
+<items>
+</items>
+<special>
+</special>

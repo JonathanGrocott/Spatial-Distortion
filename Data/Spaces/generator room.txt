@@ -1,0 +1,16 @@
+<name>
+Generator Room
+</name>
+<long_desc>
+Generator Room long
+</long_desc>
+<short_desc>
+Generator Room short
+</short_desc>
+<exits>
+Basement
+</exits>
+<items>
+</items>
+<special>
+</special>

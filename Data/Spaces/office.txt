@@ -1,0 +1,16 @@
+<name>
+Office
+</name>
+<long_desc>
+Office long
+</long_desc>
+<short_desc>
+Office short
+</short_desc>
+<exits>
+Hallway2
+</exits>
+<items>
+</items>
+<special>
+</special>

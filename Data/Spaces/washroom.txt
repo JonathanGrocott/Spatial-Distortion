@@ -1,0 +1,16 @@
+<name>
+Washroom
+</name>
+<long_desc>
+Washroom long
+</long_desc>
+<short_desc>
+Washroom Short
+</short_desc>
+<exits>
+Hallway
+</exits>
+<items>
+</items>
+<special>
+</special>

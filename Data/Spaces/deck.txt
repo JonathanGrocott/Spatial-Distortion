@@ -1,0 +1,16 @@
+<name>
+Deck
+</name>
+<long_desc>
+Deck long
+</long_desc>
+<short_desc>
+Deck short
+</short_desc>
+<exits>
+Hallway2
+</exits>
+<items>
+</items>
+<special>
+</special>

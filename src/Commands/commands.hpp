@@ -5,7 +5,8 @@
 class Commands {
   public:
     Commands(); // Default Constructor
-    virtual ~Commands();
+    ~Commands();
+    
     void help(); // Shows all commands
     void alt(); // Shows alternate command wording
     void alt(std::string command); // Shows alternate wording for specified command

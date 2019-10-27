@@ -1,0 +1,19 @@
+<name>
+Hallway
+</name>
+<long_desc>
+Hallway long
+</long_desc>
+<short_desc>
+Hallway short
+</short_desc>
+<exits>
+Entry
+Washroom
+Electronics Lab
+Research Lab1
+</exits>
+<items>
+</items>
+<special>
+</special>

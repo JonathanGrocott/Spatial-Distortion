@@ -1,0 +1,17 @@
+<name>
+Power Control Room
+</name>
+<long_desc>
+Power Control Room long
+</long_desc>
+<short_desc>
+Power Control Room short
+</short_desc>
+<exits>
+Electronics Lab
+Imaging Room
+</exits>
+<items>
+</items>
+<special>
+</special>

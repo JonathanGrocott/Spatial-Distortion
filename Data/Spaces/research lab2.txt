@@ -1,0 +1,17 @@
+<name>
+Research Lab2
+</name>
+<long_desc>
+Research Lab2 long
+</long_desc>
+<short_desc>
+Research Lab2 short
+</short_desc>
+<exits>
+Research Lab1
+Hallway2
+</exits>
+<items>
+</items>
+<special>
+</special>
