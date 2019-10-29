@@ -3,7 +3,6 @@
 ** Author: Jonathan Grocott
 ** Date: 10/15/19
 ** Description: Header file for abstract base class space.
-
 *********************************************************************/
 
 #ifndef SPACE_HPP
@@ -22,9 +21,7 @@ class Space
 		bool looped;
 		bool filledLiquid;
 		bool filledSolid;
-
 		std::string spaceName;
-		
 
     public:
         /** Default constructor */

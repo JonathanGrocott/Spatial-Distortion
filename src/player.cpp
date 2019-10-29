@@ -31,7 +31,7 @@ player::~player(){
 /*********************************************************************
 ** Description: get current player location
 ** Input: 
-** Output: Space*
+** Output: Space pointer
 *********************************************************************/
 Space* player::getCurrentLoc(){
     return this->currentLoc;
@@ -39,7 +39,7 @@ Space* player::getCurrentLoc(){
 
 /*********************************************************************
 ** Description: set current player location
-** Input: Space*
+** Input: Space pointer
 ** Output: 
 *********************************************************************/
 void player::setCurrentLoc(Space* loc){

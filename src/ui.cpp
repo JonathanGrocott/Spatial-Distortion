@@ -13,7 +13,7 @@
 
 /*********************************************************************
 ** Description: display, output file contents
-** Input: string filename
+** Input: Space pointer
 ** Output: none.
 *********************************************************************/
 void uiDisplay(Space* room){
@@ -24,8 +24,8 @@ void uiDisplay(Space* room){
     std::string location = "Data/Spaces/"+room->getSpaceName()+".txt";
     std::ifstream myfile (location);
 
-    if (myfile.is_open()){
-        while ( myfile.good() ){
+    if (myfile.is_open()){          // comfirm file opened
+        while ( myfile.good() ){    // read to end of file
 
             std::getline (myfile, line);
 
@@ -45,7 +45,7 @@ void uiDisplay(Space* room){
 
 /*********************************************************************
 ** Description: display, output exits
-** Input: map
+** Input: Space pointer
 ** Output: none.
 *********************************************************************/
 void exitDisplay(Space* temp){
@@ -54,7 +54,7 @@ void exitDisplay(Space* temp){
 }
 
 /*********************************************************************
-** Description: clearScreen
+** Description: helper function that clears the screen
 ** Input: none
 ** Output: none
 *********************************************************************/

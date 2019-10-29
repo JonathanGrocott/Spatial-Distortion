@@ -13,8 +13,8 @@
 #include <fstream>
 #include "space.hpp"
 
-void uiDisplay(Space* tmp);
-void exitDisplay(Space*);
+void uiDisplay(Space* room);
+void exitDisplay(Space* temp);
 void clearScreen();
 
 #endif

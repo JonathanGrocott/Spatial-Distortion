@@ -88,7 +88,8 @@ void GameEngine::initializeGameMap(){
 ** Output:
 *********************************************************************/
 void GameEngine::linkExitPtrs(){
-
+	// iterate through spaces and pass gameMap to link exits to the
+	//
 	for (std::map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it){
 		it->second->linkExitMapPtr(gameMap);
 	}
@@ -113,20 +114,9 @@ void GameEngine::setGameState(bool b){
 	this->gameState = b;
 }
 
-
-void GameEngine::setCurrentLocation(Space* cl){
-
-    //std::cout<<"Current Location: " <<currentLocation->getSpaceName()<<endl; //debug out
-}
-
-void GameEngine::moveLocation(Space* temp){
-
-
-}
-
 /*********************************************************************
 ** Description: Main menu driver for game. 
-
+**
 ** Input: Space* cl(current location), Commands* obj (to call commands)
 ** Output: 
 *********************************************************************/
@@ -153,19 +143,26 @@ void GameEngine::displayMenu(Commands* obj) {
 	
 }
 
+/*********************************************************************
+** Description: A test function that prints out the names of the 
+** Space objects that exit in the gameMap.
+** Input: 
+** Output: 
+*********************************************************************/
 void GameEngine::testMap()
 {
 	std::cout << "game spaces loaded:" << std::endl;
-
- for (std::map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
-    std::cout << it->first << std::endl;
+	for (std::map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
+    	std::cout << it->first << std::endl;
 }
 
 /*********************************************************************
 ** Description: Reads a player choice and validates the command.
-If valid it executes the appropriate command.
+** If valid it executes the appropriate command.
+**
 ** Input: GameEngine* game, Space* cL (current location),
-Commands* object, string command
+** Commands* object, string command
+**
 ** Output: Varies depending on command
 *********************************************************************/
 

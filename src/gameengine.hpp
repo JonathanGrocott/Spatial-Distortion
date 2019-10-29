@@ -49,11 +49,6 @@ class GameEngine
 	void getSpaceContents(std::string file);
 	void getObjectContents(std::string file);
 
-    void moveLocation(Space* temp);
-
-
-    void setCurrentLocation(Space* cl);
-
 	void displayMenu(Commands* obj);//menu for each location
 	bool readCommand(Space* cL, Commands* obj, std::string choice);
 

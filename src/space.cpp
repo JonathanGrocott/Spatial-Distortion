@@ -63,6 +63,11 @@ Space::Space(std::string path)
     }
 }
 
+/*********************************************************************
+** Description: destructor for a space object
+** Input: 
+** Output: 
+*********************************************************************/
 Space::~Space()
 {
 	// set ptrs to null
@@ -79,7 +84,7 @@ Space::~Space()
 *********************************************************************/
 void Space::linkExitMapPtr(std::map<std::string, Space*> gameMap){
 	for (std::map<std::string,Space*>::iterator it=this->exitMap.begin(); it!=this->exitMap.end(); ++it){
-		if(gameMap.count(it->first))
+		if(gameMap.count(it->first)) // check that the index space exists
 			it->second = gameMap.at(it->first);
 		else
 			std::cout << it->first << " does not exist." << std::endl;
