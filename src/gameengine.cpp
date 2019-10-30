@@ -10,6 +10,7 @@
 #include "space.hpp"
 #include "boost/filesystem.hpp"
 #include "boost/range/iterator_range.hpp"
+#include <boost/algorithm/string.hpp>
 
 #include "ui.hpp"
 #include "player.hpp"
@@ -21,7 +22,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
-#include <cctype>
+
 #include <vector>
 
 /*********************************************************************
@@ -31,15 +32,17 @@
 *********************************************************************/
 GameEngine::GameEngine()
 {
-    //setup default world - Needs to read space and object files
-	//and create all of the spaces, objects, etc.    
-	initializeGameMap();
+	//initialize command object
+	this->commands = new Commands;
 
+    //setup default world
+	//load map from files in Space directory
+	initializeGameMap();
 	//update nullptrs in space objects
 	linkExitPtrs();
 
+
 	//set player to starting place
-	//this->testMap();
 	this->gamePlayer.setCurrentLoc(this->gameMap.at("entry"));
 	this->gameState = true;
 }
@@ -97,6 +100,18 @@ void GameEngine::linkExitPtrs(){
 }
 
 /*********************************************************************
+** Description: Main game loop
+**
+** Input: 
+** Output:
+*********************************************************************/
+void GameEngine::mainGameLoop(){
+	do{
+		displayMenu();
+	}while(this->gameState);
+}
+
+/*********************************************************************
 ** Description: Return game state status
 ** Input: 
 ** Output: bool
@@ -120,7 +135,7 @@ void GameEngine::setGameState(bool b){
 ** Input: Space* cl(current location), Commands* obj (to call commands)
 ** Output: 
 *********************************************************************/
-void GameEngine::displayMenu(Commands* obj) {
+void GameEngine::displayMenu() {
 	bool quit = false;
 	std::string choice;
 	do {
@@ -136,24 +151,8 @@ void GameEngine::displayMenu(Commands* obj) {
 		std::cout << "............................................" << std::endl;
         std::cout << "What next? ";
 		std::getline(std::cin, choice);
-		quit = readCommand( this->gamePlayer.getCurrentLoc(), obj, choice);
+		quit = readCommand( this->gamePlayer.getCurrentLoc(), choice);
 	} while (!quit);
-
-
-	
-}
-
-/*********************************************************************
-** Description: A test function that prints out the names of the 
-** Space objects that exit in the gameMap.
-** Input: 
-** Output: 
-*********************************************************************/
-void GameEngine::testMap()
-{
-	std::cout << "game spaces loaded:" << std::endl;
-	for (std::map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
-    	std::cout << it->first << std::endl;
 }
 
 /*********************************************************************
@@ -166,11 +165,9 @@ void GameEngine::testMap()
 ** Output: Varies depending on command
 *********************************************************************/
 
-bool GameEngine::readCommand(Space* cL, Commands* obj, std::string command) {
+bool GameEngine::readCommand(Space* cL, std::string command) {
 	// Convert command to lowercase (doesn't handle non-ASCII at the moment)
-	for (auto& ch: command) {
-		ch = tolower(ch);
-	}
+	boost::algorithm::to_lower(command);
  	
 	// Split up the command into a vector delimited by spaces
 	std::istringstream split(command);
@@ -188,15 +185,15 @@ bool GameEngine::readCommand(Space* cL, Commands* obj, std::string command) {
 		if (splitComs.at(0).compare("help") == 0 ||
 	            splitComs.at(0).compare("guide") == 0 ||
 		    splitComs.at(0).compare("manual") == 0) {
-			obj->help();
+			this->commands->help();
 		} 
 		else if (splitComs.at(0).compare("alt") == 0 ||
 		         splitComs.at(0).compare("alternate") == 0) {
-			obj->alt();
+			this->commands->alt();
 		}
 		else if (splitComs.at(0).compare("look") == 0 ||
 			 splitComs.at(0).compare("examine") == 0) {
-			obj->look(cL);
+			this->commands->look(cL);
 		}
 		else if (splitComs.at(0).compare("go") == 0 ||
 			 splitComs.at(0).compare("move") == 0) {
@@ -218,15 +215,15 @@ bool GameEngine::readCommand(Space* cL, Commands* obj, std::string command) {
 	else if (splitComs.size() == 2) {
 		if (splitComs.at(0).compare("alt") == 0 ||
 		    splitComs.at(0).compare("alternate") == 0) {
-			obj->alt(splitComs.at(1));
+			this->commands->alt(splitComs.at(1));
 		}
 		else if (splitComs.at(0).compare("look") == 0 ||
 			 splitComs.at(0).compare("examine") == 0) {
-			obj->look(cL, splitComs.at(1));
+			this->commands->look(cL, splitComs.at(1));
 		}
 		else if (splitComs.at(0).compare("go") == 0 ||
 			 splitComs.at(0).compare("move") == 0) {
-			Space* moving = obj->go(cL, splitComs.at(1));
+			Space* moving = this->commands->go(cL, splitComs.at(1));
                         if (moving) {
 				this->gamePlayer.setCurrentLoc(moving);
 			}
@@ -265,4 +262,15 @@ std::vector<std::string> GameEngine::split(std::string str, std::string token) {
 	return result;
 }
 
-
+/*********************************************************************
+** Description: A test function that prints out the names of the 
+** Space objects that exit in the gameMap.
+** Input: 
+** Output: 
+*********************************************************************/
+void GameEngine::testMap()
+{
+	std::cout << "game spaces loaded:" << std::endl;
+	for (std::map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
+    	std::cout << it->first << std::endl;
+}

@@ -28,6 +28,7 @@ class GameEngine
 		void linkExitPtrs();
 		bool gameState;
 		player gamePlayer;
+		Commands* commands;
 		
     public:
         /** Default constructor */
@@ -35,24 +36,22 @@ class GameEngine
         /** Default destructor */
         ~GameEngine();
 
-	int numMoves;
-	int getNumMoves();
+		void testMap();
+		bool getGameState();
+		void setGameState(bool b);
+		void mainGameLoop();
 
-	void testMap();
-	bool getGameState();
-	void setGameState(bool b);
+		std::vector<std::string> split(std::string str, std::string token);
 
-	std::vector<std::string> split(std::string str, std::string token);
+		void get_file_list(const std::string& path);
 
-	void get_file_list(const std::string& path);
+		void getSpaceContents(std::string file);
+		void getObjectContents(std::string file);
 
-	void getSpaceContents(std::string file);
-	void getObjectContents(std::string file);
+		void displayMenu();//menu for each location
+		bool readCommand(Space* cL, std::string choice);
 
-	void displayMenu(Commands* obj);//menu for each location
-	bool readCommand(Space* cL, Commands* obj, std::string choice);
-
-	std::string getFileContents (std::ifstream& File);//ascii display
+		std::string getFileContents (std::ifstream& File);//ascii display
 
 };
 

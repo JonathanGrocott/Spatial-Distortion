@@ -28,20 +28,25 @@ class Space
         Space(std::string path);
         /** Default destructor */
         ~Space();
+		
+		// function for linking default nullptr in exitMap
+		void linkExitMapPtr(std::map<std::string, Space*>);
+
+		// map of spaces exits
 		std::map<std::string, Space*>exitMap;
+
+		// get functions for private variables
         std::string getSpaceName();
 		bool getVisited();
 		bool getLooped();
 		bool getFilledLiquid();
 		bool getFilledSolid();
-
+		std::string findExits();
+		//set functions for private variables
 		void setVisited(bool b);
 		void setLooped(bool b);
 		void setFilledLiquid(bool b);
 		void setFilledSolid(bool b);
-
-		void linkExitMapPtr(std::map<std::string, Space*>);
-		std::string findExits();
 };
 
 #endif // SPACE_HPP

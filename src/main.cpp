@@ -42,45 +42,36 @@ std::string getFileContents (std::ifstream& File)
 
 int main()
 {
-    std::string pName;//player name
     int option;
 	bool quit=false;
+    do{
+        std::cout << "1) NEW GAME" << std::endl;
+        std::cout << "2) LOAD EXISTING GAME" << std::endl;
+        std::cout << "3) DISPLAY KEY TO GAME" << std::endl;
+        std::cout << "4) END GAME"<< std::endl;
+        std::cout << "Enter Option: ";
+        std::cin >> option;
 
-    GameEngine* game = new GameEngine;//default game engine
-    Commands* com = new Commands; //default pointer to commands
+        if(option==1){//main game driver
+            
+            GameEngine* game = new GameEngine; //initialize new game with starting values
+            game->mainGameLoop;
+            delete game;    //deallocate memory
+        }
+        if(option==2){//Load saved game
+            // GameEngine* game = new GameEngine(savedGame); // initial game with saved file
+            //game->mainGameLoop;
+        }
 
-        do{
-            std::cout<<"1) PLAY GAME" << std::endl;
-			std::cout<<"2) LOAD EXISTING GAME" << std::endl;
-            std::cout<<"3) DISPLAY KEY TO GAME" << std::endl;
-            std::cout<<"4) END GAME"<< std::endl;
-            std::cout<<"Enter Option: ";
-            std::cin>>option;
+        if(option==3){//Key to the game for grader
 
-            if(option==1){//main game driver
-				
-				game->displayMenu(com);
-				//game->testMap();
-            }
-			if(option==2){//Load saved game
+        }
 
-            }
+        if(option==4){//exit game
+            quit = true;
+        }
 
-            if(option==3){//Key to the game for grader
-
-            }
-
-            if(option==4){//exit game
-                quit = true;
-            }
-
-        }while(!quit);//quit game bool
-
-
-
-		//deallocate memory
-        delete game;
-        delete com;
+    }while(!quit);//quit game bool
 
     return 0;
 }
