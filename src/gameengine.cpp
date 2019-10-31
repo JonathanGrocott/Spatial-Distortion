@@ -50,7 +50,7 @@ GameEngine::GameEngine()
 GameEngine::~GameEngine()
 {
     // delete pointers
-	for (std::map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it){
+	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it){
 		delete it->second;
 	}
 }
@@ -93,7 +93,7 @@ void GameEngine::initializeGameMap(){
 void GameEngine::linkExitPtrs(){
 	// iterate through spaces and pass gameMap to link exits to the
 	//
-	for (std::map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it){
+	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it){
 		it->second->linkExitMapPtr(gameMap);
 	}
     
@@ -321,6 +321,6 @@ std::vector<std::string> GameEngine::split(std::string str, std::string token) {
 void GameEngine::testMap()
 {
 	std::cout << "game spaces loaded:" << std::endl;
-	for (std::map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
+	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
     	std::cout << it->first << std::endl;
 }

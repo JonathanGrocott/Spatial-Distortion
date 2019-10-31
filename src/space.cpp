@@ -80,7 +80,7 @@ Space::Space(std::string path)
 Space::~Space()
 {
 	// set ptrs to null
-    for (std::map<std::string,Space*>::iterator it=this->exitMap.begin(); it!=this->exitMap.end(); ++it){
+    for (std::unordered_map<std::string,Space*>::iterator it=this->exitMap.begin(); it!=this->exitMap.end(); ++it){
 		it->second = nullptr;
 	}
 }
@@ -91,8 +91,8 @@ Space::~Space()
 ** Input: a completed map with constructed spaces.
 ** Output: 
 *********************************************************************/
-void Space::linkExitMapPtr(std::map<std::string, Space*> gameMap){
-	for (std::map<std::string,Space*>::iterator it=this->exitMap.begin(); it!=this->exitMap.end(); ++it){
+void Space::linkExitMapPtr(std::unordered_map<std::string, Space*> gameMap){
+	for (std::unordered_map<std::string,Space*>::iterator it=this->exitMap.begin(); it!=this->exitMap.end(); ++it){
 		if(gameMap.count(it->first)) // check that the index space exists
 			it->second = gameMap.at(it->first);
 		else

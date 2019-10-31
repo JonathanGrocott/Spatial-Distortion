@@ -11,7 +11,7 @@
 
 #include <vector>
 #include <string>
-#include <map>
+#include <unordered_map>
 
 
 class Space
@@ -31,10 +31,10 @@ class Space
 		~Space();
 		
 		// function for linking default nullptr in exitMap
-		void linkExitMapPtr(std::map<std::string, Space*>);
+		void linkExitMapPtr(std::unordered_map<std::string, Space*>);
 
 		// map of spaces exits
-		std::map<std::string, Space*>exitMap;
+		std::unordered_map<std::string, Space*>exitMap;
 
 		// get functions for private variables
         	std::string getSpaceName();

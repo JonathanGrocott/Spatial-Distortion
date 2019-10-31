@@ -14,7 +14,7 @@
 #include "boost/filesystem.hpp"
 #include "Commands/commands.hpp"
 #include "player.hpp"
-#include <map>
+#include <unordered_map>
 
 #include <string>
 
@@ -22,7 +22,7 @@
 class GameEngine
 {
 	private:
-		std::map<std::string, Space*> gameMap; //collection of pointers for all spaces in the game
+		std::unordered_map<std::string, Space*> gameMap; //collection of pointers for all spaces in the game
 		//vector<Object*> items; //collection of pointers for all objects in the game
 		void initializeGameMap();
 		void linkExitPtrs();
