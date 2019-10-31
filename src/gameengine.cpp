@@ -180,6 +180,7 @@ bool GameEngine::readCommand(Space* cL, std::string command) {
 
 	// If the command was only one word, handle the appropriate commands
 	if (splitComs.size() == 1) {
+		// If the user only enters a room name, try to move to that room
 		std::map<std::string, Space*>::iterator iter = this->gameMap.find(splitComs.at(0));
 		std::string card = this->commands->getCardinal(splitComs.at(0));
 		if (iter != this->gameMap.end()) {
@@ -187,6 +188,7 @@ bool GameEngine::readCommand(Space* cL, std::string command) {
 			if (moving)
 				this->gamePlayer.setCurrentLoc(moving);
 		}
+		// If the user only enters a cardinal direction, try to move in that direction
 		else if (card.compare("north") || card.compare("west") ||
 			 card.compare("south") || card.compare("east")) {
 			Space* moving = this->commands->go(cL, splitComs.at(0));
@@ -224,7 +226,14 @@ bool GameEngine::readCommand(Space* cL, std::string command) {
   
 	// If the command was two words, handle the appropriate commands
 	else if (splitComs.size() == 2) {
-		if (splitComs.at(0).compare("alt") == 0 ||
+		std::string room = splitComs.at(0) + " " + splitComs.at(1);
+		std::map<std::string, Space*>::iterator iter = this->gameMap.find(room);
+		if (iter != this->gameMap.end()) {
+			Space* moving = this->commands->go(cL, room);
+			if (moving)
+				this->gamePlayer.setCurrentLoc(moving);
+		}
+		else if (splitComs.at(0).compare("alt") == 0 ||
 		    splitComs.at(0).compare("alternate") == 0) {
 			this->commands->alt(splitComs.at(1));
 		}
@@ -235,9 +244,8 @@ bool GameEngine::readCommand(Space* cL, std::string command) {
 		else if (splitComs.at(0).compare("go") == 0 ||
 			 splitComs.at(0).compare("move") == 0) {
 			Space* moving = this->commands->go(cL, splitComs.at(1));
-                        if (moving) {
+                        if (moving)
 				this->gamePlayer.setCurrentLoc(moving);
-			}
 		}
 		else {
 			std::cout << "Invalid command. Type help for a list of commands." << std::endl << std::endl;
@@ -246,7 +254,34 @@ bool GameEngine::readCommand(Space* cL, std::string command) {
 	}
 
 	else if (splitComs.size() == 3) {
-		
+		std::string room = splitComs.at(0) + " " + splitComs.at(1) + " " + splitComs.at(2);
+		std::map<std::string, Space*>::iterator iter = this->gameMap.find(room);
+		if (iter != this->gameMap.end()) {
+			Space* moving = this->commands->go(cL, room);
+			if (moving)
+				this->gamePlayer.setCurrentLoc(moving);
+		}
+
+		else if (!splitComs.at(0).compare("go") ||
+		    !splitComs.at(0).compare("move")) {
+			//TODO: Check for prepositions/articles
+			std::string room = splitComs.at(1) + " " + splitComs.at(2);
+			Space* moving = this->commands->go(cL, room);
+			if (moving)
+				this->gamePlayer.setCurrentLoc(moving);
+		}	
+	}
+
+	else if (splitComs.size() == 4) {
+		if (!splitComs.at(0).compare("go") ||
+		    !splitComs.at(0).compare("move")) {
+			//TODO: Check for prepositions/articles
+			std::string room = splitComs.at(1) + " " + splitComs.at(2) + " " +
+					   splitComs.at(3);
+			Space* moving = this->commands->go(cL, room);
+			if (moving)
+				this->gamePlayer.setCurrentLoc(moving);
+		}	
 	}
 
 	return false;
