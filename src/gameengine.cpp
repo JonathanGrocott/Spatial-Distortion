@@ -181,7 +181,7 @@ bool GameEngine::readCommand(Space* cL, std::string command) {
 	// If the command was only one word, handle the appropriate commands
 	if (splitComs.size() == 1) {
 		// If the user only enters a room name, try to move to that room
-		std::map<std::string, Space*>::iterator iter = this->gameMap.find(splitComs.at(0));
+		std::unordered_map<std::string, Space*>::iterator iter = this->gameMap.find(splitComs.at(0));
 		std::string card = this->commands->getCardinal(splitComs.at(0));
 		if (iter != this->gameMap.end()) {
 			Space* moving = this->commands->go(cL, splitComs.at(0));
@@ -227,7 +227,7 @@ bool GameEngine::readCommand(Space* cL, std::string command) {
 	// If the command was two words, handle the appropriate commands
 	else if (splitComs.size() == 2) {
 		std::string room = splitComs.at(0) + " " + splitComs.at(1);
-		std::map<std::string, Space*>::iterator iter = this->gameMap.find(room);
+		std::unordered_map<std::string, Space*>::iterator iter = this->gameMap.find(room);
 		if (iter != this->gameMap.end()) {
 			Space* moving = this->commands->go(cL, room);
 			if (moving)
@@ -255,7 +255,7 @@ bool GameEngine::readCommand(Space* cL, std::string command) {
 
 	else if (splitComs.size() == 3) {
 		std::string room = splitComs.at(0) + " " + splitComs.at(1) + " " + splitComs.at(2);
-		std::map<std::string, Space*>::iterator iter = this->gameMap.find(room);
+		std::unordered_map<std::string, Space*>::iterator iter = this->gameMap.find(room);
 		if (iter != this->gameMap.end()) {
 			Space* moving = this->commands->go(cL, room);
 			if (moving)
