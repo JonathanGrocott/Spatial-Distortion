@@ -7,6 +7,7 @@ class Commands {
     Commands(); // Default Constructor
     ~Commands();
     
+    std::vector<std::string> commandList;
     void help(); // Shows all commands
     void alt(); // Shows alternate command wording
     void alt(std::string command); // Shows alternate wording for specified command

@@ -7,12 +7,11 @@
 #include <boost/algorithm/string.hpp>
 #include "commands.hpp"
 
-// List for reference and error checking
-const char *commandList[11] = {"help", "alt", "go", "look", "exit", "savegame",
-                              "loadgame", "take", "inventory", "use", "combine"};
-
 // Constructor to instantiate commands object
-Commands::Commands(){}
+Commands::Commands(){
+  this->commandList = {"help", "alt", "go", "look", "exit", "savegame",
+                        "loadgame", "take", "inventory", "use", "combine", "quit"};
+}
 
 
 // Destructor to destroy commands object

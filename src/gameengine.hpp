@@ -47,10 +47,9 @@ class GameEngine
 
 		void getSpaceContents(std::string file);
 		void getObjectContents(std::string file);
-
 		void displayMenu();//menu for each location
-		bool readCommand(Space* cL, std::string choice);
-
+		bool readCommand();
+		bool parser(std::string &original, std::string tofind);
 		std::string getFileContents (std::ifstream& File);//ascii display
 
 };

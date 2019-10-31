@@ -18,7 +18,7 @@
 *********************************************************************/
 void uiDisplay(Space* room){
 
-    clearScreen();
+    //clearScreen();
 
     std::string line;
     std::string location = "Data/Spaces/"+room->getSpaceName()+".txt";

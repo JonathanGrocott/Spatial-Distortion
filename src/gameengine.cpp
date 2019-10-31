@@ -11,6 +11,8 @@
 #include "boost/filesystem.hpp"
 #include "boost/range/iterator_range.hpp"
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <regex>
 
 #include "ui.hpp"
 #include "player.hpp"
@@ -126,7 +128,15 @@ void GameEngine::linkExitPtrs(std::string room,std::unordered_map<std::string,st
 *********************************************************************/
 void GameEngine::mainGameLoop(){
 	do{
+		//output to ui
 		displayMenu();
+		//get and process input
+		bool loop =false;
+		while (!loop){
+			loop = readCommand();
+			if (!loop)
+				std::cout << "Not a valid command!" << std::endl;
+		}
 	}while(this->gameState);
 }
 
@@ -151,13 +161,10 @@ void GameEngine::setGameState(bool b){
 /*********************************************************************
 ** Description: Main menu driver for game. 
 **
-** Input: Space* cl(current location), Commands* obj (to call commands)
+** Input:
 ** Output: 
 *********************************************************************/
 void GameEngine::displayMenu() {
-	bool quit = false;
-	std::string choice;
-	do {
 		std::cout << std::endl << std::endl;
 		std::cout << "............................................" << std::endl;
 		std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName();
@@ -166,133 +173,59 @@ void GameEngine::displayMenu() {
 		std::cout << "Possible Moves: " << std::endl;
 		exitDisplay(this->gamePlayer.getCurrentLoc());
 		std::cout << "............................................" << std::endl;
-        	std::cout << "What next? ";
-		std::getline(std::cin, choice);
-		quit = readCommand( this->gamePlayer.getCurrentLoc(), choice);
-	} while (!quit);
 }
 
 /*********************************************************************
 ** Description: Reads a player choice and validates the command.
 ** If valid it executes the appropriate command.
-**
-** Input: GameEngine* game, Space* cL (current location),
-** Commands* object, string command
-**
-** Output: Varies depending on command
+** Input: 
+** Output: returns true if a valid command was given, else false
 *********************************************************************/
 
-bool GameEngine::readCommand(Space* cL, std::string command) {
-	// Convert command to lowercase (doesn't handle non-ASCII at the moment)
-	boost::algorithm::to_lower(command);
- 	
-	// Split up the command into a vector delimited by spaces
-	std::istringstream split(command);
-	std::vector<std::string> splitComs(std::istream_iterator<std::string>{split},
-                                 std::istream_iterator<std::string>());
+bool GameEngine::readCommand() {
+	
+	std::cout << "What next? ";
+	std::string input;
+	std::getline(std::cin, input);
+	// Convert command to lowercase
+	boost::algorithm::to_lower(input);
+	std::vector<std::string> listLocations;
+	std::vector<std::string> listObjects;
+	std::vector<std::string> listCommands;
 
-	// If no command was entered, return false
-	if (splitComs.size() == 0) {
-		std::cout << "You didn't enter a command!" << std::endl;
-		return false;
+	//find all locations in input
+	for(auto it = this->gamePlayer.getCurrentLoc()->exitMap.begin(); it!= this->gamePlayer.getCurrentLoc()->exitMap.end(); it++)
+	{
+		if(parser(input, it->first))
+		{
+			std::cout << it->first << std::endl;
+			listLocations.push_back(it->first);
+		}
+			
 	}
+	//find commands in input
+	for(auto it = commands->commandList.begin(); it != commands->commandList.end(); it++)
+	{
+		if(parser(input,*it))
+			listCommands.push_back(*it);
+	}
+	//find objects
 
-	// If the command was only one word, handle the appropriate commands
-	if (splitComs.size() == 1) {
-		// If the user only enters a room name, try to move to that room
-		std::unordered_map<std::string, Space*>::iterator iter = this->gameMap.find(splitComs.at(0));
-		if (iter != this->gameMap.end()) {
-			Space* moving = this->commands->go(cL, splitComs.at(0));
-			if (moving)
-				this->gamePlayer.setCurrentLoc(moving);
-		}
-		else if (splitComs.at(0).compare("help") == 0 ||
-	        	 splitComs.at(0).compare("guide") == 0 ||
-		         splitComs.at(0).compare("manual") == 0) {
-			this->commands->help();
-		} 
-		else if (splitComs.at(0).compare("alt") == 0 ||
-		         splitComs.at(0).compare("alternate") == 0) {
-			this->commands->alt();
-		}
-		else if (splitComs.at(0).compare("look") == 0 ||
-			 splitComs.at(0).compare("examine") == 0) {
-			this->commands->look(cL);
-		}
-		else if (splitComs.at(0).compare("go") == 0 ||
-			 splitComs.at(0).compare("move") == 0) {
-			std::cout << "go/move requires a direction or room name" << std::endl << std::endl;
-			return false;
-		}
-		else if (splitComs.at(0).compare("quit") == 0 ||
-			 splitComs.at(0).compare("exit") == 0) {
-			//obj->exit();
+	//handles a location by moving
+	if(listLocations.size() == 1){
+		Space* move = this->commands->go(this->gamePlayer.getCurrentLoc(),listLocations[0]);
+		if(move){
+			this->gamePlayer.setCurrentLoc(move);
 			return true;
 		}
-		else {
-			std::cout << "Invalid command. Type help for a list of commands." << std::endl << std::endl;
-			return false;
-		}
-	}
-  
-	// If the command was two words, handle the appropriate commands
-	else if (splitComs.size() == 2) {
-		std::string room = splitComs.at(0) + " " + splitComs.at(1);
-		std::unordered_map<std::string, Space*>::iterator iter = this->gameMap.find(room);
-		if (iter != this->gameMap.end()) {
-			Space* moving = this->commands->go(cL, room);
-			if (moving)
-				this->gamePlayer.setCurrentLoc(moving);
-		}
-		else if (splitComs.at(0).compare("alt") == 0 ||
-		    splitComs.at(0).compare("alternate") == 0) {
-			this->commands->alt(splitComs.at(1));
-		}
-		else if (splitComs.at(0).compare("look") == 0 ||
-			 splitComs.at(0).compare("examine") == 0) {
-			this->commands->look(cL, splitComs.at(1));
-		}
-		else if (splitComs.at(0).compare("go") == 0 ||
-			 splitComs.at(0).compare("move") == 0) {
-			Space* moving = this->commands->go(cL, splitComs.at(1));
-                        if (moving)
-				this->gamePlayer.setCurrentLoc(moving);
-		}
-		else {
-			std::cout << "Invalid command. Type help for a list of commands." << std::endl << std::endl;
-			return false;
-		}
 	}
 
-	else if (splitComs.size() == 3) {
-		std::string room = splitComs.at(0) + " " + splitComs.at(1) + " " + splitComs.at(2);
-		std::unordered_map<std::string, Space*>::iterator iter = this->gameMap.find(room);
-		if (iter != this->gameMap.end()) {
-			Space* moving = this->commands->go(cL, room);
-			if (moving)
-				this->gamePlayer.setCurrentLoc(moving);
+	//handles a single command
+	if(listCommands.size() == 1){
+		if(listCommands[0]=="quit"){
+			this->setGameState(false);
+			return true;
 		}
-
-		else if (!splitComs.at(0).compare("go") ||
-		    !splitComs.at(0).compare("move")) {
-			//TODO: Check for prepositions/articles
-			std::string room = splitComs.at(1) + " " + splitComs.at(2);
-			Space* moving = this->commands->go(cL, room);
-			if (moving)
-				this->gamePlayer.setCurrentLoc(moving);
-		}	
-	}
-
-	else if (splitComs.size() == 4) {
-		if (!splitComs.at(0).compare("go") ||
-		    !splitComs.at(0).compare("move")) {
-			//TODO: Check for prepositions/articles
-			std::string room = splitComs.at(1) + " " + splitComs.at(2) + " " +
-					   splitComs.at(3);
-			Space* moving = this->commands->go(cL, room);
-			if (moving)
-				this->gamePlayer.setCurrentLoc(moving);
-		}	
 	}
 
 	return false;
@@ -334,4 +267,25 @@ void GameEngine::testMap()
 	std::cout << "game spaces loaded:" << std::endl;
 	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
     	std::cout << it->first << std::endl;
+}
+
+/*********************************************************************
+** Description: A test function that prints out the names of the 
+** Space objects that exit in the gameMap.
+** Input: 
+** Output: 
+*********************************************************************/
+bool GameEngine::parser(std::string &original, std::string tofind){
+
+	if(original.find(tofind)!=std::string::npos)
+	{
+		original.erase(original.find(tofind),tofind.length());
+		std::regex twoSpaces("  ");
+		original = std::regex_replace(original,twoSpaces," ");
+
+		return true;
+	}
+	else
+		return false;
+	
 }
