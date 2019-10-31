@@ -8,9 +8,6 @@ Protype Room long
 Protype Room Short
 </short_desc>
 <exits>
-
-
-
 Entry
 </exits>
 <items>

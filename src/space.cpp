@@ -24,7 +24,7 @@ is abstract and will not be instatiated.
 ** Input: Rerference to a file path
 ** Output: 
 *********************************************************************/
-Space::Space(std::string path)
+Space::Space(std::string path, std::unordered_map<std::string,std::string> &tempMap)
 {
 	this->visited = false;
 	this->looped = false;
@@ -34,6 +34,7 @@ Space::Space(std::string path)
 	std::ifstream File(path);
 
 	if(File){                      //Check if opens ok
+		this->spaceFilePath = path;
 		while (File.good ()){
 			std::string TempLine;                  //Temp line
             std::getline (File , TempLine);        //Get temp line
@@ -52,15 +53,16 @@ Space::Space(std::string path)
 				{
 					std::getline (File , TempLine);
 					if(TempLine.compare("</exits>")){
-						if (TempLine.compare("")) {
-							boost::algorithm::to_lower(TempLine);
-							this->exitMap[TempLine] = nullptr;
-							this->cardinals[count] = TempLine;
-							count++;
-						}
-						else {
-							this->cardinals[count] = "";
-							count++;
+						boost::algorithm::to_lower(TempLine);
+						std::vector<std::string> result; 
+						boost::split(result, TempLine, boost::is_any_of(",")); 
+					
+						for (int i = 0; i < result.size(); i++)
+						{
+
+							this->exitMap[result[i]] = nullptr;
+							tempMap[result[i]] = result[0];
+
 						}
 					}
 				}
@@ -91,14 +93,8 @@ Space::~Space()
 ** Input: a completed map with constructed spaces.
 ** Output: 
 *********************************************************************/
-void Space::linkExitMapPtr(std::unordered_map<std::string, Space*> gameMap){
-	for (std::unordered_map<std::string,Space*>::iterator it=this->exitMap.begin(); it!=this->exitMap.end(); ++it){
-		if(gameMap.count(it->first)) // check that the index space exists
-			it->second = gameMap.at(it->first);
-		else
-			std::cout << it->first << " does not exist." << std::endl;
-	}
-
+void Space::linkExitMapPtr(std::string exit, Space* exitptr){
+	this->exitMap[exit] = exitptr;
 }
 
 /*********************************************************************
@@ -108,6 +104,15 @@ void Space::linkExitMapPtr(std::unordered_map<std::string, Space*> gameMap){
 *********************************************************************/
 std::string Space::getSpaceName(){
     return this->spaceName;
+}
+
+/*********************************************************************
+** Description: Return file path
+** Input: 
+** Output: string
+*********************************************************************/
+std::string Space::getFilePath(){
+    return this->spaceFilePath;
 }
 
 /*********************************************************************
@@ -144,42 +149,6 @@ bool Space::getFilledLiquid() {
 *********************************************************************/
 bool Space::getFilledSolid() {
 	return this->filledSolid;
-}
-
-/*********************************************************************
-** Description: Return the north exit
-** Input: 
-** Output: string
-*********************************************************************/
-std::string Space::getNorthExit() {
-	return this->cardinals[0];
-}
-
-/*********************************************************************
-** Description: Return the west exit
-** Input: 
-** Output: string
-*********************************************************************/
-std::string Space::getWestExit() {
-	return this->cardinals[1];
-}
-
-/*********************************************************************
-** Description: Return the south exit
-** Input: 
-** Output: string
-*********************************************************************/
-std::string Space::getSouthExit() {
-	return this->cardinals[2];
-}
-
-/*********************************************************************
-** Description: Return the east exit
-** Input: 
-** Output: string
-*********************************************************************/
-std::string Space::getEastExit() {
-	return this->cardinals[3];
 }
 
 /*********************************************************************
@@ -225,14 +194,7 @@ void Space::setFilledSolid(bool b){
 *********************************************************************/
 std::string Space::findExits(){
 	std::string exitStr = "";
-	if (this->getNorthExit().compare(""))
-		exitStr += "Up: " + this->getNorthExit() + "\n";
-	if (this->getWestExit().compare(""))
-		exitStr += "Left: " + this->getWestExit() + "\n";
-	if (this->getSouthExit().compare(""))
-		exitStr += "Down: " + this->getSouthExit() + "\n";
-	if (this->getEastExit().compare(""))
-		exitStr += "Right: " + this->getEastExit();
-
+	for (std::unordered_map<std::string,Space*>::iterator it=this->exitMap.begin(); it!=this->exitMap.end(); ++it)
+		exitStr += it->first + " ";
 	return exitStr;
 }

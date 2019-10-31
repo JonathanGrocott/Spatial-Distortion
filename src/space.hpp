@@ -17,35 +17,32 @@
 class Space
 {
 	private:
-		enum {cards = 4};
 		bool visited;
 		bool looped;
 		bool filledLiquid;
 		bool filledSolid;
 		std::string spaceName;
-		std::string cardinals[cards];
+		std::string spaceFilePath;
+
 	public:
 		/** Default constructor */
-		Space(std::string path);
+		Space(std::string path, std::unordered_map<std::string,std::string> &tempMap);
 		/** Default destructor */
 		~Space();
 		
 		// function for linking default nullptr in exitMap
-		void linkExitMapPtr(std::unordered_map<std::string, Space*>);
+		void linkExitMapPtr(std::string, Space*);
 
 		// map of spaces exits
 		std::unordered_map<std::string, Space*>exitMap;
 
 		// get functions for private variables
-        	std::string getSpaceName();
+        std::string getSpaceName();
+		std::string getFilePath();
 		bool getVisited();
 		bool getLooped();
 		bool getFilledLiquid();
 		bool getFilledSolid();
-		std::string getNorthExit();
-		std::string getWestExit();
-		std::string getSouthExit();
-		std::string getEastExit();
 		std::string findExits();
 		//set functions for private variables
 		void setVisited(bool b);

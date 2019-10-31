@@ -8,9 +8,7 @@ Electronics Lab long
 Electronics Lab short
 </short_desc>
 <exits>
-
 Imaging Room
-
 Hallway
 </exits>
 <items>

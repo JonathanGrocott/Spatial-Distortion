@@ -8,8 +8,6 @@ Imaging Room long
 Imaging Room short
 </short_desc>
 <exits>
-
-
 Power Control Room
 Electronics Lab
 </exits>

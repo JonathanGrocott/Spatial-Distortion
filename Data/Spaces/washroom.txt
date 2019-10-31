@@ -8,10 +8,7 @@ Washroom long
 Washroom Short
 </short_desc>
 <exits>
-
-
 Hallway
-
 </exits>
 <items>
 </items>

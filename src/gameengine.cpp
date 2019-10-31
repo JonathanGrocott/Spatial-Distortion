@@ -16,6 +16,7 @@
 #include "player.hpp"
 
 #include <string>
+#include <utility>
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
@@ -38,8 +39,6 @@ GameEngine::GameEngine()
     //setup default world
 	//load map from files in Space directory
 	initializeGameMap();
-	//update nullptrs in space objects
-	linkExitPtrs();
 
 
 	//set player to starting place
@@ -67,16 +66,36 @@ void GameEngine::initializeGameMap(){
 	fs::path spaceDir("Data/Spaces/");
 
 	if(fs::is_directory(spaceDir)){
-
+		std::vector<std::pair<std::string,std::string>> tempVector;
+		std::vector<std::unordered_map<std::string,std::string>> tempAlias;
 		//populate the game map from files in the spaces directory
 		for(auto& entry : boost::make_iterator_range(fs::directory_iterator(spaceDir), {}))
 		{
 			//check that entry is a file
 			if(fs::is_regular_file(entry))
 			{
-				Space* temp = new Space(entry.path().string());
-				this->gameMap[temp->getSpaceName()] = temp;
+				//setup room name and path vector
+				std::string filename = entry.path().filename().string();
+				std::size_t pos = filename.find(".txt");
+				filename = filename.substr(0,pos);
+				tempVector.push_back(std::make_pair(entry.path().string(),filename));
+
 			}
+		}
+
+		//create space objects for each file and save aliases for linking
+		for(auto i=tempVector.begin(); i !=tempVector.end(); i++)
+		{
+			std::unordered_map<std::string,std::string> tempMap;
+			Space* temp = new Space(i->first, tempMap);
+			this->gameMap[temp->getSpaceName()] = temp;
+			tempAlias.push_back(tempMap);
+		}
+
+		//linking space exits and aliases
+		for(int i=0; i < tempVector.size(); i++)
+		{	
+			linkExitPtrs(tempVector[i].second,tempAlias[i]);
 		}
 	}
 	else{
@@ -90,12 +109,12 @@ void GameEngine::initializeGameMap(){
 ** Input: 
 ** Output:
 *********************************************************************/
-void GameEngine::linkExitPtrs(){
-	// iterate through spaces and pass gameMap to link exits to the
-	//
-	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it){
-		it->second->linkExitMapPtr(gameMap);
-	}
+void GameEngine::linkExitPtrs(std::string room,std::unordered_map<std::string,std::string> alias){
+	// iterate through any aliases and link pointers
+	for (auto i = alias.begin(); i != alias.end(); i++) 
+	{ 
+		this->gameMap.at(room)->linkExitMapPtr(i->first,this->gameMap.at(i->second));
+    } 
     
 }
 
@@ -182,15 +201,7 @@ bool GameEngine::readCommand(Space* cL, std::string command) {
 	if (splitComs.size() == 1) {
 		// If the user only enters a room name, try to move to that room
 		std::unordered_map<std::string, Space*>::iterator iter = this->gameMap.find(splitComs.at(0));
-		std::string card = this->commands->getCardinal(splitComs.at(0));
 		if (iter != this->gameMap.end()) {
-			Space* moving = this->commands->go(cL, splitComs.at(0));
-			if (moving)
-				this->gamePlayer.setCurrentLoc(moving);
-		}
-		// If the user only enters a cardinal direction, try to move in that direction
-		else if (card.compare("north") || card.compare("west") ||
-			 card.compare("south") || card.compare("east")) {
 			Space* moving = this->commands->go(cL, splitComs.at(0));
 			if (moving)
 				this->gamePlayer.setCurrentLoc(moving);

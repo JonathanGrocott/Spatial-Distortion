@@ -8,10 +8,8 @@ Entry long
 Entry short
 </short_desc>
 <exits>
-Hallway
+Hallway,east
 Prototype Room
-
-
 </exits>
 <items>
 </items>

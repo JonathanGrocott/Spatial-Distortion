@@ -9,9 +9,6 @@ Power Control Room short
 </short_desc>
 <exits>
 Imaging Room
-
-
-
 </exits>
 <items>
 </items>
