@@ -8,9 +8,9 @@ Hallway long
 Hallway short
 </short_desc>
 <exits>
-Entry
 Washroom
 Electronics Lab
+Entry
 Research Lab1
 </exits>
 <items>

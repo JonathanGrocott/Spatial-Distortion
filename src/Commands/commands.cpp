@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <iterator>
+#include <array>
 #include <boost/algorithm/string.hpp>
 #include "commands.hpp"
 
@@ -80,6 +81,41 @@ void Commands::alt(std::string command) {
 }
 
 
+/**********************************************
+ * string getCardinal(string command)
+ * Returns the string for cardinal direction
+ * to be used by the go function
+**********************************************/
+std::string Commands::getCardinal(std::string command) {
+  std::array<std::string, 4> north = {std::string("north"), "up", "forward", "forwards"};
+  std::array<std::string, 2> west = {std::string("west"), "left"};
+  std::array<std::string, 5> south = {std::string("south"), "down", "backward", "backwards", "back"};
+  std::array<std::string, 2> east = {std::string("east"), "right"};
+
+  for (int i = 0; i < north.size(); i++) {
+    if (!command.compare(north[i]))
+      return std::string("north");
+  }
+
+  for (int i = 0; i < west.size(); i++) {
+    if (!command.compare(west[i]))
+      return std::string("west");
+  }
+
+  for (int i = 0; i < south.size(); i++) {
+    if (!command.compare(south[i]))
+      return std::string("south");
+  }
+
+  for (int i = 0; i < east.size(); i++) {
+    if (!command.compare(east[i]))
+      return std::string("east");
+  }
+  
+  return std::string("");
+}
+
+
 /**************************************************
  * Space* go(Space *currentLocation, string room)
  * Checks for valid rooms and then moves the player
@@ -87,9 +123,24 @@ void Commands::alt(std::string command) {
 **************************************************/
 
 Space* Commands::go(Space *currLoc, std::string room) {
+  // Check for cardinal directions and move there if possible
+  std::string card;
+  card = getCardinal(room);
+  if (card.compare("")) {
+    if (!card.compare("north") && currLoc->getNorthExit().compare(""))
+      return currLoc->exitMap.at(currLoc->getNorthExit());
+    else if (!card.compare("west") && currLoc->getWestExit().compare(""))
+      return currLoc->exitMap.at(currLoc->getWestExit());
+    else if (!card.compare("south") && currLoc->getSouthExit().compare(""))
+      return currLoc->exitMap.at(currLoc->getSouthExit());
+    else if (!card.compare("east") && currLoc->getEastExit().compare(""))
+      return currLoc->exitMap.at(currLoc->getEastExit());
+    else
+      std::cout << room << " is currently not a valid direction!" << std::endl;
+  }
 
   // Check if room name is a valid choice and move player 
-  if (currLoc->exitMap.count(room) == 1) {
+  else if (currLoc->exitMap.count(room) == 1) {
     return currLoc->exitMap.at(room);
   }
   else {

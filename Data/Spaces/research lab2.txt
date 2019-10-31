@@ -8,6 +8,8 @@ Research Lab2 long
 Research Lab2 short
 </short_desc>
 <exits>
+Basement
+
 Research Lab1
 Hallway2
 </exits>

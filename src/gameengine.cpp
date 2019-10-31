@@ -141,15 +141,13 @@ void GameEngine::displayMenu() {
 	do {
 		std::cout << std::endl << std::endl;
 		std::cout << "............................................" << std::endl;
-		std::cout << "Current Location: ";
-		//currentLocation->displaySpaceInfo(currentLocation);
+		std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName();
 		uiDisplay(this->gamePlayer.getCurrentLoc());
 		std::cout << "............................................" << std::endl;
 		std::cout << "Possible Moves: " << std::endl;
-		//currentLocation->getLocationInfo(fp, lp, rp, bp);
 		exitDisplay(this->gamePlayer.getCurrentLoc());
 		std::cout << "............................................" << std::endl;
-        std::cout << "What next? ";
+        	std::cout << "What next? ";
 		std::getline(std::cin, choice);
 		quit = readCommand( this->gamePlayer.getCurrentLoc(), choice);
 	} while (!quit);
@@ -182,9 +180,22 @@ bool GameEngine::readCommand(Space* cL, std::string command) {
 
 	// If the command was only one word, handle the appropriate commands
 	if (splitComs.size() == 1) {
-		if (splitComs.at(0).compare("help") == 0 ||
-	            splitComs.at(0).compare("guide") == 0 ||
-		    splitComs.at(0).compare("manual") == 0) {
+		std::map<std::string, Space*>::iterator iter = this->gameMap.find(splitComs.at(0));
+		std::string card = this->commands->getCardinal(splitComs.at(0));
+		if (iter != this->gameMap.end()) {
+			Space* moving = this->commands->go(cL, splitComs.at(0));
+			if (moving)
+				this->gamePlayer.setCurrentLoc(moving);
+		}
+		else if (card.compare("north") || card.compare("west") ||
+			 card.compare("south") || card.compare("east")) {
+			Space* moving = this->commands->go(cL, splitComs.at(0));
+			if (moving)
+				this->gamePlayer.setCurrentLoc(moving);
+		}
+		else if (splitComs.at(0).compare("help") == 0 ||
+	        	 splitComs.at(0).compare("guide") == 0 ||
+		         splitComs.at(0).compare("manual") == 0) {
 			this->commands->help();
 		} 
 		else if (splitComs.at(0).compare("alt") == 0 ||
@@ -232,7 +243,11 @@ bool GameEngine::readCommand(Space* cL, std::string command) {
 			std::cout << "Invalid command. Type help for a list of commands." << std::endl << std::endl;
 			return false;
 		}
-	  }
+	}
+
+	else if (splitComs.size() == 3) {
+		
+	}
 
 	return false;
 }

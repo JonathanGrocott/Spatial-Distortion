@@ -17,17 +17,18 @@
 class Space
 {
 	private:
+		enum {cards = 4};
 		bool visited;
 		bool looped;
 		bool filledLiquid;
 		bool filledSolid;
 		std::string spaceName;
-
-    public:
-        /** Default constructor */
-        Space(std::string path);
-        /** Default destructor */
-        ~Space();
+		std::string cardinals[cards];
+	public:
+		/** Default constructor */
+		Space(std::string path);
+		/** Default destructor */
+		~Space();
 		
 		// function for linking default nullptr in exitMap
 		void linkExitMapPtr(std::map<std::string, Space*>);
@@ -36,11 +37,15 @@ class Space
 		std::map<std::string, Space*>exitMap;
 
 		// get functions for private variables
-        std::string getSpaceName();
+        	std::string getSpaceName();
 		bool getVisited();
 		bool getLooped();
 		bool getFilledLiquid();
 		bool getFilledSolid();
+		std::string getNorthExit();
+		std::string getWestExit();
+		std::string getSouthExit();
+		std::string getEastExit();
 		std::string findExits();
 		//set functions for private variables
 		void setVisited(bool b);

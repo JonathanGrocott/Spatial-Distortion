@@ -55,12 +55,12 @@ int main()
         if(option==1){//main game driver
             
             GameEngine* game = new GameEngine; //initialize new game with starting values
-            game->mainGameLoop;
+            game->mainGameLoop();
             delete game;    //deallocate memory
         }
         if(option==2){//Load saved game
             // GameEngine* game = new GameEngine(savedGame); // initial game with saved file
-            //game->mainGameLoop;
+            //game->mainGameLoop();
         }
 
         if(option==3){//Key to the game for grader

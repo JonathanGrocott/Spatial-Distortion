@@ -8,8 +8,10 @@ Power Control Room long
 Power Control Room short
 </short_desc>
 <exits>
-Electronics Lab
 Imaging Room
+
+
+
 </exits>
 <items>
 </items>
