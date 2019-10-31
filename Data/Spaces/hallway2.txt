@@ -9,6 +9,7 @@ Hallway2 short
 </short_desc>
 <exits>
 Office
+Research Lab2
 Robotics Lab
 Deck
 </exits>

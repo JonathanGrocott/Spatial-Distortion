@@ -8,7 +8,10 @@ Basement long
 Basement short
 </short_desc>
 <exits>
+
+Generator Room
 Research Lab2
+
 </exits>
 <items>
 </items>

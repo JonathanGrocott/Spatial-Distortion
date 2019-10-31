@@ -8,8 +8,10 @@ Imaging Room long
 Imaging Room short
 </short_desc>
 <exits>
-Electronics Lab
+
+
 Power Control Room
+Electronics Lab
 </exits>
 <items>
 </items>

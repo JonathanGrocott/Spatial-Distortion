@@ -10,6 +10,8 @@ Research Lab1 short
 <exits>
 Research Lab2
 Hallway
+
+
 </exits>
 <items>
 </items>

@@ -8,6 +8,9 @@ Generator Room long
 Generator Room short
 </short_desc>
 <exits>
+
+
+
 Basement
 </exits>
 <items>

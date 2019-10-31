@@ -30,7 +30,7 @@ Space::Space(std::string path)
 	this->looped = false;
 	this->filledLiquid = false;
 	this->filledSolid = false;
-
+	
 	std::ifstream File(path);
 
 	if(File){                      //Check if opens ok
@@ -47,12 +47,21 @@ Space::Space(std::string path)
 			
 			//setup exits map
 			if(!TempLine.compare("<exits>")){
+				int count = 0;
 				while(TempLine.compare("</exits>"))
 				{
 					std::getline (File , TempLine);
 					if(TempLine.compare("</exits>")){
-						boost::algorithm::to_lower(TempLine);
-						this->exitMap[TempLine] = nullptr;
+						if (TempLine.compare("")) {
+							boost::algorithm::to_lower(TempLine);
+							this->exitMap[TempLine] = nullptr;
+							this->cardinals[count] = TempLine;
+							count++;
+						}
+						else {
+							this->cardinals[count] = "";
+							count++;
+						}
 					}
 				}
 			}
@@ -138,6 +147,42 @@ bool Space::getFilledSolid() {
 }
 
 /*********************************************************************
+** Description: Return the north exit
+** Input: 
+** Output: string
+*********************************************************************/
+std::string Space::getNorthExit() {
+	return this->cardinals[0];
+}
+
+/*********************************************************************
+** Description: Return the west exit
+** Input: 
+** Output: string
+*********************************************************************/
+std::string Space::getWestExit() {
+	return this->cardinals[1];
+}
+
+/*********************************************************************
+** Description: Return the south exit
+** Input: 
+** Output: string
+*********************************************************************/
+std::string Space::getSouthExit() {
+	return this->cardinals[2];
+}
+
+/*********************************************************************
+** Description: Return the east exit
+** Input: 
+** Output: string
+*********************************************************************/
+std::string Space::getEastExit() {
+	return this->cardinals[3];
+}
+
+/*********************************************************************
 ** Descriptwater
 ** Input: bwater
 ** Output: water
@@ -180,8 +225,14 @@ void Space::setFilledSolid(bool b){
 *********************************************************************/
 std::string Space::findExits(){
 	std::string exitStr = "";
-	for (std::unordered_map<std::string,Space*>::iterator it=this->exitMap.begin(); it!=this->exitMap.end(); ++it)
-		exitStr += it->first + " ";
+	if (this->getNorthExit().compare(""))
+		exitStr += "Up: " + this->getNorthExit() + "\n";
+	if (this->getWestExit().compare(""))
+		exitStr += "Left: " + this->getWestExit() + "\n";
+	if (this->getSouthExit().compare(""))
+		exitStr += "Down: " + this->getSouthExit() + "\n";
+	if (this->getEastExit().compare(""))
+		exitStr += "Right: " + this->getEastExit();
 
 	return exitStr;
 }

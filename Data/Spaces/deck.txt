@@ -8,7 +8,10 @@ Deck long
 Deck short
 </short_desc>
 <exits>
+
 Hallway2
+
+
 </exits>
 <items>
 </items>
