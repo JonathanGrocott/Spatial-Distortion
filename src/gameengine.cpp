@@ -12,7 +12,7 @@
 #include "boost/range/iterator_range.hpp"
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
-#include <regex>
+#include <boost/algorithm/string/trim_all.hpp>
 
 #include "ui.hpp"
 #include "player.hpp"
@@ -280,8 +280,7 @@ bool GameEngine::parser(std::string &original, std::string tofind){
 	if(original.find(tofind)!=std::string::npos)
 	{
 		original.erase(original.find(tofind),tofind.length());
-		std::regex twoSpaces("  ");
-		original = std::regex_replace(original,twoSpaces," ");
+		boost::algorithm::trim_all(original);
 
 		return true;
 	}
