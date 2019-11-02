@@ -15,6 +15,7 @@
 #include "Commands/commands.hpp"
 #include "player.hpp"
 #include <unordered_map>
+#include "item.hpp"
 
 #include <string>
 

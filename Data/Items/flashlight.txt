@@ -1,0 +1,7 @@
+<name>
+flashlight
+</name>
+<desc>
+Lights up any room in a jiffy.
+</desc>
+
