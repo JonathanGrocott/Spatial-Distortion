@@ -167,8 +167,11 @@ void GameEngine::setGameState(bool b){
 void GameEngine::displayMenu() {
 		std::cout << std::endl << std::endl;
 		std::cout << "............................................" << std::endl;
-		std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName();
+		std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
 		uiDisplay(this->gamePlayer.getCurrentLoc());
+		std::cout << "............................................" << std::endl;
+		std::cout << "Objects in Room: " << std::endl;
+		objectsDisp(this->gamePlayer.getCurrentLoc());                
 		std::cout << "............................................" << std::endl;
 		std::cout << "Possible Moves: " << std::endl;
 		exitDisplay(this->gamePlayer.getCurrentLoc());
@@ -190,27 +193,43 @@ bool GameEngine::readCommand() {
 	// Convert command to lowercase
 	boost::algorithm::to_lower(input);
 	std::vector<std::string> listLocations;
-	std::vector<std::string> listObjects;
+	std::vector<std::string> listRoomObjects;
+	std::vector<std::string> listInventory;
 	std::vector<std::string> listCommands;
-
+	
 	//find all locations in input
 	for(auto it = this->gamePlayer.getCurrentLoc()->exitMap.begin(); it!= this->gamePlayer.getCurrentLoc()->exitMap.end(); it++)
 	{
 		if(parser(input, it->first))
 		{
-			std::cout << it->first << std::endl;
+			//std::cout << it->first << std::endl;
 			listLocations.push_back(it->first);
 		}
 			
 	}
+
 	//find commands in input
 	for(auto it = commands->commandList.begin(); it != commands->commandList.end(); it++)
 	{
 		if(parser(input,*it))
 			listCommands.push_back(*it);
 	}
-	//find objects
 
+	//find room objects in input
+	for(auto & obj : this->gamePlayer.getCurrentLoc()->getSpaceObjects()) 
+	{
+		if(parser(input, obj))
+			listRoomObjects.push_back(obj);
+	}
+
+	//find objects from inventory in input
+	for(auto & obj : this->gamePlayer.getInventory()) 
+	{
+		if(parser(input, obj))
+			listInventory.push_back(obj);
+	}
+	
+	
 	//handles a location by moving
 	if(listLocations.size() == 1){
 		Space* move = this->commands->go(this->gamePlayer.getCurrentLoc(),listLocations[0]);
@@ -225,6 +244,32 @@ bool GameEngine::readCommand() {
 		if(listCommands[0]=="quit"){
 			this->setGameState(false);
 			return true;
+		}
+		else if(listCommands[0]=="help"){
+			this->commands->help();
+			return true;
+		}
+		else if(listCommands[0]=="inventory"){
+			this->commands->inventory(this->gamePlayer);
+			return true;
+		}
+		else if(listCommands[0]=="take") {
+			if (listRoomObjects.size() != 0) {
+				this->gamePlayer.getCurrentLoc()->removeObject(listRoomObjects[0]);
+				this->gamePlayer.addInvent(listRoomObjects[0]);
+				std::cout << listRoomObjects[0] << " added to inventory." << std::endl;
+				return true;
+			}
+			else
+				std::cout << "This item is not an object in the room!" << std::endl;
+		}
+		else if(listCommands[0]=="use") {
+			if(listInventory.size() != 0) {
+				this->gamePlayer.removeInvent(listInventory[0]);
+				return true;
+			}
+			else
+				std::cout << "This item is not in your inventory!" << std::endl;
 		}
 	}
 

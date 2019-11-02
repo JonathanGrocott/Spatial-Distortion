@@ -21,6 +21,7 @@ class Space
 		bool looped;
 		bool filledLiquid;
 		bool filledSolid;
+		std::vector<std::string> objects;
 		std::string spaceName;
 		std::string spaceFilePath;
 
@@ -40,6 +41,7 @@ class Space
         std::string getSpaceName();
 		std::string getFilePath();
 		bool getVisited();
+		std::vector<std::string> getSpaceObjects();
 		bool getLooped();
 		bool getFilledLiquid();
 		bool getFilledSolid();
@@ -49,6 +51,8 @@ class Space
 		void setLooped(bool b);
 		void setFilledLiquid(bool b);
 		void setFilledSolid(bool b);
+		void addObject(std::string obj);
+		void removeObject(std::string obj);
 };
 
 #endif // SPACE_HPP

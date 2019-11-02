@@ -11,10 +11,12 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
 #include "space.hpp"
 
 void uiDisplay(Space* room);
 void exitDisplay(Space* temp);
+void objectsDisp(Space* room);
 void clearScreen();
 
 #endif

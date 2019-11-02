@@ -9,7 +9,7 @@
 
 // Constructor to instantiate commands object
 Commands::Commands(){
-  this->commandList = {"help", "alt", "go", "look", "exit", "savegame",
+  this->commandList = {"help", "go", "look", "exit", "savegame",
                         "loadgame", "take", "inventory", "use", "combine", "quit"};
 }
 
@@ -38,14 +38,14 @@ void Commands::help() {
  * command wordings for the main commands.
 **************************************************/
 
-void Commands::alt() {
+/*void Commands::alt() {
   std::ifstream read("Data/Commands/alt.txt");
   for (std::string line; std::getline(read, line);) {
     std::cout << line << std::endl;
   }
   std::cout << std::endl;
   read.close();
-}
+}*/
 
 /****************************************************
  * void alt(string command)
@@ -53,7 +53,7 @@ void Commands::alt() {
  * alternate information about the specific command.
 ****************************************************/
 
-void Commands::alt(std::string command) {
+/*void Commands::alt(std::string command) {
   bool altFound;
   std::ifstream read("Data/Commands/alt.txt");
  
@@ -78,7 +78,7 @@ void Commands::alt(std::string command) {
 
   read.close();
 }
-
+*/
 /**************************************************
  * Space* go(Space *currentLocation, string room)
  * Checks for valid rooms and then moves the player
@@ -99,37 +99,38 @@ Space* Commands::go(Space *currLoc, std::string room) {
 
 /***************************************************
  * void look(Space *currentLocation)
- * Gives the user the short description of the room
+ * Gives the user the long description of the room
 ***************************************************/
 
 void Commands::look(Space *currLoc) {
-  //const std::string spaceName = currLoc->getSpaceName();
-  //const std::string shortDesc = currLoc->getShortDesc();
-  //std::cout << "Current Location: " << spaceName << std::endl;
- // std::cout << shortDesc << std::endl << std::endl;
+
 }
 
 /***************************************************
- * void look(Space *currentLocation, string specifier)
- * Used to specify if the user wants the longer
- * description of a room (or short if they want
- * to type more).
+ * void lookAt(Space *currentLocation, string object)
+ * Used to look at specific objects in the game
+ * as well as inventory items. 
 ***************************************************/
 
-void Commands::look(Space *currLoc, std::string specifier) {
-  const std::string spaceName = currLoc->getSpaceName();
-  std::cout << "Current Location: " << spaceName << std::endl;
+void Commands::lookAt(Space *currLoc, std::string object) {
 
-  if (specifier.compare("long") == 0) {
-    //const std::string longDesc = currLoc->getLongDesc();
-    //std::cout << longDesc << std::endl << std::endl;
-  } 
-  else if (specifier.compare("short") == 0) {
-    //const std::string shortDesc = currLoc->getShortDesc();
-    //std::cout << shortDesc << std::endl << std::endl;;
-  } 
-  else {
-    //TODO: Add inventory looking
-  } 
 
 }
+
+/***************************************************
+ * void inventory(player player)
+ * Prints out the user's entire inventory.
+***************************************************/
+
+void Commands::inventory(player p) {
+  if (p.getInventory().size() != 0) {
+    std::cout << "Inventory: " << std::endl;
+  for (auto & item : p.getInventory())
+    std::cout << item << " ";
+  std::cout << std::endl;
+  }
+  else
+    std::cout << "Your inventory is empty!" << std::endl;
+}
+
+

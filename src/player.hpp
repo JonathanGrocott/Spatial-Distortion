@@ -9,21 +9,26 @@
 #define PLAYER_HPP
 
 #include <string>
+#include <vector>
 #include "space.hpp"
 
 class player
 {
 	private:
-        Space* currentLoc;
-
-    public:
-        /** Default constructor */
-        player();
-        /** Default destructor */
-        ~player();
+        	Space* currentLoc;
+		std::vector<std::string> inventory;
+	public:
+        	/** Default constructor */
+        	player();
+        	/** Default destructor */
+        	~player();
         
-        Space* getCurrentLoc();
-        void setCurrentLoc(Space* loc);
+        	Space* getCurrentLoc();
+        	void setCurrentLoc(Space* loc);
+		std::vector<std::string> getInventory();
+		void addInvent(std::string item);
+		void removeInvent(std::string item);
+		void useItem(std::string item);
 };
 
 

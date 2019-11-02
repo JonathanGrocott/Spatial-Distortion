@@ -7,6 +7,7 @@
 
 #include "ui.hpp"
 #include <string>
+#include <vector>
 #include <iostream>
 #include "space.hpp"
 #include <map>
@@ -52,6 +53,20 @@ void exitDisplay(Space* temp){
 
     std::cout << temp->findExits() << std::endl;
 }
+
+/*********************************************************************
+** Description: display objects in the room
+** Input: Space pointer
+** Output: none.
+*********************************************************************/
+void objectsDisp(Space* room){
+    for (auto & obj : room->getSpaceObjects()) {
+        std::cout << obj << " ";
+    }
+    std::cout << std::endl;
+}
+
+
 
 /*********************************************************************
 ** Description: helper function that clears the screen
