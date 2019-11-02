@@ -12,6 +12,7 @@ Hallway,east
 Prototype Room
 </exits>
 <items>
+flashlight
 </items>
 <special>
 </special>
