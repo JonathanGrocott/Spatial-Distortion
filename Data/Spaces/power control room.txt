@@ -10,7 +10,5 @@ Power Control Room short
 <exits>
 Imaging Room
 </exits>
-<items>
-</items>
 <special>
 </special>

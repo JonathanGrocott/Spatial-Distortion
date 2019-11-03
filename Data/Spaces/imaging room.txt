@@ -11,7 +11,5 @@ Imaging Room short
 Power Control Room
 Electronics Lab
 </exits>
-<items>
-</items>
 <special>
 </special>

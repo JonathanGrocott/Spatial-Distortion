@@ -11,7 +11,5 @@ Research Lab1 short
 Research Lab2
 Hallway
 </exits>
-<items>
-</items>
 <special>
 </special>

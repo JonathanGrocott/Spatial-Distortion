@@ -11,7 +11,5 @@ Basement short
 Generator Room
 Research Lab2
 </exits>
-<items>
-</items>
 <special>
 </special>

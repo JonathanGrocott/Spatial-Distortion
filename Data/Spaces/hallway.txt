@@ -13,7 +13,5 @@ Electronics Lab
 Entry
 Research Lab1
 </exits>
-<items>
-</items>
 <special>
 </special>

@@ -10,7 +10,5 @@ Robotics Lab short
 <exits>
 Hallway2
 </exits>
-<items>
-</items>
 <special>
 </special>

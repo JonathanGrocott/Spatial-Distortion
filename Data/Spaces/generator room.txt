@@ -10,7 +10,5 @@ Generator Room short
 <exits>
 Basement
 </exits>
-<items>
-</items>
 <special>
 </special>

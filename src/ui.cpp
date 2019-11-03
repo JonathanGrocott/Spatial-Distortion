@@ -67,7 +67,6 @@ void objectsDisp(Space* room, std::unordered_map<std::string, Item*> items){
 			}
 		}
 	}
-	std::cout << std::endl;
 }
 
 

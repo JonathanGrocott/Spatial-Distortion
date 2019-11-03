@@ -1,5 +1,5 @@
 <name>
-flashlight
+bucket
 </name>
 <breakable>
 false
@@ -8,8 +8,8 @@ false
 true
 </takeable>
 <desc>
-Lights up any room in a jiffy.
+For all your liquid storing needs!
 </desc>
 <found_in>
-entry
+washroom
 </found_in>

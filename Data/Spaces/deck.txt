@@ -10,7 +10,5 @@ Deck short
 <exits>
 Hallway2
 </exits>
-<items>
-</items>
 <special>
 </special>

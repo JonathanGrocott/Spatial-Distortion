@@ -12,7 +12,5 @@ Basement
 Research Lab1
 Hallway2
 </exits>
-<items>
-</items>
 <special>
 </special>

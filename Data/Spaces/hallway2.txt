@@ -13,7 +13,5 @@ Research Lab2
 Robotics Lab
 Deck
 </exits>
-<items>
-</items>
 <special>
 </special>

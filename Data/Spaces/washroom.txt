@@ -10,7 +10,5 @@ Washroom Short
 <exits>
 Hallway
 </exits>
-<items>
-</items>
 <special>
 </special>

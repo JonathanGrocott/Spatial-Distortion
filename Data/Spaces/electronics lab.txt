@@ -11,7 +11,5 @@ Electronics Lab short
 Imaging Room
 Hallway
 </exits>
-<items>
-</items>
 <special>
 </special>

@@ -10,7 +10,5 @@ Protype Room Short
 <exits>
 Entry
 </exits>
-<items>
-</items>
 <special>
 </special>

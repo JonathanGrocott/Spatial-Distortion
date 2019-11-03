@@ -108,14 +108,33 @@ void Commands::look(Space *currLoc) {
 
 }
 
-/***************************************************
- * void lookAt(Space *currentLocation, string object)
+/******************************************************************************
+ * void lookAt(Space *currentLocation, vector<Item*> inventory,
+ * unordered_map<std::string, Item*> mapItems, string object)
  * Used to look at specific objects in the game
  * as well as inventory items. 
-***************************************************/
+******************************************************************************/
 
-void Commands::lookAt(Space *currLoc, std::string object) {
-
+void Commands::lookAt(Space *cL, std::vector<Item*> inv, std::unordered_map<std::string, Item*> items, std::string obj) {
+	auto it = items.find(obj);
+	// Look at room objects
+	if (it != items.end()) {
+		if (!cL->getSpaceName().compare(it->second->getBegLoc()->getSpaceName())) {
+			if (!it->second->isTaken()) {
+				std::cout << it->second->getItemDesc() << std::endl;
+			}
+		}
+	}
+	// Look at inventory objects
+	if (inv.size() != 0) {
+		for (auto item : inv) {
+			if (!item->getItemName().compare(obj)) {
+				std::cout << item->getItemDesc() << std::endl;
+			}
+		}
+	}
+	else
+		std::cout << obj << " cannot be looked at." << std::endl;
 
 }
 

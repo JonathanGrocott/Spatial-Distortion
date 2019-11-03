@@ -1,6 +1,5 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
-#include <vector>
 #include "../space.hpp"
 #include "../player.hpp"
 #include "../item.hpp"
@@ -16,7 +15,9 @@ class Commands {
     //void alt(std::string command); // Shows alternate wording for specified command
     Space* go(Space *currLoc, std::string room); // Moves user to another room
     void look(Space *currLoc); // Gives a long description of the room 
-    void lookAt(Space *currLoc, std::string object); // Gives a description of an inventory item or object
+
+    // Gives a description of an inventory item or room object
+    void lookAt(Space*, std::vector<Item*>, std::unordered_map<std::string, Item*>, std::string); 
     void inventory(std::vector<Item*>); // Displays entire inventory
     //std::string take(Space *currLoc, std::string item); // Takes an item from a room
 };
