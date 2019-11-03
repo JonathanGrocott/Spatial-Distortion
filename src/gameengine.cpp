@@ -38,10 +38,9 @@ GameEngine::GameEngine()
 	//initialize command object
 	this->commands = new Commands;
 
-    //setup default world
+	//setup default world
 	//load map from files in Space directory
 	initializeGameMap();
-	linkObjPtrs();
 
 	//set player to starting place
 	this->gamePlayer.setCurrentLoc(this->gameMap.at("entry"));
@@ -111,8 +110,8 @@ void GameEngine::initializeGameMap(){
 		for (auto& entry : boost::make_iterator_range(fs::directory_iterator(itemDir), {})) {
 			//check that entry is a file
 			if (fs::is_regular_file(entry)) {
-				Item* temp = new Item(entry.path().string());
-				this->items[temp->getItemName()] = temp;
+				Item* temp = new Item(entry.path().string(), this->gameMap);
+				this->itemsList[temp->getItemName()] = temp;
 			}
 		}
 	}
@@ -134,20 +133,6 @@ void GameEngine::linkExitPtrs(std::string room,std::unordered_map<std::string,st
     } 
     
 }
-
-/*********************************************************************
-** Description: Helper function to link object pointers to the
-** constructed room pointers
-** Input: 
-** Output:
-*********************************************************************/
-void GameEngine::linkObjPtrs(){
-	for (auto i = this->items.begin(); i != this->items.end(); i++) 
-	{ 
-		i->second->linkItemToRoom(gameMap);
-	} 
-}
-
 
 /*********************************************************************
 ** Description: Main game loop
@@ -200,7 +185,7 @@ void GameEngine::displayMenu() {
 		uiDisplay(this->gamePlayer.getCurrentLoc());
 		std::cout << "............................................" << std::endl;
 		std::cout << "Objects in Room: " << std::endl;
-		objectsDisp(this->gamePlayer.getCurrentLoc(), this->items);                
+		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsList);                
 		std::cout << "............................................" << std::endl;
 		std::cout << "Possible Moves: " << std::endl;
 		exitDisplay(this->gamePlayer.getCurrentLoc());
@@ -245,7 +230,7 @@ bool GameEngine::readCommand() {
 	}
 	
 	//find objects in the input
-	for(auto it = this->items.begin(); it != this->items.end(); it++)
+	for(auto it = this->itemsList.begin(); it != this->itemsList.end(); it++)
 	{
 		if(parser(input, it->first)) {
 			if (!it->second->getBegLoc()->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()) &&

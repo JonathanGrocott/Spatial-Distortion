@@ -145,10 +145,10 @@ void Commands::lookAt(Space *cL, std::vector<Item*> inv, std::unordered_map<std:
 
 void Commands::inventory(std::vector<Item*> items) {
   if (items.size() != 0) {
-    std::cout << "Inventory: " << std::endl;
+    std::cout << "Inventory" << std::endl;
+    std::cout << "----------" << std::endl;
     for (auto & item : items)
-      std::cout << item->getItemName() << " ";
-    std::cout << std::endl;
+      std::cout << item->getItemName() << std::endl;
   }
   else
     std::cout << "Your inventory is empty!" << std::endl;

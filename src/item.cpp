@@ -1,7 +1,7 @@
 #include "item.hpp"
 
 // Item constructor
-Item::Item(std::string path) {
+Item::Item(std::string path, std::unordered_map<std::string, Space*> gameMap) {
 	this->taken = false;
 	std::ifstream File(path);
 	if (File) {
@@ -31,7 +31,6 @@ Item::Item(std::string path) {
 				else
 					this->takeable = false;
 			}
-
 			if (!tempLine.compare("<desc>")) {
 				std::getline(File, tempLine);
 				boost::algorithm::to_lower(tempLine);
@@ -44,16 +43,6 @@ Item::Item(std::string path) {
 			}
 		}
 	}
-}
-
-// Item destructor
-Item::~Item() {
-	for (auto it = this->foundAt.begin(); it != this->foundAt.end(); it++)
-		it->second = nullptr;
-} 
-
-// Links the item to the room pointers
-void Item::linkItemToRoom(std::unordered_map<std::string, Space*> gameMap) {
 	for (auto it = this->foundAt.begin(); it != this->foundAt.end(); it++) {
 		// Set the beginning location and current location
 		if (gameMap.count(it->first)) {
@@ -63,7 +52,14 @@ void Item::linkItemToRoom(std::unordered_map<std::string, Space*> gameMap) {
 		else
 			std::cout << it->first << " does not exist." << std::endl;
 	}
+
 }
+
+// Item destructor
+Item::~Item() {
+	for (auto it = this->foundAt.begin(); it != this->foundAt.end(); it++)
+		it->second = nullptr;
+} 
 
 // Returns the item name
 std::string Item::getItemName() {

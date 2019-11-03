@@ -24,10 +24,9 @@ class GameEngine
 {
 	private:
 		std::unordered_map<std::string, Space*> gameMap; //collection of pointers for all spaces in the game
-		std::unordered_map<std::string, Item*> items; //collection of pointers for all objects in the game
+		std::unordered_map<std::string, Item*> itemsList; //collection of pointers for all objects in the game
 		void initializeGameMap();
 		void linkExitPtrs(std::string room, std::unordered_map<std::string,std::string> alias);
-		void linkObjPtrs();
 		bool gameState;
 		player gamePlayer;
 		Commands* commands;

@@ -19,13 +19,12 @@ class Item {
 		Space* currentLoc;
 		std::unordered_map<std::string, Space*> foundAt;	
 	public:
-		Item(std::string path);
+		Item(std::string path, std::unordered_map<std::string, Space*>);
 		~Item();
 		std::string getItemName();
 		std::string getItemDesc();
 		Space* getCurrentLoc();
 		Space* getBegLoc(); // Beginning Location
-		void linkItemToRoom(std::unordered_map<std::string, Space*>);
 		bool isTaken();
 		bool isBreakable();
 		bool isTakeable();
