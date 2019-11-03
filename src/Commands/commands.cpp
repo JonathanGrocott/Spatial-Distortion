@@ -15,7 +15,9 @@ Commands::Commands(){
 
 
 // Destructor to destroy commands object
-Commands::~Commands(){}
+Commands::~Commands() {
+  this->commandList.clear();
+}
 
 /***************************************************
  * void help()
@@ -122,12 +124,12 @@ void Commands::lookAt(Space *currLoc, std::string object) {
  * Prints out the user's entire inventory.
 ***************************************************/
 
-void Commands::inventory(player p) {
-  if (p.getInventory().size() != 0) {
+void Commands::inventory(std::vector<Item*> items) {
+  if (items.size() != 0) {
     std::cout << "Inventory: " << std::endl;
-  for (auto & item : p.getInventory())
-    std::cout << item << " ";
-  std::cout << std::endl;
+    for (auto & item : items)
+      std::cout << item->getItemName() << " ";
+    std::cout << std::endl;
   }
   else
     std::cout << "Your inventory is empty!" << std::endl;

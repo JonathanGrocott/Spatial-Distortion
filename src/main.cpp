@@ -4,13 +4,13 @@
 ** Date: 10/15/19
 ** Description: Main for Spatial Distortion Game.
 *********************************************************************/
-#include"gameengine.hpp"
+#include "gameengine.hpp"
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <cstdlib>
-#include<fstream>
+#include <fstream>
 
 
 int main()

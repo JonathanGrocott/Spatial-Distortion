@@ -31,14 +31,13 @@ Space::Space(std::string path, std::unordered_map<std::string,std::string> &temp
 	this->looped = false;
 	this->filledLiquid = false;
 	this->filledSolid = false;
-	this->objects = {};
 	std::ifstream File(path);
 
 	if(File){                      //Check if opens ok
 		this->spaceFilePath = path;
 		while (File.good ()){
 			std::string TempLine;                  //Temp line
-            std::getline (File , TempLine);        //Get temp line
+	                std::getline (File , TempLine);        //Get temp line
 			
 			//setup the space name
 			if(!TempLine.compare("<name>")){
@@ -67,15 +66,6 @@ Space::Space(std::string path, std::unordered_map<std::string,std::string> &temp
 					}
 				}
 			}
-			if(!TempLine.compare("<items>")) {
-		 		while(TempLine.compare("</items>")) {
-					std::getline (File , TempLine);
-					if(TempLine.compare("</items>")) {
-						boost::algorithm::to_lower(TempLine);
-						this->objects.push_back(TempLine);
-					}
-				}	
-			}
         }
     }
     else{ //Return error
@@ -94,7 +84,6 @@ Space::~Space()
 	for (std::unordered_map<std::string,Space*>::iterator it=this->exitMap.begin(); it!=this->exitMap.end(); ++it){
 		it->second = nullptr;
 	}
-	this->objects.clear();
 }
 
 /*********************************************************************
@@ -114,15 +103,6 @@ void Space::linkExitMapPtr(std::string exit, Space* exitptr){
 *********************************************************************/
 std::string Space::getSpaceName(){
     return this->spaceName;
-}
-
-/*********************************************************************
-** Description: Return space objects
-** Input: 
-** Output: vector
-*********************************************************************/
-std::vector<std::string> Space::getSpaceObjects(){
-    return this->objects;
 }
 
 /*********************************************************************
@@ -205,29 +185,6 @@ void Space::setFilledLiquid(bool b){
 void Space::setFilledSolid(bool b){
 	this->filledSolid = b;
 }
-
-/*********************************************************************
-** Description: Add room objects 
-** Input: string
-** Output: 
-*********************************************************************/
-void Space::addObject(std::string obj){
-	this->objects.push_back(obj);
-}
-
-/*********************************************************************
-** Description: Remove room objects
-** Input: string
-** Output: 
-*********************************************************************/
-void Space::removeObject(std::string obj){
-	std::vector<std::string>::iterator it = std::find(this->objects.begin(),
-							  this->objects.end(),
-							  obj);
-	if (it != this->objects.end())
-		this->objects.erase(it);
-}
-
 
 /*********************************************************************
 ** Description: Generate a string of exits for space

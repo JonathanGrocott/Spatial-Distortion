@@ -13,7 +13,6 @@
 #include <string>
 #include <unordered_map>
 
-
 class Space
 {
 	private:
@@ -21,7 +20,6 @@ class Space
 		bool looped;
 		bool filledLiquid;
 		bool filledSolid;
-		std::vector<std::string> objects;
 		std::string spaceName;
 		std::string spaceFilePath;
 
@@ -35,13 +33,12 @@ class Space
 		void linkExitMapPtr(std::string, Space*);
 
 		// map of spaces exits
-		std::unordered_map<std::string, Space*>exitMap;
-
+		std::unordered_map<std::string, Space*> exitMap;
+		
 		// get functions for private variables
-        std::string getSpaceName();
+        	std::string getSpaceName();
 		std::string getFilePath();
 		bool getVisited();
-		std::vector<std::string> getSpaceObjects();
 		bool getLooped();
 		bool getFilledLiquid();
 		bool getFilledSolid();
@@ -51,8 +48,6 @@ class Space
 		void setLooped(bool b);
 		void setFilledLiquid(bool b);
 		void setFilledSolid(bool b);
-		void addObject(std::string obj);
-		void removeObject(std::string obj);
 };
 
 #endif // SPACE_HPP

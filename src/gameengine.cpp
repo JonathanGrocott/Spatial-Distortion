@@ -41,7 +41,7 @@ GameEngine::GameEngine()
     //setup default world
 	//load map from files in Space directory
 	initializeGameMap();
-
+	linkObjPtrs();
 
 	//set player to starting place
 	this->gamePlayer.setCurrentLoc(this->gameMap.at("entry"));
@@ -103,12 +103,27 @@ void GameEngine::initializeGameMap(){
 	else{
 		std::cout << "Error in Space Directory" << std::endl;
 	}
+
+	fs::path itemDir("Data/Items/");
+
+	if (fs::is_directory(itemDir)) {
+		// populate the game map from files in the items directory
+		for (auto& entry : boost::make_iterator_range(fs::directory_iterator(itemDir), {})) {
+			//check that entry is a file
+			if (fs::is_regular_file(entry)) {
+				Item* temp = new Item(entry.path().string());
+				this->items[temp->getItemName()] = temp;
+			}
+		}
+	}
+	else
+		std::cout << "Error in Item Directory" << std::endl;
 }
 
 /*********************************************************************
-** Description: Helper function to link exit pointers to the contructed
-** room pointers
-** Input: 
+** Description: Helper function to link exit pointers to the
+** constructed room pointers
+** Input: string, unordered_map<string, string>
 ** Output:
 *********************************************************************/
 void GameEngine::linkExitPtrs(std::string room,std::unordered_map<std::string,std::string> alias){
@@ -119,6 +134,20 @@ void GameEngine::linkExitPtrs(std::string room,std::unordered_map<std::string,st
     } 
     
 }
+
+/*********************************************************************
+** Description: Helper function to link object pointers to the
+** constructed room pointers
+** Input: 
+** Output:
+*********************************************************************/
+void GameEngine::linkObjPtrs(){
+	for (auto i = this->items.begin(); i != this->items.end(); i++) 
+	{ 
+		i->second->linkItemToRoom(gameMap);
+	} 
+}
+
 
 /*********************************************************************
 ** Description: Main game loop
@@ -171,7 +200,7 @@ void GameEngine::displayMenu() {
 		uiDisplay(this->gamePlayer.getCurrentLoc());
 		std::cout << "............................................" << std::endl;
 		std::cout << "Objects in Room: " << std::endl;
-		objectsDisp(this->gamePlayer.getCurrentLoc());                
+		objectsDisp(this->gamePlayer.getCurrentLoc(), this->items);                
 		std::cout << "............................................" << std::endl;
 		std::cout << "Possible Moves: " << std::endl;
 		exitDisplay(this->gamePlayer.getCurrentLoc());
@@ -193,8 +222,8 @@ bool GameEngine::readCommand() {
 	// Convert command to lowercase
 	boost::algorithm::to_lower(input);
 	std::vector<std::string> listLocations;
-	std::vector<std::string> listRoomObjects;
-	std::vector<std::string> listInventory;
+	std::vector<Item*> listRoomObjects;
+	std::vector<Item*> listInventory;
 	std::vector<std::string> listCommands;
 	
 	//find all locations in input
@@ -207,29 +236,31 @@ bool GameEngine::readCommand() {
 		}
 			
 	}
-
+	
 	//find commands in input
 	for(auto it = commands->commandList.begin(); it != commands->commandList.end(); it++)
 	{
 		if(parser(input,*it))
 			listCommands.push_back(*it);
 	}
-
-	//find room objects in input
-	for(auto & obj : this->gamePlayer.getCurrentLoc()->getSpaceObjects()) 
+	
+	//find objects in the input
+	for(auto it = this->items.begin(); it != this->items.end(); it++)
 	{
-		if(parser(input, obj))
-			listRoomObjects.push_back(obj);
-	}
-
-	//find objects from inventory in input
-	for(auto & obj : this->gamePlayer.getInventory()) 
-	{
-		if(parser(input, obj))
-			listInventory.push_back(obj);
+		if(parser(input, it->first)) {
+			if (!it->second->getBegLoc()->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()) &&
+			    !it->second->isTaken())
+				listRoomObjects.push_back(it->second);
+		}
 	}
 	
-	
+	//find inventory items in the input
+	for(auto inv : this->gamePlayer.getInventory())
+	{
+		if(parser(input, inv->getItemName()))
+			listInventory.push_back(inv);
+	}
+
 	//handles a location by moving
 	if(listLocations.size() == 1){
 		Space* move = this->commands->go(this->gamePlayer.getCurrentLoc(),listLocations[0]);
@@ -250,27 +281,32 @@ bool GameEngine::readCommand() {
 			return true;
 		}
 		else if(listCommands[0]=="inventory"){
-			this->commands->inventory(this->gamePlayer);
+			this->commands->inventory(this->gamePlayer.getInventory());
 			return true;
 		}
 		else if(listCommands[0]=="take") {
-			if (listRoomObjects.size() != 0) {
-				this->gamePlayer.getCurrentLoc()->removeObject(listRoomObjects[0]);
-				this->gamePlayer.addInvent(listRoomObjects[0]);
-				std::cout << listRoomObjects[0] << " added to inventory." << std::endl;
-				return true;
+			if (listRoomObjects.size() > 0) {
+				if (listRoomObjects[0]->isTakeable()) {
+					this->gamePlayer.addInvent(listRoomObjects[0]);
+					listRoomObjects[0]->setTaken(true);
+					std::cout << listRoomObjects[0]->getItemName() << " added to inventory." << std::endl;
+					return true;
+				}
+				else {
+					std::cout << listRoomObjects[0]->getItemName() << " is not valid to take." << std::endl;
+				}
 			}
 			else
 				std::cout << "This item is not an object in the room!" << std::endl;
 		}
-		else if(listCommands[0]=="use") {
+		/*else if(listCommands[0]=="use") {
 			if(listInventory.size() != 0) {
 				this->gamePlayer.removeInvent(listInventory[0]);
 				return true;
 			}
 			else
 				std::cout << "This item is not in your inventory!" << std::endl;
-		}
+		}*/
 	}
 
 	return false;

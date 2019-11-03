@@ -10,6 +10,7 @@
 #include <vector>
 #include <algorithm>
 #include "ui.hpp"
+#include "item.hpp"
 
 /*********************************************************************
 ** Description: Constructor for a player object
@@ -41,12 +42,15 @@ Space* player::getCurrentLoc(){
 }
 
 /*********************************************************************
-** Description: set current player location
+** Description: set current player location and update inventory
+		items current locations
 ** Input: Space pointer
 ** Output: 
 *********************************************************************/
 void player::setCurrentLoc(Space* loc){
    this->currentLoc = loc;
+   for (auto & item : inventory)
+	item->setCurrentLoc(loc);	
 }
 
 /*********************************************************************
@@ -54,7 +58,7 @@ void player::setCurrentLoc(Space* loc){
 ** Input: 
 ** Output: vector<string>
 *********************************************************************/
-std::vector<std::string> player::getInventory(){
+std::vector<Item*> player::getInventory(){
    return this->inventory;
 }
 
@@ -63,7 +67,7 @@ std::vector<std::string> player::getInventory(){
 ** Input: string
 ** Output:
 *********************************************************************/
-void player::addInvent(std::string item){
+void player::addInvent(Item* item){
    this->inventory.push_back(item);
 }
 
@@ -72,8 +76,8 @@ void player::addInvent(std::string item){
 ** Input: string
 ** Output:
 *********************************************************************/
-void player::removeInvent(std::string item){
-   std::vector<std::string>::iterator it = std::find(this->inventory.begin(),
+void player::removeInvent(Item* item){
+   std::vector<Item*>::iterator it = std::find(this->inventory.begin(),
 						     this->inventory.end(),
 						     item);
    if (it != this->inventory.end()) 
@@ -88,11 +92,12 @@ void player::removeInvent(std::string item){
 ** Input: string
 ** Output:
 *********************************************************************/
-void player::useItem(std::string item){
+void player::useItem(Item* item){
    // Item effect
    
-   // Durability check? (Remove if breakable)
-   this->removeInvent(item);
+   // Remove if one time use 
+   if (item->isBreakable())
+   	this->removeInvent(item);
 }
 
 

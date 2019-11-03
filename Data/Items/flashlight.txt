@@ -1,7 +1,15 @@
 <name>
 flashlight
 </name>
+<breakable>
+true
+</breakable>
+<takeable>
+true
+</takeable>
 <desc>
 Lights up any room in a jiffy.
 </desc>
-
+<found_in>
+entry
+</found_in>

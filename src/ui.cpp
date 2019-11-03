@@ -56,14 +56,18 @@ void exitDisplay(Space* temp){
 
 /*********************************************************************
 ** Description: display objects in the room
-** Input: Space pointer
+** Input: Space pointer, Items map
 ** Output: none.
 *********************************************************************/
-void objectsDisp(Space* room){
-    for (auto & obj : room->getSpaceObjects()) {
-        std::cout << obj << " ";
-    }
-    std::cout << std::endl;
+void objectsDisp(Space* room, std::unordered_map<std::string, Item*> items){
+	for (auto it = items.begin(); it != items.end(); it++) {
+		if (!it->second->getBegLoc()->getSpaceName().compare(room->getSpaceName())) {
+			if (!it->second->isTaken()) {
+				std::cout << it->second->getItemName() << std::endl;
+			}
+		}
+	}
+	std::cout << std::endl;
 }
 
 
