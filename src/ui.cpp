@@ -59,11 +59,11 @@ void exitDisplay(Space* temp){
 ** Input: Space pointer, Items map
 ** Output: none.
 *********************************************************************/
-void objectsDisp(Space* room, std::unordered_map<std::string, Item*> items){
-	for (auto it = items.begin(); it != items.end(); it++) {
-		if (!it->second->getBegLoc()->getSpaceName().compare(room->getSpaceName())) {
-			if (!it->second->isTaken()) {
-				std::cout << it->second->getItemName() << std::endl;
+void objectsDisp(Space* room, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap){
+	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+		if (!(std::get<0>(it->second)->getBegLoc()->getSpaceName().compare(room->getSpaceName()))) {
+			if (!(std::get<0>(it->second)->isTaken())) {
+				std::cout << it->first << std::endl;
 			}
 		}
 	}

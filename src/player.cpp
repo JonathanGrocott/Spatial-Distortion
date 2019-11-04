@@ -19,7 +19,6 @@
 *********************************************************************/
 player::player(){
     this->currentLoc = nullptr;
-    this->inventory = {};
 }
 
 /*********************************************************************
@@ -29,7 +28,6 @@ player::player(){
 *********************************************************************/
 player::~player(){
     this->currentLoc = nullptr;
-    this->inventory.clear();
 }
 
 /*********************************************************************
@@ -49,55 +47,7 @@ Space* player::getCurrentLoc(){
 *********************************************************************/
 void player::setCurrentLoc(Space* loc){
    this->currentLoc = loc;
-   for (auto & item : inventory)
-	item->setCurrentLoc(loc);	
 }
 
-/*********************************************************************
-** Description: get current player's inventory 
-** Input: 
-** Output: vector<string>
-*********************************************************************/
-std::vector<Item*> player::getInventory(){
-   return this->inventory;
-}
-
-/*********************************************************************
-** Description: adds an item to the player's inventory 
-** Input: string
-** Output:
-*********************************************************************/
-void player::addInvent(Item* item){
-   this->inventory.push_back(item);
-}
-
-/*********************************************************************
-** Description: removes an item from the player's inventory
-** Input: string
-** Output:
-*********************************************************************/
-void player::removeInvent(Item* item){
-   std::vector<Item*>::iterator it = std::find(this->inventory.begin(),
-						     this->inventory.end(),
-						     item);
-   if (it != this->inventory.end()) 
-      this->inventory.erase(it);
-   //else
-      //std::cout << item << " is not in your inventory!" << std::endl;
-  
-}
-
-/*********************************************************************
-** Description: use an item from the inventory 
-** Input: string
-** Output:
-*********************************************************************/
-void player::useItem(Item* item){
-   // Item effect
-   
-   // Remove if one time use 
-   if (item->isBreakable())
-   	this->removeInvent(item);
-}
 
 

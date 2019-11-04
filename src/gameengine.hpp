@@ -15,27 +15,26 @@
 #include "Commands/commands.hpp"
 #include "player.hpp"
 #include <unordered_map>
+#include <tuple>
 #include "item.hpp"
-
 #include <string>
-
 
 class GameEngine
 {
 	private:
 		std::unordered_map<std::string, Space*> gameMap; //collection of pointers for all spaces in the game
-		std::unordered_map<std::string, Item*> itemsList; //collection of pointers for all objects in the game
+		std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap;
 		void initializeGameMap();
 		void linkExitPtrs(std::string room, std::unordered_map<std::string,std::string> alias);
 		bool gameState;
 		player gamePlayer;
 		Commands* commands;
 		
-    public:
-        /** Default constructor */
-        GameEngine();
-        /** Default destructor */
-        ~GameEngine();
+	public:
+       		/** Default constructor */
+        	GameEngine();
+       	 	/** Default destructor */
+        	~GameEngine();
 
 		void testMap();
 		bool getGameState();
@@ -50,6 +49,7 @@ class GameEngine
 		void getObjectContents(std::string file);
 		void displayMenu();//menu for each location
 		bool readCommand();
+		void updateItem(Item*, player*, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>&);
 		bool parser(std::string &original, std::string tofind);
 		std::string getFileContents (std::ifstream& File);//ascii display
 

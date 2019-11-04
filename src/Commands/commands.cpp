@@ -138,19 +138,22 @@ void Commands::lookAt(Space *cL, std::vector<Item*> inv, std::unordered_map<std:
 
 }
 
-/***************************************************
- * void inventory(player player)
+/*********************************************************************
+ * void inventory(unordered_map<string, tuple<Item*, Space*, player*>)
  * Prints out the user's entire inventory.
-***************************************************/
+*********************************************************************/
 
-void Commands::inventory(std::vector<Item*> items) {
-  if (items.size() != 0) {
-    std::cout << "Inventory" << std::endl;
-    std::cout << "----------" << std::endl;
-    for (auto & item : items)
-      std::cout << item->getItemName() << std::endl;
+void Commands::inventory(std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap) {
+  std::cout << "Inventory" << std::endl;
+  std::cout << "----------" << std::endl;
+  int count = 0;
+  for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+    if (std::get<2>(it->second) != nullptr) {
+      std::cout << it->first << std::endl;
+      count++;
+    }
   }
-  else
+  if (count == 0)
     std::cout << "Your inventory is empty!" << std::endl;
 }
 

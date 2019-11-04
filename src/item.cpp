@@ -47,7 +47,6 @@ Item::Item(std::string path, std::unordered_map<std::string, Space*> gameMap) {
 		// Set the beginning location and current location
 		if (gameMap.count(it->first)) {
 			it->second = gameMap.at(it->first);
-			this->setCurrentLoc(it->second);
 		}
 		else
 			std::cout << it->first << " does not exist." << std::endl;
@@ -71,11 +70,6 @@ std::string Item::getItemDesc() {
 	return this->itemDesc;
 }
 
-// Gets the current location of the item
-Space* Item::getCurrentLoc() {
-	return this->currentLoc;
-}
-
 // Gets the beginning location of the item
 Space* Item::getBegLoc() {
 	return foundAt.begin()->second;
@@ -94,11 +88,6 @@ bool Item::isBreakable() {
 // Checks if the item is takeable or not
 bool Item::isTakeable() {
 	return this->takeable;
-}
-
-// Sets the item's current location
-void Item::setCurrentLoc(Space *loc) {
-	this->currentLoc = loc;
 }
 
 // Sets the item's taken status

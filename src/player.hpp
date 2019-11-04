@@ -12,13 +12,11 @@
 #include <vector>
 #include <algorithm>
 #include "space.hpp"
-#include "item.hpp"
 
 class player
 {
 	private:
         	Space* currentLoc;
-		std::vector<Item*> inventory;
 	public:
         	/** Default constructor */
         	player();
@@ -27,10 +25,6 @@ class player
         
         	Space* getCurrentLoc();
         	void setCurrentLoc(Space* loc);
-		std::vector<Item*> getInventory();
-		void addInvent(Item* item);
-		void removeInvent(Item* item);
-		void useItem(Item* item);
 };
 
 

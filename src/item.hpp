@@ -16,19 +16,16 @@ class Item {
 		bool takeable;
 		std::string itemDesc; //description
 		std::string itemFilePath;
-		Space* currentLoc;
 		std::unordered_map<std::string, Space*> foundAt;	
 	public:
 		Item(std::string path, std::unordered_map<std::string, Space*>);
 		~Item();
 		std::string getItemName();
 		std::string getItemDesc();
-		Space* getCurrentLoc();
 		Space* getBegLoc(); // Beginning Location
 		bool isTaken();
 		bool isBreakable();
 		bool isTakeable();
-		void setCurrentLoc(Space*);
 		void setTaken(bool);
 };
 

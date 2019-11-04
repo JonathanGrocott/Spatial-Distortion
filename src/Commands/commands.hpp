@@ -3,6 +3,7 @@
 #include "../space.hpp"
 #include "../player.hpp"
 #include "../item.hpp"
+#include <tuple>
 
 class Commands {
   public:
@@ -18,7 +19,7 @@ class Commands {
 
     // Gives a description of an inventory item or room object
     void lookAt(Space*, std::vector<Item*>, std::unordered_map<std::string, Item*>, std::string); 
-    void inventory(std::vector<Item*>); // Displays entire inventory
+    void inventory(std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>); // Displays entire inventory
     //std::string take(Space *currLoc, std::string item); // Takes an item from a room
 };
 

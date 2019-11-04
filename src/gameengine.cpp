@@ -104,14 +104,14 @@ void GameEngine::initializeGameMap(){
 	}
 
 	fs::path itemDir("Data/Items/");
-
+	
 	if (fs::is_directory(itemDir)) {
 		// populate the game map from files in the items directory
 		for (auto& entry : boost::make_iterator_range(fs::directory_iterator(itemDir), {})) {
 			//check that entry is a file
 			if (fs::is_regular_file(entry)) {
 				Item* temp = new Item(entry.path().string(), this->gameMap);
-				this->itemsList[temp->getItemName()] = temp;
+				this->itemsMap[temp->getItemName()] = std::make_tuple(temp, temp->getBegLoc(), nullptr) ;
 			}
 		}
 	}
@@ -185,7 +185,7 @@ void GameEngine::displayMenu() {
 		uiDisplay(this->gamePlayer.getCurrentLoc());
 		std::cout << "............................................" << std::endl;
 		std::cout << "Objects in Room: " << std::endl;
-		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsList);                
+		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
 		std::cout << "............................................" << std::endl;
 		std::cout << "Possible Moves: " << std::endl;
 		exitDisplay(this->gamePlayer.getCurrentLoc());
@@ -230,20 +230,23 @@ bool GameEngine::readCommand() {
 	}
 	
 	//find objects in the input
-	for(auto it = this->itemsList.begin(); it != this->itemsList.end(); it++)
+	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
 	{
 		if(parser(input, it->first)) {
-			if (!it->second->getBegLoc()->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()) &&
-			    !it->second->isTaken())
-				listRoomObjects.push_back(it->second);
+			if (!(std::get<0>(it->second)->getBegLoc()->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
+				if (!(std::get<0>(it->second)->isTaken()))
+					listRoomObjects.push_back(std::get<0>(it->second));
+			}
 		}
 	}
 	
 	//find inventory items in the input
-	for(auto inv : this->gamePlayer.getInventory())
+	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
 	{
-		if(parser(input, inv->getItemName()))
-			listInventory.push_back(inv);
+		if(parser(input, it->first)) {
+			if (std::get<2>(it->second) != nullptr)
+				listInventory.push_back(std::get<0>(it->second));
+		}
 	}
 
 	//handles a location by moving
@@ -266,13 +269,13 @@ bool GameEngine::readCommand() {
 			return true;
 		}
 		else if(listCommands[0]=="inventory"){
-			this->commands->inventory(this->gamePlayer.getInventory());
+			this->commands->inventory(itemsMap);
 			return true;
 		}
 		else if(listCommands[0]=="take") {
 			if (listRoomObjects.size() > 0) {
 				if (listRoomObjects[0]->isTakeable()) {
-					this->gamePlayer.addInvent(listRoomObjects[0]);
+					this->updateItem(listRoomObjects[0], &gamePlayer, itemsMap);
 					listRoomObjects[0]->setTaken(true);
 					std::cout << listRoomObjects[0]->getItemName() << " added to inventory." << std::endl;
 					return true;
@@ -284,14 +287,6 @@ bool GameEngine::readCommand() {
 			else
 				std::cout << "This item is not an object in the room!" << std::endl;
 		}
-		/*else if(listCommands[0]=="use") {
-			if(listInventory.size() != 0) {
-				this->gamePlayer.removeInvent(listInventory[0]);
-				return true;
-			}
-			else
-				std::cout << "This item is not in your inventory!" << std::endl;
-		}*/
 	}
 
 	return false;
@@ -334,6 +329,22 @@ void GameEngine::testMap()
 	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
     	std::cout << it->first << std::endl;
 }
+
+/*********************************************************************
+** Description: Updates the tuple in itemMaps  to reflect
+** items moving around the map and being taken
+** Input: Item*, player*, unordered_map<string, tuple<Item*, Space*, player*>>
+** Output: 
+*********************************************************************/
+void GameEngine::updateItem(Item* update, player* p, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> &itemsMap)
+{
+	std::cout << "Hello: " << p->getCurrentLoc()->getSpaceName() << std::endl;
+	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+		if (!it->first.compare(update->getItemName()))
+			std::get<2>(it->second) = p;
+	}
+}
+
 
 /*********************************************************************
 ** Description: A test function that prints out the names of the 

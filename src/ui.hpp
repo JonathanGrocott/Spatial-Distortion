@@ -15,10 +15,11 @@
 #include <unordered_map>
 #include "space.hpp"
 #include "item.hpp"
+#include "player.hpp"
 
 void uiDisplay(Space* room);
 void exitDisplay(Space* temp);
-void objectsDisp(Space* room, std::unordered_map<std::string, Item*>);
+void objectsDisp(Space* room, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>);
 void clearScreen();
 
 #endif
