@@ -254,6 +254,7 @@ bool GameEngine::readCommand() {
 		Space* move = this->commands->go(this->gamePlayer.getCurrentLoc(),listLocations[0]);
 		if(move){
 			this->gamePlayer.setCurrentLoc(move);
+			updateItemLoc(&gamePlayer, itemsMap);
 			return true;
 		}
 	}
@@ -275,7 +276,7 @@ bool GameEngine::readCommand() {
 		else if(listCommands[0]=="take") {
 			if (listRoomObjects.size() > 0) {
 				if (listRoomObjects[0]->isTakeable()) {
-					this->updateItem(listRoomObjects[0], &gamePlayer, itemsMap);
+					this->updateInvent(listRoomObjects[0], &gamePlayer, itemsMap);
 					listRoomObjects[0]->setTaken(true);
 					std::cout << listRoomObjects[0]->getItemName() << " added to inventory." << std::endl;
 					return true;
@@ -331,14 +332,28 @@ void GameEngine::testMap()
 }
 
 /*********************************************************************
-** Description: Updates the tuple in itemMaps  to reflect
-** items moving around the map and being taken
+** Description: Updates the tuple in itemMaps to reflect
+** items moving around the map
 ** Input: Item*, player*, unordered_map<string, tuple<Item*, Space*, player*>>
 ** Output: 
 *********************************************************************/
-void GameEngine::updateItem(Item* update, player* p, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> &itemsMap)
+void GameEngine::updateItemLoc(player* p, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> &itemsMap)
 {
-	std::cout << "Hello: " << p->getCurrentLoc()->getSpaceName() << std::endl;
+	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+		if (!(std::get<2>(it->second) != nullptr))
+			std::get<1>(it->second) = p->getCurrentLoc();
+	}
+}
+
+
+/*********************************************************************
+** Description: Updates the tuple in itemMaps to reflect
+** items being taken and added to inventory
+** Input: Item*, player*, unordered_map<string, tuple<Item*, Space*, player*>>
+** Output: 
+*********************************************************************/
+void GameEngine::updateInvent(Item* update, player* p, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> &itemsMap)
+{
 	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
 		if (!it->first.compare(update->getItemName()))
 			std::get<2>(it->second) = p;

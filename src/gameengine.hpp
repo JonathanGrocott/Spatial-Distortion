@@ -49,7 +49,8 @@ class GameEngine
 		void getObjectContents(std::string file);
 		void displayMenu();//menu for each location
 		bool readCommand();
-		void updateItem(Item*, player*, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>&);
+		void updateItemLoc(player*, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>&);
+		void updateInvent(Item*, player*, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>&);
 		bool parser(std::string &original, std::string tofind);
 		std::string getFileContents (std::ifstream& File);//ascii display
 
