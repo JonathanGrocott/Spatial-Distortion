@@ -2,14 +2,17 @@
 Entry
 </name>
 <long_desc>
-Entry long
+You have entered the reception area for Aperture Science it is a small carpeted area with a waiting area consisting of several chairs and a small table. There are some pop culture engineering magazines on top of the small table. Across from the waiting area is a wooden desk with a computer and phone. You see several post-it notes attached to the monitor. 
+
+To the north is the Prototype Room.
+To the east is a Hallway.
 </long_desc>
 <short_desc>
 Entry short
 </short_desc>
 <exits>
 Hallway,east
-Prototype Room
+Prototype Room,north
 </exits>
 <special>
 </special>

@@ -3,12 +3,14 @@ Deck
 </name>
 <long_desc>
 Deck long
+
+To the north is Hallway2.
 </long_desc>
 <short_desc>
 Deck short
 </short_desc>
 <exits>
-Hallway2
+Hallway2,north
 </exits>
 <special>
 </special>

@@ -3,14 +3,18 @@ Research Lab2
 </name>
 <long_desc>
 Research Lab2 long
+
+To the north is Research Lab1.
+To the east is the Basement.
+To the west is Hallway2.
 </long_desc>
 <short_desc>
 Research Lab2 short
 </short_desc>
 <exits>
-Basement
-Research Lab1
-Hallway2
+Basement,east
+Research Lab1,north
+Hallway2,west
 </exits>
 <special>
 </special>

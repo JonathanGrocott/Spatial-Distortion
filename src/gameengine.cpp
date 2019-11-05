@@ -187,9 +187,9 @@ void GameEngine::displayMenu() {
 		std::cout << "Objects in Room: " << std::endl;
 		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
 		std::cout << "............................................" << std::endl;
-		std::cout << "Possible Moves: " << std::endl;
-		exitDisplay(this->gamePlayer.getCurrentLoc());
-		std::cout << "............................................" << std::endl;
+		//std::cout << "Possible Moves: " << std::endl;
+		//exitDisplay(this->gamePlayer.getCurrentLoc());
+		//std::cout << "............................................" << std::endl;
 }
 
 /*********************************************************************

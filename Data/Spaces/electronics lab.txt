@@ -3,13 +3,16 @@ Electronics Lab
 </name>
 <long_desc>
 Electronics Lab long
+
+To the east is the Imaging Room.
+To the south is the Hallway.
 </long_desc>
 <short_desc>
 Electronics Lab short
 </short_desc>
 <exits>
-Imaging Room
-Hallway
+Imaging Room,east
+Hallway,south
 </exits>
 <special>
 </special>

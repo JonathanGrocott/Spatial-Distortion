@@ -3,12 +3,14 @@ Robotics Lab
 </name>
 <long_desc>
 Robotics Lab long
+
+To the south is Hallway2
 </long_desc>
 <short_desc>
 Robotics Lab short
 </short_desc>
 <exits>
-Hallway2
+Hallway2,south
 </exits>
 <special>
 </special>

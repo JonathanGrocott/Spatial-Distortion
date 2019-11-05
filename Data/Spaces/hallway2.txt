@@ -3,15 +3,20 @@ Hallway2
 </name>
 <long_desc>
 Hallway2 long
+
+To the north is the Robotics Lab.
+To the east is Research Lab2.
+To the south is the Deck.
+To the west is an Office.
 </long_desc>
 <short_desc>
 Hallway2 short
 </short_desc>
 <exits>
-Office
-Research Lab2
-Robotics Lab
-Deck
+Office,west
+Research Lab2,east
+Robotics Lab,north
+Deck,south
 </exits>
 <special>
 </special>

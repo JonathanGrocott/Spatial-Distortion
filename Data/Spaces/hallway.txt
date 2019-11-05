@@ -2,16 +2,21 @@
 Hallway
 </name>
 <long_desc>
-Hallway long
+The hallway you entered has several pictures hanging on it. One picture is of the 1981 STS-1 shuttle launch. Another is a poster of the periodic table of elements. The last picture is of the solar system, there is a sticky note next to Pluto which reads “Relegated to dwarf status”.
+
+To the left is the Washroom.
+To the north is the Electronics Lab.
+To the east is Research Lab1.
+To the west is the Entry.
 </long_desc>
 <short_desc>
 Hallway short
 </short_desc>
 <exits>
-Washroom
-Electronics Lab
-Entry
-Research Lab1
+Washroom,left
+Electronics Lab,north
+Entry,west
+Research Lab1,east
 </exits>
 <special>
 </special>

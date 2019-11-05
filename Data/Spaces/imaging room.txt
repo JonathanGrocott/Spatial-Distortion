@@ -3,13 +3,18 @@ Imaging Room
 </name>
 <long_desc>
 Imaging Room long
+
+To the east is the Power Control Room.
+To the south is the Basement.
+To the west is the Electronics Lab.
 </long_desc>
 <short_desc>
 Imaging Room short
 </short_desc>
 <exits>
-Power Control Room
-Electronics Lab
+Basement,south
+Power Control Room,east
+Electronics Lab,west
 </exits>
 <special>
 </special>
