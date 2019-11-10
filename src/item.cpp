@@ -42,6 +42,7 @@ Item::Item(std::string path, std::unordered_map<std::string, Space*> gameMap) {
 				this->foundAt[tempLine] = nullptr;
 			}
 		}
+		File.close();
 	}
 	for (auto it = this->foundAt.begin(); it != this->foundAt.end(); it++) {
 		// Set the beginning location and current location
