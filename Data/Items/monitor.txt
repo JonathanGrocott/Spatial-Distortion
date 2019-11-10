@@ -1,15 +1,15 @@
 <name>
-flashlight
+monitor
 </name>
 <breakable>
 false
 </breakable>
 <takeable>
-true
+false
 </takeable>
 <desc>
-Lights up any room in a jiffy.
+There appears to be a lot of sticky notes stuck to the screen.
 </desc>
 <found_in>
-hallway
+entry
 </found_in>

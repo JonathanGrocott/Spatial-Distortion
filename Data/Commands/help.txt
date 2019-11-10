@@ -21,13 +21,18 @@ exit: Quits the game. Will prompt to save before quitting.
 -------------------------------------------------------------------------------------------------------
 look: Gives the player the room's description again.
 look at [object]: Shows details about the specified object.
+lookat [object]: See above command.
 go [roomName]: Moves to the specified room if possible.
 go [direction]: Moves to the specified cardinal direction if possible.
+[roomName]: Moves player to the specified room name.
+[direction]: Moves player to the specified direction.
 take [object]: Takes an object from the room and adds it to your inventory if possible.
 
                                          Inventory Commands
 -------------------------------------------------------------------------------------------------------
 inventory: Lists all the current items in your inventory.
 look at [item]: Shows details about the specified item.
-use [item]: Consumes the item if valid.
+lookat [item]: See above command.
+use [item]: Consumes the item if valid and performs the item's action (if any).
 combine [item1] [item2]: Combines the two items if valid and adds the combined item to your inventory.
+drop [item]: Drops an item in the current room.

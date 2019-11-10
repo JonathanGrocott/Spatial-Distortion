@@ -1,15 +1,15 @@
 <name>
-flashlight
+sink
 </name>
 <breakable>
 false
 </breakable>
 <takeable>
-true
+false
 </takeable>
 <desc>
-Lights up any room in a jiffy.
+This sink appears to missing knobs to turn the water on.
 </desc>
 <found_in>
-hallway
+washroom
 </found_in>
