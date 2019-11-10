@@ -38,10 +38,9 @@ GameEngine::GameEngine()
 	//initialize command object
 	this->commands = new Commands;
 
-    //setup default world
+	//setup default world
 	//load map from files in Space directory
 	initializeGameMap();
-
 
 	//set player to starting place
 	this->gamePlayer.setCurrentLoc(this->gameMap.at("entry"));
@@ -103,12 +102,27 @@ void GameEngine::initializeGameMap(){
 	else{
 		std::cout << "Error in Space Directory" << std::endl;
 	}
+
+	fs::path itemDir("Data/Items/");
+	
+	if (fs::is_directory(itemDir)) {
+		// populate the game map from files in the items directory
+		for (auto& entry : boost::make_iterator_range(fs::directory_iterator(itemDir), {})) {
+			//check that entry is a file
+			if (fs::is_regular_file(entry)) {
+				Item* temp = new Item(entry.path().string(), this->gameMap);
+				this->itemsMap[temp->getItemName()] = std::make_tuple(temp, temp->getBegLoc(), nullptr) ;
+			}
+		}
+	}
+	else
+		std::cout << "Error in Item Directory" << std::endl;
 }
 
 /*********************************************************************
-** Description: Helper function to link exit pointers to the contructed
-** room pointers
-** Input: 
+** Description: Helper function to link exit pointers to the
+** constructed room pointers
+** Input: string, unordered_map<string, string>
 ** Output:
 *********************************************************************/
 void GameEngine::linkExitPtrs(std::string room,std::unordered_map<std::string,std::string> alias){
@@ -167,12 +181,15 @@ void GameEngine::setGameState(bool b){
 void GameEngine::displayMenu() {
 		std::cout << std::endl << std::endl;
 		std::cout << "............................................" << std::endl;
-		std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName();
+		std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
 		uiDisplay(this->gamePlayer.getCurrentLoc());
 		std::cout << "............................................" << std::endl;
-		std::cout << "Possible Moves: " << std::endl;
-		exitDisplay(this->gamePlayer.getCurrentLoc());
+		std::cout << "Objects in Room: " << std::endl;
+		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
 		std::cout << "............................................" << std::endl;
+		//std::cout << "Possible Moves: " << std::endl;
+		//exitDisplay(this->gamePlayer.getCurrentLoc());
+		//std::cout << "............................................" << std::endl;
 }
 
 /*********************************************************************
@@ -190,32 +207,54 @@ bool GameEngine::readCommand() {
 	// Convert command to lowercase
 	boost::algorithm::to_lower(input);
 	std::vector<std::string> listLocations;
-	std::vector<std::string> listObjects;
+	std::vector<Item*> listRoomObjects;
+	std::vector<Item*> listInventory;
 	std::vector<std::string> listCommands;
-
+	
 	//find all locations in input
 	for(auto it = this->gamePlayer.getCurrentLoc()->exitMap.begin(); it!= this->gamePlayer.getCurrentLoc()->exitMap.end(); it++)
 	{
 		if(parser(input, it->first))
 		{
-			std::cout << it->first << std::endl;
+			//std::cout << it->first << std::endl;
 			listLocations.push_back(it->first);
 		}
 			
 	}
+	
 	//find commands in input
 	for(auto it = commands->commandList.begin(); it != commands->commandList.end(); it++)
 	{
 		if(parser(input,*it))
 			listCommands.push_back(*it);
 	}
-	//find objects
+	
+	//find objects in the input
+	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
+	{
+		if(parser(input, it->first)) {
+			if (!(std::get<0>(it->second)->getBegLoc()->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
+				if (!(std::get<0>(it->second)->isTaken()))
+					listRoomObjects.push_back(std::get<0>(it->second));
+			}
+		}
+	}
+	
+	//find inventory items in the input
+	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
+	{
+		if(parser(input, it->first)) {
+			if (std::get<2>(it->second) != nullptr)
+				listInventory.push_back(std::get<0>(it->second));
+		}
+	}
 
 	//handles a location by moving
 	if(listLocations.size() == 1){
 		Space* move = this->commands->go(this->gamePlayer.getCurrentLoc(),listLocations[0]);
 		if(move){
 			this->gamePlayer.setCurrentLoc(move);
+			updateItemLoc(&gamePlayer, itemsMap);
 			return true;
 		}
 	}
@@ -225,6 +264,29 @@ bool GameEngine::readCommand() {
 		if(listCommands[0]=="quit"){
 			this->setGameState(false);
 			return true;
+		}
+		else if(listCommands[0]=="help"){
+			this->commands->help();
+			return true;
+		}
+		else if(listCommands[0]=="inventory"){
+			this->commands->inventory(itemsMap);
+			return true;
+		}
+		else if(listCommands[0]=="take") {
+			if (listRoomObjects.size() > 0) {
+				if (listRoomObjects[0]->isTakeable()) {
+					this->updateInvent(listRoomObjects[0], &gamePlayer, itemsMap);
+					listRoomObjects[0]->setTaken(true);
+					std::cout << listRoomObjects[0]->getItemName() << " added to inventory." << std::endl;
+					return true;
+				}
+				else {
+					std::cout << listRoomObjects[0]->getItemName() << " is not valid to take." << std::endl;
+				}
+			}
+			else
+				std::cout << "This item is not an object in the room!" << std::endl;
 		}
 	}
 
@@ -268,6 +330,36 @@ void GameEngine::testMap()
 	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
     	std::cout << it->first << std::endl;
 }
+
+/*********************************************************************
+** Description: Updates the tuple in itemMaps to reflect
+** items moving around the map
+** Input: Item*, player*, unordered_map<string, tuple<Item*, Space*, player*>>
+** Output: 
+*********************************************************************/
+void GameEngine::updateItemLoc(player* p, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> &itemsMap)
+{
+	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+		if (!(std::get<2>(it->second) != nullptr))
+			std::get<1>(it->second) = p->getCurrentLoc();
+	}
+}
+
+
+/*********************************************************************
+** Description: Updates the tuple in itemMaps to reflect
+** items being taken and added to inventory
+** Input: Item*, player*, unordered_map<string, tuple<Item*, Space*, player*>>
+** Output: 
+*********************************************************************/
+void GameEngine::updateInvent(Item* update, player* p, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> &itemsMap)
+{
+	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+		if (!it->first.compare(update->getItemName()))
+			std::get<2>(it->second) = p;
+	}
+}
+
 
 /*********************************************************************
 ** Description: A test function that prints out the names of the 

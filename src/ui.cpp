@@ -7,6 +7,7 @@
 
 #include "ui.hpp"
 #include <string>
+#include <vector>
 #include <iostream>
 #include "space.hpp"
 #include <map>
@@ -18,7 +19,7 @@
 *********************************************************************/
 void uiDisplay(Space* room){
 
-    //clearScreen();
+    clearScreen();
 
     std::string line;
     std::string location = "Data/Spaces/"+room->getSpaceName()+".txt";
@@ -52,6 +53,23 @@ void exitDisplay(Space* temp){
 
     std::cout << temp->findExits() << std::endl;
 }
+
+/*********************************************************************
+** Description: display objects in the room
+** Input: Space pointer, Items map
+** Output: none.
+*********************************************************************/
+void objectsDisp(Space* room, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap){
+	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+		if (!(std::get<0>(it->second)->getBegLoc()->getSpaceName().compare(room->getSpaceName()))) {
+			if (!(std::get<0>(it->second)->isTaken())) {
+				std::cout << it->first << std::endl;
+			}
+		}
+	}
+}
+
+
 
 /*********************************************************************
 ** Description: helper function that clears the screen

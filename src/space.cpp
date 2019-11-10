@@ -11,6 +11,7 @@ is abstract and will not be instatiated.
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include "boost/filesystem.hpp"
 #include "boost/filesystem/fstream.hpp"
 #include <boost/algorithm/string.hpp>
@@ -30,14 +31,13 @@ Space::Space(std::string path, std::unordered_map<std::string,std::string> &temp
 	this->looped = false;
 	this->filledLiquid = false;
 	this->filledSolid = false;
-	
 	std::ifstream File(path);
 
 	if(File){                      //Check if opens ok
 		this->spaceFilePath = path;
 		while (File.good ()){
 			std::string TempLine;                  //Temp line
-            std::getline (File , TempLine);        //Get temp line
+	                std::getline (File , TempLine);        //Get temp line
 			
 			//setup the space name
 			if(!TempLine.compare("<name>")){
@@ -48,7 +48,6 @@ Space::Space(std::string path, std::unordered_map<std::string,std::string> &temp
 			
 			//setup exits map
 			if(!TempLine.compare("<exits>")){
-				int count = 0;
 				while(TempLine.compare("</exits>"))
 				{
 					std::getline (File , TempLine);
@@ -82,7 +81,7 @@ Space::Space(std::string path, std::unordered_map<std::string,std::string> &temp
 Space::~Space()
 {
 	// set ptrs to null
-    for (std::unordered_map<std::string,Space*>::iterator it=this->exitMap.begin(); it!=this->exitMap.end(); ++it){
+	for (std::unordered_map<std::string,Space*>::iterator it=this->exitMap.begin(); it!=this->exitMap.end(); ++it){
 		it->second = nullptr;
 	}
 }

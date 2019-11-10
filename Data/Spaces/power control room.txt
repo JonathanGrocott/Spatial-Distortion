@@ -3,14 +3,14 @@ Power Control Room
 </name>
 <long_desc>
 Power Control Room long
+
+To the west is the Imaging Room.
 </long_desc>
 <short_desc>
 Power Control Room short
 </short_desc>
 <exits>
-Imaging Room
+Imaging Room,west
 </exits>
-<items>
-</items>
 <special>
 </special>

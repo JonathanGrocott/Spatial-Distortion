@@ -2,15 +2,15 @@
 Washroom
 </name>
 <long_desc>
-Washroom long
+You are in the washroom. There is a sink.
+
+To the south is the Hallway.
 </long_desc>
 <short_desc>
 Washroom Short
 </short_desc>
 <exits>
-Hallway
+Hallway,south
 </exits>
-<items>
-</items>
 <special>
 </special>

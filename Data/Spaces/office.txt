@@ -3,12 +3,14 @@ Office
 </name>
 <long_desc>
 Office long
+
+To the east is Hallway2.
 </long_desc>
 <short_desc>
 Office short
 </short_desc>
 <exits>
-Hallway2
+Hallway2,east
 </exits>
 <items>
 </items>

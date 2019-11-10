@@ -3,14 +3,14 @@ Generator Room
 </name>
 <long_desc>
 Generator Room long
+
+To the west is the Basement.
 </long_desc>
 <short_desc>
 Generator Room short
 </short_desc>
 <exits>
-Basement
+Basement,west
 </exits>
-<items>
-</items>
 <special>
 </special>

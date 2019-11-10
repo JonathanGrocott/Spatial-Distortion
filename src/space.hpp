@@ -13,7 +13,6 @@
 #include <string>
 #include <unordered_map>
 
-
 class Space
 {
 	private:
@@ -34,10 +33,10 @@ class Space
 		void linkExitMapPtr(std::string, Space*);
 
 		// map of spaces exits
-		std::unordered_map<std::string, Space*>exitMap;
-
+		std::unordered_map<std::string, Space*> exitMap;
+		
 		// get functions for private variables
-        std::string getSpaceName();
+        	std::string getSpaceName();
 		std::string getFilePath();
 		bool getVisited();
 		bool getLooped();

@@ -7,7 +7,10 @@
 
 #include "player.hpp"
 #include <string>
+#include <vector>
+#include <algorithm>
 #include "ui.hpp"
+#include "item.hpp"
 
 /*********************************************************************
 ** Description: Constructor for a player object
@@ -24,7 +27,6 @@ player::player(){
 ** Output: 
 *********************************************************************/
 player::~player(){
-
     this->currentLoc = nullptr;
 }
 
@@ -38,11 +40,14 @@ Space* player::getCurrentLoc(){
 }
 
 /*********************************************************************
-** Description: set current player location
+** Description: set current player location and update inventory
+		items current locations
 ** Input: Space pointer
 ** Output: 
 *********************************************************************/
 void player::setCurrentLoc(Space* loc){
- 
    this->currentLoc = loc;
 }
+
+
+
