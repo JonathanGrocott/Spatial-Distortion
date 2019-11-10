@@ -1,0 +1,16 @@
+<name>
+Prototype Room
+</name>
+<long_desc>
+Highway to the dangerzone... I mean welcome to the Prototype Room.
+
+To the south is the Entry.
+</long_desc>
+<short_desc>
+Protype Room Short
+</short_desc>
+<exits>
+Entry,south
+</exits>
+<special>
+</special>

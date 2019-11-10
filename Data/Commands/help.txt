@@ -10,7 +10,6 @@
                                          Player Commands
 -------------------------------------------------------------------------------------------------------
 help: This is how you got here. Shows all the main commands.
-help [command]: The more specific help. Shows details about a [command].
 savegame: Saves the current progress of the game to a default file.
 savegame [fileName]: Saves the current progress to a file name of your choice.
 loadgame: Loads up the save progress of the default save file.

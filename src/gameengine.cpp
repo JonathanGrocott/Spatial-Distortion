@@ -9,21 +9,24 @@
 #include "gameengine.hpp"
 #include "space.hpp"
 #include "boost/filesystem.hpp"
+#include "boost/range/iterator_range.hpp"
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/trim_all.hpp>
+
+#include "ui.hpp"
+#include "player.hpp"
 
 #include <string>
+#include <utility>
 #include <iostream>
-#include <cstdlib>
 #include <fstream>
 #include <stdio.h>
 #include <sstream>
 #include <algorithm>
 #include <iterator>
-#include <cctype>
+
 #include <vector>
-
-using namespace std;
-
-
 
 /*********************************************************************
 ** Description: Constructor for GameEngine. Sets up default world.
@@ -32,61 +35,276 @@ using namespace std;
 *********************************************************************/
 GameEngine::GameEngine()
 {
-    //setup default world - Needs to read space and object files
-	//and create all of the spaces, objects, etc. 
+	//initialize command object
+	this->commands = new Commands;
 
-    
+	//setup default world
+	//load map from files in Space directory
+	initializeGameMap();
 
+	//set player to starting place
+	this->gamePlayer.setCurrentLoc(this->gameMap.at("entry"));
+	this->gameState = true;
 }
 
 GameEngine::~GameEngine()
 {
-    //dtor
-	//delete all of the pointers
-	delete Entry, PrototypeRoom, Washroom, ElectronicsLab, ImagingRoom, PowerRoom, Hallway1, ResearchLab1, ResearchLab2, Office1,
-		RoboticsLab, Hallway2, Basement, GeneratorRoom, Deck;
+    // delete pointers
+	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it){
+		delete it->second;
+	}
+}
+
+/*********************************************************************
+** Description: Helper function to initialize the game map from files
+** Input: 
+** Output:
+*********************************************************************/
+void GameEngine::initializeGameMap(){
+	
+	//setup boost filesystem and directory path
+	namespace fs = boost::filesystem;
+	fs::path spaceDir("Data/Spaces/");
+
+	if(fs::is_directory(spaceDir)){
+		std::vector<std::pair<std::string,std::string>> tempVector;
+		std::vector<std::unordered_map<std::string,std::string>> tempAlias;
+		//populate the game map from files in the spaces directory
+		for(auto& entry : boost::make_iterator_range(fs::directory_iterator(spaceDir), {}))
+		{
+			//check that entry is a file
+			if(fs::is_regular_file(entry))
+			{
+				//setup room name and path vector
+				std::string filename = entry.path().filename().string();
+				std::size_t pos = filename.find(".txt");
+				filename = filename.substr(0,pos);
+				tempVector.push_back(std::make_pair(entry.path().string(),filename));
+
+			}
+		}
+
+		//create space objects for each file and save aliases for linking
+		for(auto i=tempVector.begin(); i !=tempVector.end(); i++)
+		{
+			std::unordered_map<std::string,std::string> tempMap;
+			Space* temp = new Space(i->first, tempMap);
+			this->gameMap[temp->getSpaceName()] = temp;
+			tempAlias.push_back(tempMap);
+		}
+
+		//linking space exits and aliases
+		for(int i=0; i < tempVector.size(); i++)
+		{	
+			linkExitPtrs(tempVector[i].second,tempAlias[i]);
+		}
+	}
+	else{
+		std::cout << "Error in Space Directory" << std::endl;
+	}
+
+	fs::path itemDir("Data/Items/");
+	
+	if (fs::is_directory(itemDir)) {
+		// populate the game map from files in the items directory
+		for (auto& entry : boost::make_iterator_range(fs::directory_iterator(itemDir), {})) {
+			//check that entry is a file
+			if (fs::is_regular_file(entry)) {
+				Item* temp = new Item(entry.path().string(), this->gameMap);
+				this->itemsMap[temp->getItemName()] = std::make_tuple(temp, temp->getBegLoc(), nullptr) ;
+			}
+		}
+	}
+	else
+		std::cout << "Error in Item Directory" << std::endl;
+}
+
+/*********************************************************************
+** Description: Helper function to link exit pointers to the
+** constructed room pointers
+** Input: string, unordered_map<string, string>
+** Output:
+*********************************************************************/
+void GameEngine::linkExitPtrs(std::string room,std::unordered_map<std::string,std::string> alias){
+	// iterate through any aliases and link pointers
+	for (auto i = alias.begin(); i != alias.end(); i++) 
+	{ 
+		this->gameMap.at(room)->linkExitMapPtr(i->first,this->gameMap.at(i->second));
+    } 
     
 }
 
-void GameEngine::setAllPossibleMoves() {
+/*********************************************************************
+** Description: Main game loop
+**
+** Input: 
+** Output:
+*********************************************************************/
+void GameEngine::mainGameLoop(){
+	do{
+		//output to ui
+		displayMenu();
+		//get and process input
+		bool loop =false;
+		while (!loop){
+			loop = readCommand();
+			if (!loop)
+				std::cout << "Not a valid command!" << std::endl;
+		}
+	}while(this->gameState);
+}
+
+/*********************************************************************
+** Description: Return game state status
+** Input: 
+** Output: bool
+*********************************************************************/
+bool GameEngine::getGameState(){
+	return this->gameState;
+}
+
+/*********************************************************************
+** Description: set game state status
+** Input: bool
+** Output: 
+*********************************************************************/
+void GameEngine::setGameState(bool b){
+	this->gameState = b;
+}
+
+/*********************************************************************
+** Description: Main menu driver for game. 
+**
+** Input:
+** Output: 
+*********************************************************************/
+void GameEngine::displayMenu() {
+		std::cout << std::endl << std::endl;
+		std::cout << "............................................" << std::endl;
+		std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
+		uiDisplay(this->gamePlayer.getCurrentLoc());
+		std::cout << "............................................" << std::endl;
+		std::cout << "Objects in Room: " << std::endl;
+		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
+		std::cout << "............................................" << std::endl;
+		//std::cout << "Possible Moves: " << std::endl;
+		//exitDisplay(this->gamePlayer.getCurrentLoc());
+		//std::cout << "............................................" << std::endl;
+}
+
+/*********************************************************************
+** Description: Reads a player choice and validates the command.
+** If valid it executes the appropriate command.
+** Input: 
+** Output: returns true if a valid command was given, else false
+*********************************************************************/
+
+bool GameEngine::readCommand() {
 	
-	//Set the possible moves from each of the spaces
-	Entry->setSpaceMoves(PrototypeRoom, NULL, Hallway1, NULL);
-	PrototypeRoom->setSpaceMoves(NULL, NULL, NULL, Entry);
-	Washroom->setSpaceMoves(NULL, NULL, NULL, Hallway1);
-	ElectronicsLab->setSpaceMoves(NULL, NULL, ImagingRoom, Hallway1);
-	//ImagingRoom->setSpaceMoves(NULL, ElectronicsLab, PowerRoom, Basement);
-	//PowerRoom->setSpaceMoves(NULL, ImagingRoom, NULL, NULL);
-	Hallway1->setSpaceMoves(Washroom, Entry, ResearchLab1, NULL);
-	//ResearchLab1->setSpaceMoves(NULL, Hallway1, NULL, ResearchLab2);
-	//ResearchLab2->setSpaceMoves(ResearchLab1, Hallway2, Basement, NULL);
-	//Office1->setSpaceMoves(NULL, NULL, Hallway2, NULL);
-	//RoboticsLab->setSpaceMoves(Hallway2, NULL, NULL, NULL);
-	//Hallway2->setSpaceMoves(NULL, Office1, ResearchLab2, RoboticsLab);
-	//Basement->setSpaceMoves(ImagingRoom, ResearchLab2, GeneratorRoom, NULL);
-	//GeneratorRoom->setSpaceMoves(NULL, Basement, NULL, NULL);
-	//Deck->setSpaceMoves(ResearchLab2, RoboticsLab, NULL, NULL);
+	std::cout << "What next? ";
+	std::string input;
+	std::getline(std::cin, input);
+	// Convert command to lowercase
+	boost::algorithm::to_lower(input);
+	std::vector<std::string> listLocations;
+	std::vector<Item*> listRoomObjects;
+	std::vector<Item*> listInventory;
+	std::vector<std::string> listCommands;
+	
+	//find all locations in input
+	for(auto it = this->gamePlayer.getCurrentLoc()->exitMap.begin(); it!= this->gamePlayer.getCurrentLoc()->exitMap.end(); it++)
+	{
+		if(parser(input, it->first))
+		{
+			//std::cout << it->first << std::endl;
+			listLocations.push_back(it->first);
+		}
+			
+	}
+	
+	//find commands in input
+	for(auto it = commands->commandList.begin(); it != commands->commandList.end(); it++)
+	{
+		if(parser(input,*it))
+			listCommands.push_back(*it);
+	}
+	
+	//find objects in the input
+	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
+	{
+		if(parser(input, it->first)) {
+			if (!(std::get<0>(it->second)->getBegLoc()->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
+				if (!(std::get<0>(it->second)->isTaken()))
+					listRoomObjects.push_back(std::get<0>(it->second));
+			}
+		}
+	}
+	
+	//find inventory items in the input
+	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
+	{
+		if(parser(input, it->first)) {
+			if (std::get<2>(it->second) != nullptr)
+				listInventory.push_back(std::get<0>(it->second));
+		}
+	}
 
-	currentLocation = Entry; //set starting location
+	//handles a location by moving
+	if(listLocations.size() == 1){
+		Space* move = this->commands->go(this->gamePlayer.getCurrentLoc(),listLocations[0]);
+		if(move){
+			this->gamePlayer.setCurrentLoc(move);
+			updateItemLoc(&gamePlayer, itemsMap);
+			return true;
+		}
+	}
+
+	//handles a single command
+	if(listCommands.size() == 1){
+		if(listCommands[0]=="quit"){
+			this->setGameState(false);
+			return true;
+		}
+		else if(listCommands[0]=="help"){
+			this->commands->help();
+			return true;
+		}
+		else if(listCommands[0]=="inventory"){
+			this->commands->inventory(itemsMap);
+			return true;
+		}
+		else if(listCommands[0]=="take") {
+			if (listRoomObjects.size() > 0) {
+				if (listRoomObjects[0]->isTakeable()) {
+					this->updateInvent(listRoomObjects[0], &gamePlayer, itemsMap);
+					listRoomObjects[0]->setTaken(true);
+					std::cout << listRoomObjects[0]->getItemName() << " added to inventory." << std::endl;
+					return true;
+				}
+				else {
+					std::cout << listRoomObjects[0]->getItemName() << " is not valid to take." << std::endl;
+				}
+			}
+			else
+				std::cout << "This item is not an object in the room!" << std::endl;
+		}
+	}
+
+	return false;
 }
 
-int GameEngine::getNumMoves() {
-	return this->numMoves;
-}
-
-void GameEngine::setNumMoves(int n) {
-	numMoves = n; 
-}
 /*********************************************************************
 ** Description: Helper function to split string by delimiters
 ** Input: string st, and string token
 ** Output: vector<string> 
 *********************************************************************/
-vector<string> GameEngine::split(string str, string token) {
+std::vector<std::string> GameEngine::split(std::string str, std::string token) {
 	
+	std::vector<std::string> result;
+
 	while (str.size()) {
 		int index = str.find(token);
-		if (index != string::npos) {
+		if (index != std::string::npos) {
 			//result.push_back(str.substr(0, index));
 			str = str.substr(index + token.size());
 			if (str.size() == 0)result.push_back(str);
@@ -100,365 +318,65 @@ vector<string> GameEngine::split(string str, string token) {
 	return result;
 }
 
-
-
 /*********************************************************************
-** Description: Gets list of files in space directory and feeds them
-into the getSpaceContents function. 
-
-** Input: string directory path
-** Output:
+** Description: A test function that prints out the names of the 
+** Space objects that exit in the gameMap.
+** Input: 
+** Output: 
 *********************************************************************/
-void GameEngine::createSpacesFromFiles(GameEngine* game, string dir) {
-
-	get_file_list(dir);
-	for (unsigned int i = 0; i < files.size(); i++) {
-		game->getSpaceContents(files.at(i));
-	}
-	
-	
-}
-
-/*********************************************************************
-** Description: Gets all files in a directory
-** Input: string path
-** Output: Vector files as reference is changed
-*********************************************************************/
-void GameEngine::get_file_list(const string& path)
+void GameEngine::testMap()
 {
-	files.clear();
-
-	if (!path.empty())
-	{
-		namespace fs = boost::filesystem;
-
-		fs::path apk_path(path);
-		fs::recursive_directory_iterator end;
-
-		for (fs::recursive_directory_iterator i(apk_path); i != end; ++i)
-		{
-			const fs::path cp = (*i);
-			files.push_back(cp.string());
-		}
-	}
-
+	std::cout << "game spaces loaded:" << std::endl;
+	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
+    	std::cout << it->first << std::endl;
 }
 
 /*********************************************************************
-** Description: Gets space info from file. Instatiates the space objects
-** fromt the file. 
-** Input: string file path
+** Description: Updates the tuple in itemMaps to reflect
+** items moving around the map
+** Input: Item*, player*, unordered_map<string, tuple<Item*, Space*, player*>>
 ** Output: 
 *********************************************************************/
-void GameEngine::getSpaceContents(string file){
-	
-	result.clear();//clear vector contents
-
-	string st;
-	int lineNum = 1;
-	ifstream infile;
-	infile.open(file);
-
-	while (infile) {
-		getline(infile, st);
-		//cout << "Line " << lineNum << ": " << st << endl;
-		split(st, ": ");
-		lineNum++;
+void GameEngine::updateItemLoc(player* p, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> &itemsMap)
+{
+	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+		if (!(std::get<2>(it->second) != nullptr))
+			std::get<1>(it->second) = p->getCurrentLoc();
 	}
-	
-	infile.close();
-	
-	int visited, numObjects, numActions, numExits, numCharacters;
-	string type, name, longDesc, shortDesc, objects, actions, exits, characters, puzzle;
-
-	//now have results vector with all inputs
-	for (unsigned int i = 0; i < result.size(); i++) {
-		if (i == 0){ //visited
-			visited = atoi(result.at(0).c_str());
-			//cout << "1: " << visited << endl;
-		}
-		if (i == 1) { //type
-			type = result.at(1);
-			//cout << "2: " << type << endl;
-		}
-		if (i == 2) { //name
-			name = result.at(2);
-			//cout << "3: " << name << endl;
-		}
-		if (i == 3) { //long description
-			longDesc = result.at(3);
-			//cout << "4: " << longDesc << endl;
-		}
-		if (i == 4) { //short description
-			shortDesc = result.at(4);
-			//cout << "5: " << shortDesc << endl;
-		}
-		if (i == 5) { //num objects
-			numObjects = atoi(result.at(5).c_str());
-			//cout << "6: " << numObjects << endl;
-		}
-		if (i == 6) { //objects
-			objects = result.at(6);
-			//cout << "7: " << objects << endl;
-		}
-		if (i == 7) { //num actions
-			numActions = atoi(result.at(7).c_str());
-			//cout << "8: " << numActions << endl;
-		}
-		if (i == 8) { //actions
-			actions = result.at(8);
-			//cout << "9: " << actions << endl;
-		}
-		if (i == 9) { //num Exits
-			numExits = atoi(result.at(9).c_str());
-			//cout << "10: " << numExits << endl;
-		}
-		if (i == 10) { //Exits
-			exits = result.at(10);
-			//cout << "11: " << exits << endl;
-		}
-		if (i == 11) { //num Characters
-			numCharacters = atoi(result.at(11).c_str());
-			//cout << "12: " << numCharacters << endl;
-		}
-		if (i == 12) { //Characters
-			characters = result.at(12);
-			//cout << "13: " << characters << endl;
-		}
-		if (i == 13) { //Puzzle
-			puzzle = result.at(13);
-			//cout << "14: " << puzzle << endl;
-		}
-
-	}
-
-	if (name == "Entry") {
-		Entry = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created Entry" << endl;
-	}
-	if (name == "PrototypeRoom") {
-		PrototypeRoom = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created PrototypeRoom" << endl;
-	}
-	if (name == "Washroom") {
-		Washroom = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created Washroom" << endl;
-	}
-	if (name == "ElectronicsLab") {
-		ElectronicsLab = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created ElectronicsLab" << endl;
-	}
-	if (name == "ImagingRoom") {
-		ImagingRoom = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created ImagingRoom" << endl;
-	}
-	if (name == "PowerRoom") {
-		PowerRoom = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created PowerRoom" << endl;
-	}
-	if (name == "Hallway1") {
-		Hallway1 = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created Hallway1" << endl;
-	}
-	if (name == "Hallway2") {
-		Hallway2 = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created Hallway2" << endl;
-	}
-	if (name == "ResearchLab1") {
-		ResearchLab1 = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created ResearchLab1" << endl;
-	}
-	if (name == "ResearchLab2") {
-		ResearchLab2 = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created ResearchLab2" << endl;
-	}
-	if (name == "Office1") {
-		Office1 = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created Office1" << endl;
-	}
-	if (name == "RoboticsLab") {
-		RoboticsLab = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created RoboticsLab" << endl;
-	}
-	if (name == "Basement") {
-		Basement = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created Basement" << endl;
-	}
-	if (name == "GeneratorRoom") {
-		GeneratorRoom = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created GeneratorRoom" << endl;
-	}
-	if (name == "Deck") {
-		Deck = new Space(name, type, longDesc, shortDesc, numObjects, numActions, numExits, exits, numCharacters, visited);
-		cout << "Created Deck" << endl;
-	}
-
-
-
-	
 }
 
 
 /*********************************************************************
-** Description: Gets object info from file. 
-** Input: string file path
+** Description: Updates the tuple in itemMaps to reflect
+** items being taken and added to inventory
+** Input: Item*, player*, unordered_map<string, tuple<Item*, Space*, player*>>
 ** Output: 
 *********************************************************************/
-void GameEngine::getObjectContents(string file){
-	
-	
+void GameEngine::updateInvent(Item* update, player* p, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> &itemsMap)
+{
+	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+		if (!it->first.compare(update->getItemName()))
+			std::get<2>(it->second) = p;
+	}
 }
 
-Space* GameEngine::getCurrentLocation(){
-
-    //cout<<currentLocation->getSpaceName()<<endl;
-    return currentLocation;
-}
-
-void GameEngine::setCurrentLocation(Space* cl){
-    currentLocation = cl;
-    //cout<<"Current Location: " <<currentLocation->getSpaceName()<<endl; //debug out
-}
-
-void GameEngine::moveLocation(Space* temp){
-    this->currentLocation = temp;
-
-}
 
 /*********************************************************************
-** Description: Main menu driver for game. 
-
-** Input: Space* cl(current location), Commands* obj (to call commands)
+** Description: A test function that prints out the names of the 
+** Space objects that exit in the gameMap.
+** Input: 
 ** Output: 
 *********************************************************************/
-void GameEngine::displayMenu(GameEngine* game, Space* cL, Commands* obj) {
-	bool quit = false;
-	string choice;
-	do {
-		cout << endl << endl;
-		cout << "............................................" << endl;
-		cout << "Current Location: ";
-		currentLocation->displaySpaceInfo(currentLocation);
-		cout << "............................................" << endl;
-		cout << "Possible Moves: " << endl;
-		currentLocation->getLocationInfo(fp, lp, rp, bp);
-		cout << "............................................" << endl;
-                cout << "What next? ";
-		getline(cin, choice);
-		quit = readCommand(game, currentLocation, obj, choice);
-	} while (!quit);
+bool GameEngine::parser(std::string &original, std::string tofind){
 
-
-	
-}
-
-/*********************************************************************
-** Description: Reads a text file into a ifstream and then returns
-the input as a string.
-** Input: ifstream by reference
-** Output: string of file contents
-*********************************************************************/
-string GameEngine::getFileContents(ifstream& File) {
-	string Lines = "";        //All lines
-
-	if (File)                      //Check if everything is good
+	if(original.find(tofind)!=std::string::npos)
 	{
-		while (File.good())
-		{
-			string TempLine;                  //Temp line
-			getline(File, TempLine);        //Get temp line
-			TempLine += "\n";                      //Add newline character
+		original.erase(original.find(tofind),tofind.length());
+		boost::algorithm::trim_all(original);
 
-			Lines += TempLine;                     //Add newline
-		}
-		return Lines;
+		return true;
 	}
-	else                           //Return error
-	{
-		return "ERROR File does not exist.";
-	}
-}
-
-/*********************************************************************
-** Description: Reads a player choice and validates the command.
-If valid it executes the appropriate command.
-** Input: GameEngine* game, Space* cL (current location),
-Commands* object, string command
-** Output: Varies depending on command
-*********************************************************************/
-
-bool GameEngine::readCommand(GameEngine* game, Space* cL, Commands* obj, string command) {
-	// Convert command to lowercase (doesn't handle non-ASCII at the moment)
-	for (auto& ch: command) {
-		ch = tolower(ch);
-	}
- 	
-	// Split up the command into a vector delimited by spaces
-	istringstream split(command);
-	vector<string> splitComs(istream_iterator<string>{split},
-                                 istream_iterator<string>());
-
-	// If no command was entered, return false
-	if (splitComs.size() == 0) {
-		cout << "You didn't enter a command!" << endl;
+	else
 		return false;
-	}
-
-	// If the command was only one word, handle the appropriate commands
-	if (splitComs.size() == 1) {
-		if (splitComs.at(0).compare("help") == 0 ||
-	            splitComs.at(0).compare("guide") == 0 ||
-		    splitComs.at(0).compare("manual") == 0) {
-			obj->help();
-		} 
-		else if (splitComs.at(0).compare("alt") == 0 ||
-		         splitComs.at(0).compare("alternate") == 0) {
-			obj->alt();
-		}
-		else if (splitComs.at(0).compare("look") == 0 ||
-			 splitComs.at(0).compare("examine") == 0) {
-			obj->look(cL);
-		}
-		else if (splitComs.at(0).compare("go") == 0 ||
-			 splitComs.at(0).compare("move") == 0) {
-			cout << "go/move requires a direction or room name" << endl << endl;
-			return false;
-		}
-		else if (splitComs.at(0).compare("quit") == 0 ||
-			 splitComs.at(0).compare("exit") == 0) {
-			//obj->exit();
-			return true;
-		}
-		else {
-			cout << "Invalid command. Type help for a list of commands." << std::endl << std::endl;
-			return false;
-		}
-	}
-  
-	// If the command was two words, handle the appropriate commands
-	else if (splitComs.size() == 2) {
-		if (splitComs.at(0).compare("alt") == 0 ||
-		    splitComs.at(0).compare("alternate") == 0) {
-			obj->alt(splitComs.at(1));
-		}
-		else if (splitComs.at(0).compare("look") == 0 ||
-			 splitComs.at(0).compare("examine") == 0) {
-			obj->look(cL, splitComs.at(1));
-		}
-		else if (splitComs.at(0).compare("go") == 0 ||
-			 splitComs.at(0).compare("move") == 0) {
-			Space* moving = obj->go(cL, splitComs.at(1));
-                        if (moving) {
-				game->setCurrentLocation(moving);
-			}
-		}
-		else {
-			cout << "Invalid command. Type help for a list of commands." << endl << endl;
-			return false;
-		}
-	  }
-
-	return false;
+	
 }
-
-

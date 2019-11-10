@@ -1,0 +1,16 @@
+<name>
+Generator Room
+</name>
+<long_desc>
+Generator Room long
+
+To the west is the Basement.
+</long_desc>
+<short_desc>
+Generator Room short
+</short_desc>
+<exits>
+Basement,west
+</exits>
+<special>
+</special>

@@ -1,0 +1,20 @@
+<name>
+Basement
+</name>
+<long_desc>
+Basement long
+
+To the north is the Imaging Room.
+To the east is the Generator Room.
+To the west is Research Lab2.
+</long_desc>
+<short_desc>
+Basement short
+</short_desc>
+<exits>
+Imaging Room,north
+Generator Room,east
+Research Lab2,west
+</exits>
+<special>
+</special>

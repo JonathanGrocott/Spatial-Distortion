@@ -1,0 +1,15 @@
+<name>
+bucket
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+true
+</takeable>
+<desc>
+For all your liquid storing needs!
+</desc>
+<found_in>
+washroom
+</found_in>
