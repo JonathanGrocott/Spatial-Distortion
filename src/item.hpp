@@ -27,6 +27,8 @@ class Item {
 		bool isBreakable();
 		bool isTakeable();
 		void setTaken(bool);
+		void setBreakable(bool);
+		void setTakeable(bool);
 };
 
 #endif

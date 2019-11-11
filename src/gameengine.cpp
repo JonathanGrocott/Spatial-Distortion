@@ -192,11 +192,12 @@ void GameEngine::loadGameState(std::string savedGame){
 						boost::split(result, TempLine, boost::is_any_of(","));
 						if(result[1] == "player"){
 							std::get<2>(this->itemsMap.at(result[0])) =  std::addressof(this->gamePlayer);
-							std::get<1>(this->itemsMap.at(result[0])) =  nullptr;
+							std::get<1>(this->itemsMap.at(result[0])) =  this->gamePlayer.getCurrentLoc();
+							std::get<0>(this->itemsMap.at(result[0]))->setTaken(true);
 						} 
 						else
 						{
-							std::get<2>(this->itemsMap.at(result[0])) =   nullptr;
+							std::get<2>(this->itemsMap.at(result[0])) = nullptr;
 							std::get<1>(this->itemsMap.at(result[0])) = this->gameMap.at(result[1]);
 						}
 						
@@ -327,9 +328,6 @@ void GameEngine::displayMenu() {
 		std::cout << "Objects in Room: " << std::endl;
 		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
 		std::cout << "............................................" << std::endl;
-		//std::cout << "Possible Moves: " << std::endl;
-		//exitDisplay(this->gamePlayer.getCurrentLoc());
-		//std::cout << "............................................" << std::endl;
 }
 
 /*********************************************************************
@@ -372,14 +370,15 @@ bool GameEngine::readCommand() {
 	//find objects in the input
 	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
 	{
-		if(parser(input, it->first)) {
-			if (!(std::get<0>(it->second)->getBegLoc()->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
-				if (!(std::get<0>(it->second)->isTaken()))
-					listRoomObjects.push_back(std::get<0>(it->second));
+		if (std::get<2>(it->second) == nullptr) {
+			if(parser(input, it->first)) {
+				if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
+					if (!(std::get<0>(it->second)->isTaken())) 
+						listRoomObjects.push_back(std::get<0>(it->second));
+				}
 			}
 		}
 	}
-	
 	//find inventory items in the input
 	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
 	{
@@ -415,6 +414,10 @@ bool GameEngine::readCommand() {
 			this->setGameState(false);
 			return true;
 		}
+		else if(listCommands[0]=="look"){
+			uiDisplay(this->gamePlayer.getCurrentLoc());
+			return true;
+		}
 		else if(listCommands[0]=="help"){
 			this->commands->help();
 			return true;
@@ -423,7 +426,7 @@ bool GameEngine::readCommand() {
 			this->commands->inventory(itemsMap);
 			return true;
 		}
-		else if(listCommands[0]=="take") {
+		else if(listCommands[0]=="take"){
 			if (listRoomObjects.size() > 0) {
 				if (listRoomObjects[0]->isTakeable()) {
 					this->updateInvent(listRoomObjects[0], &gamePlayer, itemsMap);
@@ -435,10 +438,36 @@ bool GameEngine::readCommand() {
 					std::cout << listRoomObjects[0]->getItemName() << " is not valid to take." << std::endl;
 				}
 			}
-			else
-				std::cout << "This item is not an object in the room!" << std::endl;
+		}
+		else if(listCommands[0]=="drop"){
+			if (listInventory.size() > 0) {
+				this->updateInvent(listInventory[0], nullptr, itemsMap);
+				listInventory[0]->setTaken(false);
+				std::cout << listInventory[0]->getItemName() << " dropped." << std::endl;
+				return true;	
+			}
+			else {
+				std::cout << listInventory[0]->getItemName() << " is not in your inventory." << std::endl;
+			}
 		}
 	}
+
+	if (listCommands.size() == 2) {
+		if (listCommands[0] + listCommands[1] == "lookat") {
+		        if (listRoomObjects.size() > 0) {
+				this->commands->lookAt(listRoomObjects);
+				return true;
+			}
+			else if (listInventory.size() > 0) {
+				this->commands->lookAt(listInventory);
+				return true;
+			}
+			else {
+				std::cout << "This object is not valid to look at!" << std::endl; 
+			}
+		}
+	}
+		
 
 	return false;
 }
@@ -490,7 +519,7 @@ void GameEngine::testMap()
 void GameEngine::updateItemLoc(player* p, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> &itemsMap)
 {
 	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
-		if (!(std::get<2>(it->second) != nullptr))
+		if (std::get<2>(it->second) != nullptr)
 			std::get<1>(it->second) = p->getCurrentLoc();
 	}
 }
