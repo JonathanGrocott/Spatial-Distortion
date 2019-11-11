@@ -62,7 +62,7 @@ void exitDisplay(Space* temp){
 void objectsDisp(Space* room, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap){
 	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
 		if (!(std::get<1>(it->second)->getSpaceName().compare(room->getSpaceName()))) {
-			// If not taken and not hidden
+			// If not taken 
 			if (!(std::get<0>(it->second)->isTaken())) {
 				std::cout << it->first << std::endl;
 			}

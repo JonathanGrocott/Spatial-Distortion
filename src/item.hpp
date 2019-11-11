@@ -26,8 +26,6 @@ class Item {
 		bool isTaken();
 		bool isBreakable();
 		bool isTakeable();
-		bool isHidden();
-		std::string getTrigger();
 		void setTaken(bool);
 		void setBreakable(bool);
 		void setTakeable(bool);
