@@ -67,12 +67,13 @@ int main()
                 std::cin >> input;
             }while(input < 0 && input < saveFiles.size());
             
+            //clear and flush stream
+            std::cin.clear();
+            std::cin.ignore(INT_MAX,'\n');
 
             // start saved game
             if(input != 0)
             {
-                std::cin.clear();
-			    std::cin.ignore(INT_MAX,'\n');
                 GameEngine* game = new GameEngine(saveFiles[input-1]); //initialize new game with starting values
                 game->mainGameLoop();
                 delete game;    //deallocate memory
