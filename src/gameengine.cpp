@@ -393,6 +393,8 @@ bool GameEngine::readCommand() {
 		Space* move = this->commands->go(this->gamePlayer.getCurrentLoc(),listLocations[0]);
 		if(move){
 			this->gamePlayer.setCurrentLoc(move);
+			if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
+				this->gamePlayer.getCurrentLoc()->setVisited(true);
 			updateItemLoc(&gamePlayer, itemsMap);
 			return true;
 		}

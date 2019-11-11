@@ -71,7 +71,7 @@ int main()
             std::cin.clear();
             std::cin.ignore(INT_MAX,'\n');
 
-            // start saved game
+            // start saved game from selected file
             if(input != 0)
             {
                 GameEngine* game = new GameEngine(saveFiles[input-1]); //initialize new game with starting values
