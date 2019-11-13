@@ -27,6 +27,4 @@ class player
         	void setCurrentLoc(Space* loc);
 };
 
-
-
 #endif

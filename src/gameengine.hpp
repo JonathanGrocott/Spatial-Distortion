@@ -26,6 +26,8 @@ class GameEngine
 		std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap;
 		void initializeGameMap();
 		void linkExitPtrs(std::string room, std::unordered_map<std::string,std::string> alias);
+		void loadGameState(std::string savedGame);
+		void saveGameState();
 		bool gameState;
 		player gamePlayer;
 		Commands* commands;
@@ -33,6 +35,8 @@ class GameEngine
 	public:
        		/** Default constructor */
         	GameEngine();
+			/** Saved constructor */
+        	GameEngine(std::string);
        	 	/** Default destructor */
         	~GameEngine();
 

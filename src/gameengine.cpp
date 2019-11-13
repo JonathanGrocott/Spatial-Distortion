@@ -13,6 +13,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/trim_all.hpp>
+#include "Commands/commands.hpp"
 
 #include "ui.hpp"
 #include "player.hpp"
@@ -44,6 +45,20 @@ GameEngine::GameEngine()
 
 	//set player to starting place
 	this->gamePlayer.setCurrentLoc(this->gameMap.at("entry"));
+	this->gameState = true;
+}
+
+GameEngine::GameEngine(std::string savedGame)
+{
+		//initialize command object
+	this->commands = new Commands;
+
+	//setup default world
+	//load map from files in Space directory
+	initializeGameMap();
+
+	// set roomstates, item locations, player location
+	loadGameState(savedGame);
 	this->gameState = true;
 }
 
@@ -135,6 +150,132 @@ void GameEngine::linkExitPtrs(std::string room,std::unordered_map<std::string,st
 }
 
 /*********************************************************************
+** Description: Helper function to initialize game from a saved state
+** Input: string with file name
+** Output:
+*********************************************************************/
+void GameEngine::loadGameState(std::string savedGame){
+
+	std::ifstream File("Data/Saves/"+savedGame);
+
+	if(File){                      //Check if opens ok
+		while (File.good ()){
+			std::string TempLine;                  //Temp line
+	        std::getline (File , TempLine);        //Get temp line
+			
+			// set player location
+			if(!TempLine.compare("<player>")){
+				std::getline (File , TempLine);
+				boost::algorithm::to_lower(TempLine);
+				this->gamePlayer.setCurrentLoc(this->gameMap.at(TempLine));
+			}
+			
+			// set visted rooms
+			if(!TempLine.compare("<visted>")){
+				while(TempLine.compare("</visted>"))
+				{
+					std::getline (File , TempLine);
+					if(TempLine.compare("</visted>")){
+						boost::algorithm::to_lower(TempLine);
+						this->gameMap.at(TempLine)->setVisited(true);
+					}
+				}
+			}
+			// set item locations
+			if(!TempLine.compare("<items>")){
+				while(TempLine.compare("</items>"))
+				{
+					std::getline (File , TempLine);
+					if(TempLine.compare("</items>")){
+						boost::algorithm::to_lower(TempLine);
+						std::vector<std::string> result; 
+						boost::split(result, TempLine, boost::is_any_of(","));
+						if(result[1] == "player"){
+							std::get<2>(this->itemsMap.at(result[0])) =  std::addressof(this->gamePlayer);
+							std::get<1>(this->itemsMap.at(result[0])) =  this->gamePlayer.getCurrentLoc();
+							std::get<0>(this->itemsMap.at(result[0]))->setTaken(true);
+						} 
+						else
+						{
+							std::get<2>(this->itemsMap.at(result[0])) = nullptr;
+							std::get<1>(this->itemsMap.at(result[0])) = this->gameMap.at(result[1]);
+						}
+						
+					}
+				}
+			}
+        }
+		File.close();
+    }
+    else{ //Return error
+        std::cout << "ERROR cannot find File or does not exist." << std::endl;
+    }
+}
+
+/*********************************************************************
+** Description: Helper function to create a save game
+** Input: string with file name
+** Output:
+*********************************************************************/
+void GameEngine::saveGameState(){
+	namespace fs = boost::filesystem;
+	fs::path saveDir("Data/Saves/");
+	//check if the save directory exists if not create it
+	if(!fs::exists(saveDir)){
+		fs::create_directory(saveDir);
+	}
+
+	std::string input;
+	std::string confirm;
+
+	do{
+		std::cout << "Enter a save name: ";
+		std::getline(std::cin, input);
+		if(fs::is_regular_file("Data/Saves/"+input+".txt")){
+			std::cout << "This save already exits do you want to overwrite it? ";
+			std::getline(std::cin, confirm);
+		}
+	}while(fs::is_regular_file("Data/Saves/"+input+".txt") && confirm != "yes");
+	
+	std::ofstream file("Data/Saves/"+input+".txt");
+
+	if(file.is_open()){
+
+		// save player location
+		file << "<player>" << std::endl;
+		file << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
+		file << "</player>" << std::endl;
+
+		// save visted rooms
+		file << "<visted>" << std::endl;
+		for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it){
+			if(it->second->getVisited()){
+				file << it->second->getSpaceName() << std::endl;
+			}
+		}
+		file << "</visted>" << std::endl;
+
+		//save item locations
+		file << "<items>" << std::endl;
+		for (std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>::iterator it=this->itemsMap.begin(); it!=this->itemsMap.end(); ++it){
+			if(std::get<2>(it->second) == nullptr){
+				file << it->first << "," << std::get<1>(it->second)->getSpaceName() << std::endl;
+			}
+			else{
+				file << it->first << "," << "player" << std::endl;
+			}
+		}
+		file << "</items>" << std::endl;
+
+		file.close();
+	}
+	else
+	{
+		std::cout << "Failed to open file!" << std::endl;
+	}
+}
+
+/*********************************************************************
 ** Description: Main game loop
 **
 ** Input: 
@@ -187,9 +328,6 @@ void GameEngine::displayMenu() {
 		std::cout << "Objects in Room: " << std::endl;
 		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
 		std::cout << "............................................" << std::endl;
-		//std::cout << "Possible Moves: " << std::endl;
-		//exitDisplay(this->gamePlayer.getCurrentLoc());
-		//std::cout << "............................................" << std::endl;
 }
 
 /*********************************************************************
@@ -232,14 +370,15 @@ bool GameEngine::readCommand() {
 	//find objects in the input
 	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
 	{
-		if(parser(input, it->first)) {
-			if (!(std::get<0>(it->second)->getBegLoc()->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
-				if (!(std::get<0>(it->second)->isTaken()))
-					listRoomObjects.push_back(std::get<0>(it->second));
+		if (std::get<2>(it->second) == nullptr) {
+			if(parser(input, it->first)) {
+				if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
+					if (!(std::get<0>(it->second)->isTaken())) 
+						listRoomObjects.push_back(std::get<0>(it->second));
+				}
 			}
 		}
 	}
-	
 	//find inventory items in the input
 	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
 	{
@@ -254,6 +393,8 @@ bool GameEngine::readCommand() {
 		Space* move = this->commands->go(this->gamePlayer.getCurrentLoc(),listLocations[0]);
 		if(move){
 			this->gamePlayer.setCurrentLoc(move);
+			if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
+				this->gamePlayer.getCurrentLoc()->setVisited(true);
 			updateItemLoc(&gamePlayer, itemsMap);
 			return true;
 		}
@@ -262,7 +403,21 @@ bool GameEngine::readCommand() {
 	//handles a single command
 	if(listCommands.size() == 1){
 		if(listCommands[0]=="quit"){
+			//check if player would like to save
+			clearScreen();
+			std::string input;
+			std::cout << "Would you like to save the game: ";
+       		std::getline(std::cin, input);
+			//set gamestate to false
+			if(input == "y" || input == "yes")
+			{
+				saveGameState();
+			}
 			this->setGameState(false);
+			return true;
+		}
+		else if(listCommands[0]=="look"){
+			uiDisplay(this->gamePlayer.getCurrentLoc());
 			return true;
 		}
 		else if(listCommands[0]=="help"){
@@ -273,7 +428,7 @@ bool GameEngine::readCommand() {
 			this->commands->inventory(itemsMap);
 			return true;
 		}
-		else if(listCommands[0]=="take") {
+		else if(listCommands[0]=="take"){
 			if (listRoomObjects.size() > 0) {
 				if (listRoomObjects[0]->isTakeable()) {
 					this->updateInvent(listRoomObjects[0], &gamePlayer, itemsMap);
@@ -285,10 +440,36 @@ bool GameEngine::readCommand() {
 					std::cout << listRoomObjects[0]->getItemName() << " is not valid to take." << std::endl;
 				}
 			}
-			else
-				std::cout << "This item is not an object in the room!" << std::endl;
+		}
+		else if(listCommands[0]=="drop"){
+			if (listInventory.size() > 0) {
+				this->updateInvent(listInventory[0], nullptr, itemsMap);
+				listInventory[0]->setTaken(false);
+				std::cout << listInventory[0]->getItemName() << " dropped." << std::endl;
+				return true;	
+			}
+			else {
+				std::cout << listInventory[0]->getItemName() << " is not in your inventory." << std::endl;
+			}
 		}
 	}
+
+	if (listCommands.size() == 2) {
+		if (listCommands[0] + listCommands[1] == "lookat") {
+		        if (listRoomObjects.size() > 0) {
+				this->commands->lookAt(listRoomObjects);
+				return true;
+			}
+			else if (listInventory.size() > 0) {
+				this->commands->lookAt(listInventory);
+				return true;
+			}
+			else {
+				std::cout << "This object is not valid to look at!" << std::endl; 
+			}
+		}
+	}
+		
 
 	return false;
 }
@@ -340,7 +521,7 @@ void GameEngine::testMap()
 void GameEngine::updateItemLoc(player* p, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> &itemsMap)
 {
 	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
-		if (!(std::get<2>(it->second) != nullptr))
+		if (std::get<2>(it->second) != nullptr)
 			std::get<1>(it->second) = p->getCurrentLoc();
 	}
 }

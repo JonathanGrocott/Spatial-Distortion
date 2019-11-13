@@ -18,7 +18,7 @@ Item::Item(std::string path, std::unordered_map<std::string, Space*> gameMap) {
 			if (!tempLine.compare("<breakable>")) {
 				std::getline(File, tempLine);
 				boost::algorithm::to_lower(tempLine);
-				if (tempLine.compare("true"))
+				if (!tempLine.compare("true"))
 					this->breakable = true;
 				else
 					this->breakable = false;
@@ -33,7 +33,6 @@ Item::Item(std::string path, std::unordered_map<std::string, Space*> gameMap) {
 			}
 			if (!tempLine.compare("<desc>")) {
 				std::getline(File, tempLine);
-				boost::algorithm::to_lower(tempLine);
 				this->itemDesc = tempLine;
 			}
 			if (!tempLine.compare("<found_in>")) {
@@ -42,6 +41,7 @@ Item::Item(std::string path, std::unordered_map<std::string, Space*> gameMap) {
 				this->foundAt[tempLine] = nullptr;
 			}
 		}
+		File.close();
 	}
 	for (auto it = this->foundAt.begin(); it != this->foundAt.end(); it++) {
 		// Set the beginning location and current location
@@ -93,4 +93,14 @@ bool Item::isTakeable() {
 // Sets the item's taken status
 void Item::setTaken(bool status) {
 	this->taken = status;
+}
+
+// Sets the item's breakable status
+void Item::setBreakable(bool status) {
+	this->breakable = status;
+}
+
+// Sets the item's takeable status
+void Item::setTakeable(bool status) {
+	this->takeable = status;
 }

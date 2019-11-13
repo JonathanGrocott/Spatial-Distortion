@@ -67,6 +67,7 @@ Space::Space(std::string path, std::unordered_map<std::string,std::string> &temp
 				}
 			}
         }
+		File.close();
     }
     else{ //Return error
         std::cout << "ERROR File does not exist." << std::endl;
