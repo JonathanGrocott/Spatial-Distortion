@@ -550,14 +550,54 @@ void GameEngine::updateInvent(Item* update, player* p, std::unordered_map<std::s
 *********************************************************************/
 bool GameEngine::parser(std::string &original, std::string tofind){
 
-	if(original.find(tofind)!=std::string::npos)
+	if(tofind.length() <= original.length()) // check that its logical to proceed
 	{
-		original.erase(original.find(tofind),tofind.length());
-		boost::algorithm::trim_all(original);
-
-		return true;
+		size_t found = original.find(tofind);
+		if(found!=std::string::npos)
+		{
+			// if find and original are same length then they are identical
+			if(original.length() == tofind.length())
+			{
+				original.erase(found,tofind.length());
+				boost::algorithm::trim_all(original);
+				return true;
+			}
+			else if (found == 0)
+			{
+				if(original.at(found+1) == ' '){
+					original.erase(found,tofind.length());
+					boost::algorithm::trim_all(original);
+					return true;
+				}
+				else
+					return false;
+			}
+			else if ((found-1)>=0 && (found+1)<= (original.length()-1))
+			{
+				if(original.at(found-1) == ' ' && original.at(found+1 ==' ')){
+					original.erase(found,tofind.length());
+					boost::algorithm::trim_all(original);
+					return true;
+				}
+				else
+					return false;
+			}
+			else if ((found+tofind.length())<= (original.length()-1))
+			{
+				if(original.at(found-1) == ' '){
+					original.erase(found,tofind.length());
+					boost::algorithm::trim_all(original);
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+		}
+		else
+			return false;
 	}
 	else
 		return false;
-	
 }
