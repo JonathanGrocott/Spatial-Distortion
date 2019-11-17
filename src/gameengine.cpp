@@ -73,7 +73,6 @@ GameEngine::~GameEngine()
 	for (auto it=this->itemsMap.begin(); it!=this->itemsMap.end(); it++) {
 		delete std::get<0>(it->second);
 		delete std::get<1>(it->second);
-		delete std::get<2>(it->second);
 	}
 	for (auto it=this->puzzleTracker.begin(); it!=this->puzzleTracker.end(); it++) {
 		delete it->second;
@@ -383,22 +382,16 @@ bool GameEngine::readCommand() {
 			listLocations.push_back(it->first);
 		}
 	}
-	
-	//find commands in input
-	for(auto it = this->commandList.begin(); it != this->commandList.end(); it++)
-	{
-		if(parser(input,*it))
-			listCommands.push_back(*it);
-	}
-	
+
 	//find objects in the input
 	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
 	{
 		if (std::get<2>(it->second) == nullptr) {
 			if(parser(input, it->first)) {
 				if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
-					if (!(std::get<0>(it->second)->isTaken())) 
+					if (!(std::get<0>(it->second)->isTaken())) { 
 						listRoomObjects.push_back(std::get<0>(it->second));
+					}
 				}
 			}
 		}
@@ -411,6 +404,15 @@ bool GameEngine::readCommand() {
 				listInventory.push_back(std::get<0>(it->second));
 		}
 	}
+
+		
+	//find commands in input
+	for(auto it = this->commandList.begin(); it != this->commandList.end(); it++)
+	{
+		if(parser(input,*it))
+			listCommands.push_back(*it);
+	}
+	
 
 	//handles a location by moving
 	if(listLocations.size() == 1){
@@ -425,7 +427,7 @@ bool GameEngine::readCommand() {
 			clearScreen();
 			std::string input;
 			std::cout << "Would you like to save the game: ";
-       		std::getline(std::cin, input);
+       			std::getline(std::cin, input);
 			//set gamestate to false
 			if(input == "y" || input == "yes")
 			{
