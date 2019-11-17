@@ -12,7 +12,6 @@
 
 #include "space.hpp"
 #include "boost/filesystem.hpp"
-#include "Commands/commands.hpp"
 #include "player.hpp"
 #include <unordered_map>
 #include <tuple>
@@ -30,8 +29,12 @@ class GameEngine
 		void saveGameState();
 		bool gameState;
 		player gamePlayer;
-		Commands* commands;
-		
+		// commands
+		std::vector<std::string> commandList;
+		void help(); // Shows all commands
+		void go(std::string room); // Moves user to another room
+		void lookAt(std::vector<Item*>); // Gives description of room or inventory objects 
+		void inventory(std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>); // Displays entire inventory
 	public:
 		/** Default constructor */
 		GameEngine();
