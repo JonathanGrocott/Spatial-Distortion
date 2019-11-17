@@ -13,7 +13,6 @@
 #include "space.hpp"
 #include "puzzle.hpp"
 #include "boost/filesystem.hpp"
-#include "Commands/commands.hpp"
 #include "player.hpp"
 #include <unordered_map>
 #include <tuple>
@@ -32,15 +31,19 @@ class GameEngine
 		void saveGameState();
 		bool gameState;
 		player gamePlayer;
-		Commands* commands;
-		
+		// commands
+		std::vector<std::string> commandList;
+		void help(); // Shows all commands
+		void go(std::string room); // Moves user to another room
+		void lookAt(std::vector<Item*>); // Gives description of room or inventory objects 
+		void inventory(std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>); // Displays entire inventory
 	public:
-       		/** Default constructor */
-        	GameEngine();
-			/** Saved constructor */
-        	GameEngine(std::string);
-       	 	/** Default destructor */
-        	~GameEngine();
+		/** Default constructor */
+		GameEngine();
+		/** Saved constructor */
+		GameEngine(std::string);
+		/** Default destructor */
+		~GameEngine();
 
 		void testMap();
 		bool getGameState();
@@ -59,7 +62,6 @@ class GameEngine
 		void updateInvent(Item*, player*, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>&);
 		bool parser(std::string &original, std::string tofind);
 		std::string getFileContents (std::ifstream& File);//ascii display
-
 };
 
 #endif // GAMEENGINE_HPP

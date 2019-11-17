@@ -14,7 +14,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/trim_all.hpp>
-#include "Commands/commands.hpp"
 
 #include "ui.hpp"
 #include "player.hpp"
@@ -37,8 +36,9 @@
 *********************************************************************/
 GameEngine::GameEngine()
 {
-	//initialize command object
-	this->commands = new Commands;
+	//initialize command list
+	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
+                        "loadgame", "take", "inventory", "use", "combine", "quit"};
 
 	//setup default world
 	//load map from files in Space directory
@@ -51,11 +51,11 @@ GameEngine::GameEngine()
 
 GameEngine::GameEngine(std::string savedGame)
 {
-		//initialize command object
-	this->commands = new Commands;
+	//initialize command list
+	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
+                        "loadgame", "take", "inventory", "use", "combine", "quit"};
 
 	//setup default world
-	//load map from files in Space directory
 	initializeGameMap();
 
 	// set roomstates, item locations, player location
@@ -382,11 +382,10 @@ bool GameEngine::readCommand() {
 			//std::cout << it->first << std::endl;
 			listLocations.push_back(it->first);
 		}
-			
 	}
 	
 	//find commands in input
-	for(auto it = commands->commandList.begin(); it != commands->commandList.end(); it++)
+	for(auto it = this->commandList.begin(); it != this->commandList.end(); it++)
 	{
 		if(parser(input,*it))
 			listCommands.push_back(*it);
@@ -415,14 +414,8 @@ bool GameEngine::readCommand() {
 
 	//handles a location by moving
 	if(listLocations.size() == 1){
-		Space* move = this->commands->go(this->gamePlayer.getCurrentLoc(),listLocations[0]);
-		if(move){
-			this->gamePlayer.setCurrentLoc(move);
-			if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
-				this->gamePlayer.getCurrentLoc()->setVisited(true);
-			updateItemLoc(&gamePlayer, itemsMap);
-			return true;
-		}
+		go(listLocations[0]);
+		return true;
 	}
 
 	//handles a single command
@@ -446,11 +439,11 @@ bool GameEngine::readCommand() {
 			return true;
 		}
 		else if(listCommands[0]=="help"){
-			this->commands->help();
+			help();
 			return true;
 		}
 		else if(listCommands[0]=="inventory"){
-			this->commands->inventory(itemsMap);
+			inventory(itemsMap);
 			return true;
 		}
 		else if(listCommands[0]=="take"){
@@ -478,24 +471,6 @@ bool GameEngine::readCommand() {
 			}
 		}
 	}
-
-	if (listCommands.size() == 2) {
-		if (listCommands[0] + listCommands[1] == "lookat") {
-		        if (listRoomObjects.size() > 0) {
-				this->commands->lookAt(listRoomObjects);
-				return true;
-			}
-			else if (listInventory.size() > 0) {
-				this->commands->lookAt(listInventory);
-				return true;
-			}
-			else {
-				std::cout << "This object is not valid to look at!" << std::endl; 
-			}
-		}
-	}
-		
-
 	return false;
 }
 
@@ -625,4 +600,67 @@ bool GameEngine::parser(std::string &original, std::string tofind){
 	}
 	else
 		return false;
+}
+
+/***************************************************
+ * void help()
+ * The basic help command which lists all the main
+ * commands by pulling them from a text file.
+***************************************************/
+
+void GameEngine::help() {
+  std::ifstream read("Data/Commands/help.txt");
+  for (std::string line; std::getline(read, line);) {
+    std::cout << line << std::endl;
+  }
+  std::cout << std::endl;
+  read.close();
+}
+
+/**************************************************
+ * Space* go(Space *currentLocation, string room)
+ * Checks for valid rooms and then moves the player
+ * to the appropriate room.
+**************************************************/
+
+void GameEngine::go(std::string room) {
+  // Check if room name is a valid choice and move player 
+  if (this->gamePlayer.getCurrentLoc()->exitMap.count(room) == 1) {
+	this->gamePlayer.setCurrentLoc(this->gamePlayer.getCurrentLoc()->exitMap.at(room));
+	if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
+		this->gamePlayer.getCurrentLoc()->setVisited(true);
+	updateItemLoc(&gamePlayer, itemsMap);
+  }
+  else {
+    std::cout << room << " is currently not a valid location. Please try again." << std::endl;
+  }
+}
+
+/******************************************************************************
+ * void lookAt(vector<Item*> itemList)
+ * Used to look at specific objects in the game
+ * as well as inventory items. 
+******************************************************************************/
+
+void GameEngine::lookAt(std::vector<Item*> itemList) {
+	std::cout << itemList[0]->getItemDesc() << std::endl;
+}
+
+/*********************************************************************
+ * void inventory(unordered_map<string, tuple<Item*, Space*, player*>)
+ * Prints out the user's entire inventory.
+*********************************************************************/
+
+void GameEngine::inventory(std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap) {
+  std::cout << "Inventory" << std::endl;
+  std::cout << "----------" << std::endl;
+  int count = 0;
+  for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+    if (std::get<2>(it->second) != nullptr) {
+      std::cout << it->first << std::endl;
+      count++;
+    }
+  }
+  if (count == 0)
+    std::cout << "Your inventory is empty!" << std::endl;
 }
