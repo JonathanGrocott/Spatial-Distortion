@@ -10,7 +10,12 @@ To the east is Research Lab1.
 To the west is the Entry.
 </long_desc>
 <short_desc>
-Hallway short
+This hallway has several pictures hanging on the wall.
+
+To the left is the Washroom.
+To the north is the Electronics Lab.
+To the east is Research Lab1.
+To the west is the Entry.
 </short_desc>
 <exits>
 Washroom,left

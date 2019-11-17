@@ -13,3 +13,6 @@ Lights up any room in a jiffy.
 <found_in>
 hallway
 </found_in>
+<hidden>
+true
+</hidden>

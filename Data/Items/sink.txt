@@ -13,3 +13,6 @@ This sink appears to missing knobs to turn the water on.
 <found_in>
 washroom
 </found_in>
+<hidden>
+false
+</hidden>

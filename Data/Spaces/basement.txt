@@ -2,14 +2,20 @@
 Basement
 </name>
 <long_desc>
-Basement long
+There is a musky smell in this room. The room is pitch black
+save for the glow of a small lamp on a table. There appears
+to be a sink knob on the table.
 
 To the north is the Imaging Room.
 To the east is the Generator Room.
 To the west is Research Lab2.
 </long_desc>
 <short_desc>
-Basement short
+A dimly lit basement with a single lamp on a table against the wall.
+
+To the north is the Imaging Room.
+To the east is the Generator Room.
+To the west is Research Lab2.
 </short_desc>
 <exits>
 Imaging Room,north

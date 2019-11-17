@@ -8,6 +8,8 @@ To the south is the Entry.
 </long_desc>
 <short_desc>
 Protype Room Short
+
+To the south is the Entry.
 </short_desc>
 <exits>
 Entry,south

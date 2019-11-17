@@ -9,6 +9,9 @@ To the south is the Hallway.
 </long_desc>
 <short_desc>
 Electronics Lab short
+
+To the east is the Imaging Room.
+To the south is the Hallway.
 </short_desc>
 <exits>
 Imaging Room,east

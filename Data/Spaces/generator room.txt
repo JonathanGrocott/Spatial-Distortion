@@ -8,6 +8,8 @@ To the west is the Basement.
 </long_desc>
 <short_desc>
 Generator Room short
+
+To the west is the Basement.
 </short_desc>
 <exits>
 Basement,west

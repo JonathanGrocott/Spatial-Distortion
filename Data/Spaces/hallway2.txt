@@ -11,6 +11,11 @@ To the west is an Office.
 </long_desc>
 <short_desc>
 Hallway2 short
+
+To the north is the Robotics Lab.
+To the east is Research Lab2.
+To the south is the Deck.
+To the west is an Office.
 </short_desc>
 <exits>
 Office,west

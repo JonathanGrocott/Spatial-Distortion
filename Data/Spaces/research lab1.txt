@@ -2,13 +2,19 @@
 Research Lab1
 </name>
 <long_desc>
-Research Lab1 long
+This seems to be a chemistry lab of sorts. There is glassware
+and empty labeled bottles everywhere. There's a silver lockbox
+on a wooden table in the center of the room. The lockbox appears
+to have a keypad to enter a code.
 
 To the south is Research Lab2.
 To the west is the Hallway.
 </long_desc>
 <short_desc>
-Research Lab1 short
+A chemistry lab with a lockbox in the center of the room.
+
+To the south is Research Lab2.
+To the west is the Hallway.
 </short_desc>
 <exits>
 Research Lab2,south

@@ -11,6 +11,7 @@
 
 
 #include "space.hpp"
+#include "puzzle.hpp"
 #include "boost/filesystem.hpp"
 #include "Commands/commands.hpp"
 #include "player.hpp"
@@ -24,6 +25,7 @@ class GameEngine
 	private:
 		std::unordered_map<std::string, Space*> gameMap; //collection of pointers for all spaces in the game
 		std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap;
+		std::unordered_map<std::string, Puzzle*> puzzleTracker; // Used to track completed puzzles in the game
 		void initializeGameMap();
 		void linkExitPtrs(std::string room, std::unordered_map<std::string,std::string> alias);
 		void loadGameState(std::string savedGame);

@@ -8,6 +8,8 @@ To the east is Hallway2.
 </long_desc>
 <short_desc>
 Office short
+
+To the east is Hallway2.
 </short_desc>
 <exits>
 Hallway2,east

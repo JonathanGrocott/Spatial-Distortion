@@ -8,6 +8,8 @@ To the south is Hallway2
 </long_desc>
 <short_desc>
 Robotics Lab short
+
+To the south is Hallway2
 </short_desc>
 <exits>
 Hallway2,south

@@ -9,6 +9,9 @@ To the east is a Hallway.
 </long_desc>
 <short_desc>
 Entry short
+
+To the north is the Prototype Room.
+To the east is a Hallway.
 </short_desc>
 <exits>
 Hallway,east

@@ -10,6 +10,10 @@ To the west is the Electronics Lab.
 </long_desc>
 <short_desc>
 Imaging Room short
+
+To the east is the Power Control Room.
+To the south is the Basement.
+To the west is the Electronics Lab.
 </short_desc>
 <exits>
 Basement,south

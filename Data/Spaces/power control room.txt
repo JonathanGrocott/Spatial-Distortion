@@ -8,6 +8,8 @@ To the west is the Imaging Room.
 </long_desc>
 <short_desc>
 Power Control Room short
+
+To the west is the Imaging Room.
 </short_desc>
 <exits>
 Imaging Room,west

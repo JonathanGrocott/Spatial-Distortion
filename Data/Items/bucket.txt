@@ -13,3 +13,6 @@ For all your liquid storing needs!
 <found_in>
 washroom
 </found_in>
+<hidden>
+false
+</hidden>

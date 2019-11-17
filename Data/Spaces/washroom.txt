@@ -2,12 +2,15 @@
 Washroom
 </name>
 <long_desc>
-You are in the washroom. There is a sink.
+You are in the washroom. There is a sink that
+appears to be missing the knobs.
 
 To the south is the Hallway.
 </long_desc>
 <short_desc>
-Washroom Short
+There is a sink in this room.
+
+To the south is the Hallway.
 </short_desc>
 <exits>
 Hallway,south

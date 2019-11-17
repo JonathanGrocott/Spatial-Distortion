@@ -1,0 +1,16 @@
+<name>
+lockbox
+</name>
+<desc>
+The keypad is a standard numerical keypad with the numbers 0-9.
+It appears to be looking for a two digit number.
+</desc>
+<fail>
+The keypad illuminates red and resets to its original position.
+That probably wasn't the correct number. Perhaps a look
+at a periodic table might help.
+</fail>
+<success>
+The lockbox gently swings open. A strange power cord with six prongs
+sits in the box. You take the cord and place it in your inventory.
+</success>

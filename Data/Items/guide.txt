@@ -13,3 +13,6 @@ One of the sticky notes from the monitor. Welcome to Spatial Distortion! Your go
 <found_in>
 entry
 </found_in>
+<hidden>
+false
+</hidden>

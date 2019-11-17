@@ -8,6 +8,7 @@
 
 #include "gameengine.hpp"
 #include "space.hpp"
+#include "puzzle.hpp"
 #include "boost/filesystem.hpp"
 #include "boost/range/iterator_range.hpp"
 #include <boost/algorithm/string.hpp>
@@ -65,7 +66,16 @@ GameEngine::GameEngine(std::string savedGame)
 GameEngine::~GameEngine()
 {
     // delete pointers
-	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it){
+	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
+	{
+		delete it->second;
+	}
+	for (auto it=this->itemsMap.begin(); it!=this->itemsMap.end(); it++) {
+		delete std::get<0>(it->second);
+		delete std::get<1>(it->second);
+		delete std::get<2>(it->second);
+	}
+	for (auto it=this->puzzleTracker.begin(); it!=this->puzzleTracker.end(); it++) {
 		delete it->second;
 	}
 }
@@ -132,6 +142,21 @@ void GameEngine::initializeGameMap(){
 	}
 	else
 		std::cout << "Error in Item Directory" << std::endl;
+
+	fs::path puzzDir("Data/Puzzles/");
+
+	if (fs::is_directory(puzzDir)) {
+		// populate the game map from files in the items directory
+		for (auto& entry : boost::make_iterator_range(fs::directory_iterator(puzzDir), {})) {
+			//check that entry is a file
+			if (fs::is_regular_file(entry)) {
+				Puzzle* temp = new Puzzle(entry.path().string());
+				this->puzzleTracker[temp->getPuzzName()] = temp;
+			}
+		}
+	}
+	else
+		std::cout << "Error in Puzzle Directory" << std::endl;
 }
 
 /*********************************************************************

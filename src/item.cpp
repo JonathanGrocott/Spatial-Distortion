@@ -3,6 +3,7 @@
 // Item constructor
 Item::Item(std::string path, std::unordered_map<std::string, Space*> gameMap) {
 	this->taken = false;
+	this->itemDesc = "";
 	std::ifstream File(path);
 	if (File) {
 		this->itemFilePath = path;
@@ -32,8 +33,11 @@ Item::Item(std::string path, std::unordered_map<std::string, Space*> gameMap) {
 					this->takeable = false;
 			}
 			if (!tempLine.compare("<desc>")) {
-				std::getline(File, tempLine);
-				this->itemDesc = tempLine;
+				while (tempLine.compare("</desc>")) {
+					std::getline(File, tempLine);
+					if (tempLine.compare("</desc>"))
+						this->itemDesc = this->itemDesc + tempLine + "\n";
+				}
 			}
 			if (!tempLine.compare("<found_in>")) {
 				std::getline(File, tempLine);
