@@ -357,7 +357,6 @@ bool GameEngine::readCommand() {
 			//std::cout << it->first << std::endl;
 			listLocations.push_back(it->first);
 		}
-			
 	}
 	
 	//find commands in input
@@ -453,24 +452,6 @@ bool GameEngine::readCommand() {
 			}
 		}
 	}
-
-	if (listCommands.size() == 2) {
-		if (listCommands[0] + listCommands[1] == "lookat") {
-		        if (listRoomObjects.size() > 0) {
-				this->commands->lookAt(listRoomObjects);
-				return true;
-			}
-			else if (listInventory.size() > 0) {
-				this->commands->lookAt(listInventory);
-				return true;
-			}
-			else {
-				std::cout << "This object is not valid to look at!" << std::endl; 
-			}
-		}
-	}
-		
-
 	return false;
 }
 

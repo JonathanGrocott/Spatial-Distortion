@@ -33,12 +33,12 @@ class GameEngine
 		Commands* commands;
 		
 	public:
-       		/** Default constructor */
-        	GameEngine();
-			/** Saved constructor */
-        	GameEngine(std::string);
-       	 	/** Default destructor */
-        	~GameEngine();
+		/** Default constructor */
+		GameEngine();
+		/** Saved constructor */
+		GameEngine(std::string);
+		/** Default destructor */
+		~GameEngine();
 
 		void testMap();
 		bool getGameState();
@@ -57,7 +57,6 @@ class GameEngine
 		void updateInvent(Item*, player*, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>&);
 		bool parser(std::string &original, std::string tofind);
 		std::string getFileContents (std::ifstream& File);//ascii display
-
 };
 
 #endif // GAMEENGINE_HPP

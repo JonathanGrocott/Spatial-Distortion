@@ -9,7 +9,7 @@
 
 // Constructor to instantiate commands object
 Commands::Commands(){
-  this->commandList = {"help", "go", "look", "lookat", "at", "exit", "savegame", "drop",
+  this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
                         "loadgame", "take", "inventory", "use", "combine", "quit"};
 }
 
