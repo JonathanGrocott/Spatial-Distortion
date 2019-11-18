@@ -11,7 +11,6 @@
 class Puzzle {
 	private:
 		std::string puzzName;
-		bool complete;
 		std::string puzzDesc;
 		std::string failMessage;
 		std::string successMessage;
@@ -24,9 +23,7 @@ class Puzzle {
 		std::string getPuzzDesc();
 		std::string getFail();
 		std::string getSuccess();
-		bool isComplete();
 		Space* getPuzzLocation();
-		void setComplete(bool);
 };
 
 #endif

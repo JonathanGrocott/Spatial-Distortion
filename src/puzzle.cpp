@@ -2,7 +2,6 @@
 
 // Puzzle default constructor
 Puzzle::Puzzle(std::string path, std::unordered_map<std::string, Space*> gameMap) {
-	this->complete = false;
 	this->puzzDesc = "";
 	this->failMessage = "";
 	this->successMessage = "";
@@ -87,12 +86,3 @@ Space* Puzzle::getPuzzLocation() {
 	return this->location.begin()->second;
 }
 
-// Checks if the item has been taken
-bool Puzzle::isComplete() {
-	return this->complete;
-}
-
-// Sets the puzzle's completion status
-void Puzzle::setComplete(bool status) {
-	this->complete = status;
-}
