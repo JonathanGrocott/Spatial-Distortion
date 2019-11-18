@@ -16,3 +16,6 @@ washroom
 <hidden>
 false
 </hidden>
+<trigger>
+none
+</trigger>

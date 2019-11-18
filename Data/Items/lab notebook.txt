@@ -1,21 +1,22 @@
 <name>
-sink
+lab notebook
 </name>
 <breakable>
 false
 </breakable>
 <takeable>
-false
+true
 </takeable>
 <desc>
-This sink appears to missing knobs to turn the water on.
+To get the key, the large and medium tubes must have the same
+amount of liquid.
 </desc>
 <found_in>
-washroom
+research lab1
 </found_in>
 <hidden>
-false
+true
 </hidden>
 <trigger>
-none
+lab bench
 </trigger>

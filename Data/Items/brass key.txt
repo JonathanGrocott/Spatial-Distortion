@@ -1,5 +1,5 @@
 <name>
-sink
+brass key
 </name>
 <breakable>
 false
@@ -8,10 +8,10 @@ false
 false
 </takeable>
 <desc>
-This sink appears to missing knobs to turn the water on.
+Looks like a standard key. Wonder what it opens?
 </desc>
 <found_in>
-washroom
+research lab1
 </found_in>
 <hidden>
 false

@@ -8,11 +8,23 @@ false
 true
 </takeable>
 <desc>
-One of the sticky notes from the monitor. Welcome to Spatial Distortion! Your goal is to escape this alternate dimension by solving puzzles and collecting items. Your basic commands consist of moving from room to room via "go [roomname]", typing in the room name, or typing in the cardinal directions. You can look at various objects in the room such with the look at or lookat command. In fact, you can even take things from rooms with take if the object can be taken. Don't be afraid to attempt to pick up everything in a room. If for some reason you wish to drop items, drop [item] will work for you. For more commands, type "help" to see more. You'll stumble upon a machine on your adventure: this very machine manipulates the space in rooms. Find ways to alter the machine to escape this dimension. Good luck!
+One of the sticky notes from the monitor. It reads:
+Welcome to Spatial Distortion! Your goal is to escape this alternate dimension by solving puzzles 
+and collecting items. Your basic commands consist of moving from room to room via "go [roomname]", 
+typing in the room name, or typing in the cardinal directions. You can look at various objects in 
+the room such with the look at or lookat command. In fact, you can even take things from rooms 
+with take if the object can be taken. Don't be afraid to attempt to pick up everything in a room. 
+Puzzles will be found in various areas: if you wish to solve a puzzle, then enter "solve [puzzleName]".
+For more commands, type "help" to see more. You'll stumble upon a machine on your adventure: 
+this very machine manipulates the space in rooms. Find ways to alter the machine to escape this dimension. 
+Good luck adventurer!
 </desc>
 <found_in>
 entry
 </found_in>
 <hidden>
-false
+true
 </hidden>
+<trigger>
+monitor
+</trigger>

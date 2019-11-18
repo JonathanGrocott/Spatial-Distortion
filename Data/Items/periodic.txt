@@ -19,3 +19,6 @@ hallway
 <hidden>
 false
 </hidden>
+<trigger>
+none
+</trigger>

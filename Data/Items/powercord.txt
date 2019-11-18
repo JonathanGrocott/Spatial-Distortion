@@ -1,21 +1,21 @@
 <name>
-sink
+Power Cord
 </name>
 <breakable>
 false
 </breakable>
 <takeable>
-false
+true
 </takeable>
 <desc>
-This sink appears to missing knobs to turn the water on.
+A six-pronged power cable on both ends.
 </desc>
 <found_in>
-washroom
+basement
 </found_in>
 <hidden>
-false
+true
 </hidden>
 <trigger>
-none
+lockbox
 </trigger>

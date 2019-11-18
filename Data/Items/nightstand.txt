@@ -1,5 +1,5 @@
 <name>
-sink
+nightstand
 </name>
 <breakable>
 false
@@ -8,10 +8,11 @@ false
 false
 </takeable>
 <desc>
-This sink appears to missing knobs to turn the water on.
+The nightstand has a small glass lamp that illiuminates
+a steel lockbox with a keypad.
 </desc>
 <found_in>
-washroom
+basement
 </found_in>
 <hidden>
 false

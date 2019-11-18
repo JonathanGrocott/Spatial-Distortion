@@ -16,10 +16,12 @@
 #include "space.hpp"
 #include "item.hpp"
 #include "player.hpp"
+#include "puzzle.hpp"
 
 void uiDisplay(Space* room);
 void exitDisplay(Space* temp);
 void objectsDisp(Space* room, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>);
+void puzzlesDisp(Space* room, std::unordered_map<std::string, std::tuple<Puzzle*, Space*, player*>>);
 void clearScreen();
 
 #endif

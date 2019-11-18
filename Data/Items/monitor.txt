@@ -16,3 +16,6 @@ entry
 <hidden>
 false
 </hidden>
+<trigger>
+none
+</trigger>

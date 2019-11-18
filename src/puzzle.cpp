@@ -1,8 +1,9 @@
 #include "puzzle.hpp"
 
 // Puzzle default constructor
-Puzzle::Puzzle(std::string path) {
+Puzzle::Puzzle(std::string path, std::unordered_map<std::string, Space*> gameMap) {
 	this->complete = false;
+	this->puzzDesc = "";
 	this->failMessage = "";
 	this->successMessage = "";
 	
@@ -16,6 +17,13 @@ Puzzle::Puzzle(std::string path) {
 			if (!tempLine.compare("<name>")) {
 				std::getline(File, tempLine);
 				this->puzzName = tempLine;
+			}
+			if (!tempLine.compare("<desc>")) {
+				while(tempLine.compare("</desc>")) {
+					std::getline(File, tempLine);
+					if (tempLine.compare("</desc>"))
+						this->puzzDesc = this->puzzDesc + tempLine + "\n";
+				}
 			}
 			if (!tempLine.compare("<fail>")) {
 				while(tempLine.compare("</fail>")) {
@@ -31,9 +39,23 @@ Puzzle::Puzzle(std::string path) {
 						this->successMessage = this->successMessage + tempLine + "\n";
 				}
 			}
+			if (!tempLine.compare("<found_in>")) {
+				std::getline(File, tempLine);
+				boost::algorithm::to_lower(tempLine);
+				this->location[tempLine] = nullptr;	
+				
+			}
 
 		}
 		File.close();
+		
+		for (auto it = this->location.begin(); it != this->location.end(); it++) {
+			if (gameMap.count(it->first)) {
+				it->second = gameMap.at(it->first);
+			}
+			else
+				std::cout << "This location does not exist!" << std::endl;
+		}
 	}
 }
 
@@ -45,6 +67,11 @@ std::string Puzzle::getPuzzName() {
 	return this->puzzName;
 }
 
+// Returns the puzzle description
+std::string Puzzle::getPuzzDesc() {
+	return this->puzzDesc;
+}
+
 // Returns the fail message
 std::string Puzzle::getFail() {
 	return this->failMessage;
@@ -53,6 +80,11 @@ std::string Puzzle::getFail() {
 // Returns the success message
 std::string Puzzle::getSuccess() {
 	return this->successMessage;
+}
+
+// Returns the puzzle's location
+Space* Puzzle::getPuzzLocation() {
+	return this->location.begin()->second;
 }
 
 // Checks if the item has been taken

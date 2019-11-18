@@ -2,16 +2,18 @@
 Research Lab1
 </name>
 <long_desc>
-This seems to be a chemistry lab of sorts. There is glassware
-and empty labeled bottles everywhere. There's a silver lockbox
-on a wooden table in the center of the room. The lockbox appears
-to have a keypad to enter a code.
+This seems to be an abandoned chemistry lab. There is glassware
+and empty labeled bottles everywhere. On one of the lab
+countertops, there's three test tubes of decreasing size.
+The largest tube is filled to the top with a fluorescent green
+liquid. There is a brass key encased in a transparent dome behind
+the test tubes. 
 
 To the south is Research Lab2.
 To the west is the Hallway.
 </long_desc>
 <short_desc>
-A chemistry lab with a lockbox in the center of the room.
+A chemistry lab with a peculiar set of test tubes.
 
 To the south is Research Lab2.
 To the west is the Hallway.

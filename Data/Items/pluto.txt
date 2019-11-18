@@ -1,5 +1,5 @@
 <name>
-sink
+pluto poster
 </name>
 <breakable>
 false
@@ -8,10 +8,12 @@ false
 false
 </takeable>
 <desc>
-This sink appears to missing knobs to turn the water on.
+A picture of the former 9th planet.
+It has in bold words "Relegated to dwarf status"
+You will be missed Pluto.
 </desc>
 <found_in>
-washroom
+hallway
 </found_in>
 <hidden>
 false

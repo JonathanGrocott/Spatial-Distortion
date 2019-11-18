@@ -24,7 +24,7 @@ class GameEngine
 	private:
 		std::unordered_map<std::string, Space*> gameMap; //collection of pointers for all spaces in the game
 		std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap;
-		std::unordered_map<std::string, Puzzle*> puzzleTracker; // Used to track completed puzzles in the game
+		std::unordered_map<std::string, std::tuple<Puzzle*, Space*, player*>> puzzleTracker; 
 		void initializeGameMap();
 		void linkExitPtrs(std::string room, std::unordered_map<std::string,std::string> alias);
 		void loadGameState(std::string savedGame);
@@ -35,8 +35,10 @@ class GameEngine
 		std::vector<std::string> commandList;
 		void help(); // Shows all commands
 		void go(std::string room); // Moves user to another room
-		void lookAt(std::vector<Item*>); // Gives description of room or inventory objects 
 		void inventory(std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>); // Displays entire inventory
+		bool solve(std::string); // Find the appropriate puzzle and checks the answer 
+		bool lockboxPuzzle(); // Checks answer for lockbox puzzle.
+		bool testTubePuzzle(); // Checks answer for testtube puzzle.
 	public:
 		/** Default constructor */
 		GameEngine();
@@ -60,6 +62,7 @@ class GameEngine
 		bool readCommand();
 		void updateItemLoc(player*, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>&);
 		void updateInvent(Item*, player*, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>&);
+		void updatePuzzMap(Puzzle*, player*, std::unordered_map<std::string, std::tuple<Puzzle*, Space*, player*>>&);
 		bool parser(std::string &original, std::string tofind);
 		std::string getFileContents (std::ifstream& File);//ascii display
 };

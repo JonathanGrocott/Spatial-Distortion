@@ -26,7 +26,6 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
-
 #include <vector>
 
 /*********************************************************************
@@ -38,7 +37,7 @@ GameEngine::GameEngine()
 {
 	//initialize command list
 	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
-                        "loadgame", "take", "inventory", "use", "combine", "quit"};
+                        "loadgame", "take", "inventory", "use", "combine", "quit", "solve"};
 
 	//setup default world
 	//load map from files in Space directory
@@ -53,7 +52,7 @@ GameEngine::GameEngine(std::string savedGame)
 {
 	//initialize command list
 	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
-                        "loadgame", "take", "inventory", "use", "combine", "quit"};
+                        "loadgame", "take", "inventory", "use", "combine", "quit", "solve"};
 
 	//setup default world
 	initializeGameMap();
@@ -65,18 +64,12 @@ GameEngine::GameEngine(std::string savedGame)
 
 GameEngine::~GameEngine()
 {
-    // delete pointers
+	// delete pointers
 	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
 	{
 		delete it->second;
 	}
-	for (auto it=this->itemsMap.begin(); it!=this->itemsMap.end(); it++) {
-		delete std::get<0>(it->second);
-		delete std::get<1>(it->second);
-	}
-	for (auto it=this->puzzleTracker.begin(); it!=this->puzzleTracker.end(); it++) {
-		delete it->second;
-	}
+
 }
 
 /*********************************************************************
@@ -149,8 +142,8 @@ void GameEngine::initializeGameMap(){
 		for (auto& entry : boost::make_iterator_range(fs::directory_iterator(puzzDir), {})) {
 			//check that entry is a file
 			if (fs::is_regular_file(entry)) {
-				Puzzle* temp = new Puzzle(entry.path().string());
-				this->puzzleTracker[temp->getPuzzName()] = temp;
+				Puzzle* temp = new Puzzle(entry.path().string(), this->gameMap);
+				this->puzzleTracker[temp->getPuzzName()] = std::make_tuple(temp, temp->getPuzzLocation(), nullptr);
 			}
 		}
 	}
@@ -185,7 +178,7 @@ void GameEngine::loadGameState(std::string savedGame){
 	if(File){                      //Check if opens ok
 		while (File.good ()){
 			std::string TempLine;                  //Temp line
-	        std::getline (File , TempLine);        //Get temp line
+		        std::getline (File , TempLine);        //Get temp line
 			
 			// set player location
 			if(!TempLine.compare("<player>")){
@@ -218,18 +211,44 @@ void GameEngine::loadGameState(std::string savedGame){
 							std::get<2>(this->itemsMap.at(result[0])) =  std::addressof(this->gamePlayer);
 							std::get<1>(this->itemsMap.at(result[0])) =  this->gamePlayer.getCurrentLoc();
 							std::get<0>(this->itemsMap.at(result[0]))->setTaken(true);
+							std::get<0>(this->itemsMap.at(result[0]))->setTakeable(true);
+							std::get<0>(this->itemsMap.at(result[0]))->setHidden(false);
+
 						} 
 						else
 						{
 							std::get<2>(this->itemsMap.at(result[0])) = nullptr;
 							std::get<1>(this->itemsMap.at(result[0])) = this->gameMap.at(result[1]);
+							if(result[2] == "0") 
+								std::get<0>(this->itemsMap.at(result[0]))->setHidden(false);
+							if(result[3] == "1")
+								std::get<0>(this->itemsMap.at(result[0]))->setTakeable(true);
+							
 						}
 						
 					}
 				}
 			}
+			// set puzzle completion
+			if(!TempLine.compare("<puzzles>")) {
+				while(TempLine.compare("</puzzles>"))
+				{
+					std::getline (File , TempLine);
+					if(TempLine.compare("</puzzles>")) {
+						boost::algorithm::to_lower(TempLine);
+						std::vector<std::string> result;
+						boost::split(result, TempLine, boost::is_any_of(","));
+						if(result[1] == "true"){
+							std::get<2>(this->puzzleTracker.at(result[0])) = std::addressof(this->gamePlayer);
+						}
+						else {
+							std::get<2>(this->puzzleTracker.at(result[0])) = nullptr;
+						}
+					}
+				}
+			}
         }
-		File.close();
+	File.close();
     }
     else{ //Return error
         std::cout << "ERROR cannot find File or does not exist." << std::endl;
@@ -279,17 +298,31 @@ void GameEngine::saveGameState(){
 		}
 		file << "</visted>" << std::endl;
 
-		//save item locations
+		// save item locations
 		file << "<items>" << std::endl;
 		for (std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>::iterator it=this->itemsMap.begin(); it!=this->itemsMap.end(); ++it){
 			if(std::get<2>(it->second) == nullptr){
-				file << it->first << "," << std::get<1>(it->second)->getSpaceName() << std::endl;
+				file << it->first << "," << std::get<1>(it->second)->getSpaceName() << "," <<
+				std::to_string(std::get<0>(it->second)->isHidden()) << "," << 
+				std::to_string(std::get<0>(it->second)->isTakeable()) << std::endl;
 			}
 			else{
-				file << it->first << "," << "player" << std::endl;
+				file << it->first << "," << "player,false,true" << std::endl;
 			}
 		}
 		file << "</items>" << std::endl;
+
+		// save puzzle completion
+		file << "<puzzles>" << std::endl;
+		for (auto it = this->puzzleTracker.begin(); it != this->puzzleTracker.end(); ++it) {
+			if(std::get<2>(it->second) == nullptr) {
+				file << it->first << ",false" << std::endl;
+			}
+			else {
+				file << it->first << ",true" << std::endl;
+			}
+		}
+		file << "</puzzles>" << std::endl;
 
 		file.close();
 	}
@@ -352,6 +385,9 @@ void GameEngine::displayMenu() {
 		std::cout << "Objects in Room: " << std::endl;
 		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
 		std::cout << "............................................" << std::endl;
+		std::cout << "Solvable Puzzles: " << std::endl;
+		puzzlesDisp(this->gamePlayer.getCurrentLoc(), this->puzzleTracker);
+		std::cout << "............................................" << std::endl;
 }
 
 /*********************************************************************
@@ -371,6 +407,7 @@ bool GameEngine::readCommand() {
 	std::vector<std::string> listLocations;
 	std::vector<Item*> listRoomObjects;
 	std::vector<Item*> listInventory;
+	std::vector<Puzzle*> listPuzzles;
 	std::vector<std::string> listCommands;
 	
 	//find all locations in input
@@ -402,6 +439,21 @@ bool GameEngine::readCommand() {
 		if(parser(input, it->first)) {
 			if (std::get<2>(it->second) != nullptr)
 				listInventory.push_back(std::get<0>(it->second));
+		}
+	}
+	
+	//find puzzle names in the input
+	for(auto it = this->puzzleTracker.begin(); it != this->puzzleTracker.end(); it++)
+	{
+		if(parser(input, it->first)) {
+			if (std::get<2>(it->second) == nullptr) {
+				if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
+					listPuzzles.push_back(std::get<0>(it->second));
+				}
+			}
+			else {
+				std::cout << it->first << " has already been solved!" << std::endl;
+			}
 		}
 	}
 
@@ -450,7 +502,7 @@ bool GameEngine::readCommand() {
 		}
 		else if(listCommands[0]=="take"){
 			if (listRoomObjects.size() > 0) {
-				if (listRoomObjects[0]->isTakeable()) {
+				if (listRoomObjects[0]->isTakeable() && !listRoomObjects[0]->isHidden()) {
 					this->updateInvent(listRoomObjects[0], &gamePlayer, itemsMap);
 					listRoomObjects[0]->setTaken(true);
 					std::cout << listRoomObjects[0]->getItemName() << " added to inventory." << std::endl;
@@ -470,6 +522,36 @@ bool GameEngine::readCommand() {
 			}
 			else {
 				std::cout << listInventory[0]->getItemName() << " is not in your inventory." << std::endl;
+			}
+		}
+		else if(listCommands[0]=="look at") {
+			if (listRoomObjects.size() > 0) {
+				std::cout << listRoomObjects[0]->getItemDesc() << std::endl;
+				for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+					if (std::get<0>(it->second)->getTrigger() == listRoomObjects[0]->getItemName())
+						std::get<0>(it->second)->setHidden(false);
+				}
+				return true;
+			}
+			else if (listInventory.size() > 0) {
+				std::cout << listInventory[0]->getItemDesc() << std::endl;
+				return true;
+			}
+			else {
+				std::cout << "This object is not valid to look at!" << std::endl;
+			}
+		}
+		else if(listCommands[0]=="solve") {
+			if (listPuzzles.size() > 0) {
+				std::cout << listPuzzles[0]->getPuzzDesc() << std::endl;
+				if (solve(listPuzzles[0]->getPuzzName())) {
+					std::cout << listPuzzles[0]->getSuccess() << std::endl;
+					updatePuzzMap(listPuzzles[0], &gamePlayer, puzzleTracker);
+				}
+				else {
+					std::cout << listPuzzles[0]->getFail() << std::endl;
+				}
+				return true;
 			}
 		}
 	}
@@ -543,11 +625,24 @@ void GameEngine::updateInvent(Item* update, player* p, std::unordered_map<std::s
 	}
 }
 
+/*********************************************************************
+** Description: Updates the tuple in puzzleTracker to reflect
+** puzzles being solved
+** Input: Puzzle*, player*, unordered_map<string, tuple<Item*, Space*, player*>>
+** Output: 
+*********************************************************************/
+void GameEngine::updatePuzzMap(Puzzle* update, player* p, std::unordered_map<std::string, std::tuple<Puzzle*, Space*, player*>> &puzzleTracker)
+{
+	for (auto it = puzzleTracker.begin(); it != puzzleTracker.end(); it++) {
+		if (!it->first.compare(update->getPuzzName()))
+			std::get<2>(it->second) = p;
+	}
+}
+
 
 /*********************************************************************
-** Description: A test function that prints out the names of the 
-** Space objects that exit in the gameMap.
-** Input: 
+** Description: Command parser
+** Input: string, string
 ** Output: 
 *********************************************************************/
 bool GameEngine::parser(std::string &original, std::string tofind){
@@ -604,11 +699,11 @@ bool GameEngine::parser(std::string &original, std::string tofind){
 		return false;
 }
 
-/***************************************************
- * void help()
- * The basic help command which lists all the main
- * commands by pulling them from a text file.
-***************************************************/
+/*********************************************************************
+** Description: Prints the list of main commands
+** Input: 
+** Output: 
+*********************************************************************/
 
 void GameEngine::help() {
   std::ifstream read("Data/Commands/help.txt");
@@ -619,11 +714,11 @@ void GameEngine::help() {
   read.close();
 }
 
-/**************************************************
- * Space* go(Space *currentLocation, string room)
- * Checks for valid rooms and then moves the player
- * to the appropriate room.
-**************************************************/
+/*********************************************************************
+** Description: Moves the player to a room
+** Input: string
+** Output: 
+*********************************************************************/
 
 void GameEngine::go(std::string room) {
   // Check if room name is a valid choice and move player 
@@ -638,19 +733,10 @@ void GameEngine::go(std::string room) {
   }
 }
 
-/******************************************************************************
- * void lookAt(vector<Item*> itemList)
- * Used to look at specific objects in the game
- * as well as inventory items. 
-******************************************************************************/
-
-void GameEngine::lookAt(std::vector<Item*> itemList) {
-	std::cout << itemList[0]->getItemDesc() << std::endl;
-}
-
 /*********************************************************************
- * void inventory(unordered_map<string, tuple<Item*, Space*, player*>)
- * Prints out the user's entire inventory.
+** Description: Prints the inventory out to the player
+** Input: unordered_map<string, tuple<Item*, Space*, player*>>
+** Output: 
 *********************************************************************/
 
 void GameEngine::inventory(std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap) {
@@ -666,3 +752,159 @@ void GameEngine::inventory(std::unordered_map<std::string, std::tuple<Item*, Spa
   if (count == 0)
     std::cout << "Your inventory is empty!" << std::endl;
 }
+
+/*********************************************************************
+** Description: Finds the correct puzzle and checks the answer
+** Input: string, string
+** Output: bool
+*********************************************************************/
+bool GameEngine::solve(std::string puzzleName) {
+	if (puzzleName == "lockbox")
+		return lockboxPuzzle();
+	else if (puzzleName == "test tubes") {
+		return testTubePuzzle();
+	}
+}
+
+/*********************************************************************
+** Description: Checks the answer for lockbox puzzle
+** Input:
+** Output: bool
+*********************************************************************/
+bool GameEngine::lockboxPuzzle() {
+	std::string answer;
+	std::cout << "What number do you input? ";
+	std::getline(std::cin, answer);
+	if (answer == "42" || answer == "forty two" || answer == "forty-two") {
+		std::get<0>(this->itemsMap.at("power cord"))->setHidden(false);
+		std::get<0>(this->itemsMap.at("power cord"))->setTakeable(true);
+		return true;
+	}
+	else { 
+		return false;
+	}
+}
+
+/*********************************************************************
+** Description: Checks the answer for test tube puzzle
+** Input:
+** Output: bool
+*********************************************************************/
+bool GameEngine::testTubePuzzle() {
+	int smallTube = 0;
+	const int MAX_SMALL = 5;
+	int mediumTube = 0;
+	const int MAX_MED = 7;
+	int largeTube = 12;
+	int diff;
+	std::string input;
+	while (largeTube != mediumTube) {
+		// Display quantities
+		std::cout << std::endl;
+		std::cout << "The large tube (1) currently has: " << std::to_string(largeTube) << " units" << std::endl;
+		std::cout << "The medium tube (2) currently has: " << std::to_string(mediumTube) << " units" << std::endl;
+		std::cout << "The small tube (3) currently has: " << std::to_string(smallTube) << " units" << std::endl;
+		
+		// User input
+		std::cout << "Pouring: ";
+		std::getline(std::cin, input);
+		if (input == "q" || input == "quit" || input == "reset") 
+			return false;
+
+		// Parse input
+		std::vector<std::string> splitInput;
+		boost::split(splitInput, input, boost::is_any_of(" "));
+		if (splitInput.size() == 3 && splitInput[1] == "to") {	
+			// Pouring into the large tube (tube 1)
+			if (splitInput[2] == "1") {
+				// Med -> Large
+				if (splitInput[0] == "2") {
+					largeTube += mediumTube;
+					mediumTube = 0;
+				}
+				// Small -> Large
+				else if (splitInput[0] == "3") {
+					largeTube += smallTube;
+					smallTube = 0;
+				}
+			else
+				std::cout << "That's not a valid pour." << std::endl;
+			}
+		
+			// Pouring into the medium tube (tube 2)
+			else if (splitInput[2] == "2") {
+				// Large -> Med
+				if (splitInput[0] == "1") {
+					if (mediumTube + largeTube > MAX_MED) {
+						diff = MAX_MED - mediumTube; 
+						mediumTube = MAX_MED;
+						largeTube -= diff;
+					}
+					else {
+						mediumTube += largeTube;
+						largeTube = 0;
+					}
+				}
+				// Small -> Med
+				else if (splitInput[0] == "3") {
+					if (mediumTube + smallTube > MAX_MED) {
+						diff = MAX_MED - mediumTube;
+						mediumTube = MAX_MED;
+						smallTube -= diff;
+					}
+					else {
+						mediumTube += smallTube;
+						smallTube = 0;
+					}
+				}
+				else
+					std::cout << "That's not a valid pour." << std::endl;
+			}
+	
+			// Pouring into the small tube (tube 3)
+			else if (splitInput[2] == "3") {
+				// Large -> Small
+				if (splitInput[0] == "1") {
+					if (smallTube + largeTube > MAX_SMALL) { 
+						diff = MAX_SMALL - smallTube;
+						smallTube = MAX_SMALL;
+						largeTube -= diff;
+					}
+					else {
+						smallTube += largeTube;
+						largeTube = 0;
+					}
+				}
+				// Large -> Med
+				else if (splitInput[0] == "2") {
+					if (smallTube + mediumTube > MAX_SMALL) {
+						diff = MAX_SMALL - smallTube;
+						smallTube = MAX_SMALL;
+						mediumTube -= diff;
+					}
+					else {
+						smallTube += mediumTube;
+						mediumTube = 0;
+					}
+				}
+				else
+					std::cout << "That's not a valid pour." << std::endl;
+			}
+			
+			// User entered strange input
+			else {
+				std::cout << "Please follow the format x to y when deciding your pour." << std::endl;
+			}
+
+		}
+		else {
+			std::cout << "Please follow the format x to y when deciding your pour." << std::endl;
+		
+		}
+	}
+	
+	// Release the key
+	std::get<0>(this->itemsMap.at("brass key"))->setTakeable(true);
+	return true;
+}
+

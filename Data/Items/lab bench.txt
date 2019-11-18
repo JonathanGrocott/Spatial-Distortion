@@ -1,5 +1,5 @@
 <name>
-sink
+lab bench
 </name>
 <breakable>
 false
@@ -8,10 +8,11 @@ false
 false
 </takeable>
 <desc>
-This sink appears to missing knobs to turn the water on.
+A lab bench with three test tubes on top.
+There appears to be a lab notebook next to the tubes.
 </desc>
 <found_in>
-washroom
+research lab1
 </found_in>
 <hidden>
 false

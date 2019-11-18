@@ -11,8 +11,8 @@ true
 Lights up any room in a jiffy.
 </desc>
 <found_in>
-hallway
+office
 </found_in>
 <hidden>
-true
+false
 </hidden>
