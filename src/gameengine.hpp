@@ -34,7 +34,12 @@ class GameEngine
 		void help(); // Shows all commands
 		void go(std::string room); // Moves user to another room
 		void lookAt(std::vector<Item*>); // Gives description of room or inventory objects 
-		void inventory(std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>); // Displays entire inventory
+		void inventory(); // Displays entire inventory
+		void quit();
+		void look();
+		
+		// void take();
+		// void drop();
 	public:
 		/** Default constructor */
 		GameEngine();

@@ -396,21 +396,11 @@ bool GameEngine::readCommand() {
 	//handles a single command
 	if(listCommands.size() == 1){
 		if(listCommands[0]=="quit"){
-			//check if player would like to save
-			clearScreen();
-			std::string input;
-			std::cout << "Would you like to save the game: ";
-       		std::getline(std::cin, input);
-			//set gamestate to false
-			if(input == "y" || input == "yes")
-			{
-				saveGameState();
-			}
-			this->setGameState(false);
+			quit();
 			return true;
 		}
 		else if(listCommands[0]=="look"){
-			uiDisplay(this->gamePlayer.getCurrentLoc());
+			look();
 			return true;
 		}
 		else if(listCommands[0]=="help"){
@@ -418,7 +408,7 @@ bool GameEngine::readCommand() {
 			return true;
 		}
 		else if(listCommands[0]=="inventory"){
-			inventory(itemsMap);
+			inventory();
 			return true;
 		}
 		else if(listCommands[0]=="take"){
@@ -626,11 +616,11 @@ void GameEngine::lookAt(std::vector<Item*> itemList) {
  * Prints out the user's entire inventory.
 *********************************************************************/
 
-void GameEngine::inventory(std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap) {
+void GameEngine::inventory() {
   std::cout << "Inventory" << std::endl;
   std::cout << "----------" << std::endl;
   int count = 0;
-  for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+  for (auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++) {
     if (std::get<2>(it->second) != nullptr) {
       std::cout << it->first << std::endl;
       count++;
@@ -638,4 +628,21 @@ void GameEngine::inventory(std::unordered_map<std::string, std::tuple<Item*, Spa
   }
   if (count == 0)
     std::cout << "Your inventory is empty!" << std::endl;
+}
+
+void GameEngine::quit(){
+	//check if player would like to save
+	clearScreen();
+	std::string input;
+	std::cout << "Would you like to save the game: ";
+	std::getline(std::cin, input);
+	//set gamestate to false
+	if(input == "y" || input == "yes")
+	{
+		saveGameState();
+	}
+	this->setGameState(false);
+}
+void GameEngine::look(){
+	uiDisplay(this->gamePlayer.getCurrentLoc());
 }
