@@ -35,10 +35,16 @@ class GameEngine
 		std::vector<std::string> commandList;
 		void help(); // Shows all commands
 		void go(std::string room); // Moves user to another room
-		void inventory(std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>); // Displays entire inventory
 		bool solve(std::string); // Find the appropriate puzzle and checks the answer 
 		bool lockboxPuzzle(); // Checks answer for lockbox puzzle.
 		bool testTubePuzzle(); // Checks answer for testtube puzzle.
+		void lookAt(std::vector<Item*>); // Gives description of room or inventory objects 
+		void inventory(); // Displays entire inventory
+		void quit();
+		void look();
+		
+		// void take();
+		// void drop();
 	public:
 		/** Default constructor */
 		GameEngine();

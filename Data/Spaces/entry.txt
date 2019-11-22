@@ -8,7 +8,7 @@ To the north is the Prototype Room.
 To the east is a Hallway.
 </long_desc>
 <short_desc>
-Entry short
+The main reception area for Aperture Science.
 
 To the north is the Prototype Room.
 To the east is a Hallway.

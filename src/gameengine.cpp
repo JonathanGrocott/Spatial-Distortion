@@ -37,7 +37,8 @@ GameEngine::GameEngine()
 {
 	//initialize command list
 	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
-                        "loadgame", "take", "inventory", "use", "combine", "quit", "solve"};
+                        "loadgame", "take", "inventory", "use", "combine", "quit", "solve",
+			"clear"};
 
 	//setup default world
 	//load map from files in Space directory
@@ -474,22 +475,12 @@ bool GameEngine::readCommand() {
 
 	//handles a single command
 	if(listCommands.size() == 1){
-		if(listCommands[0]=="quit"){
-			//check if player would like to save
-			clearScreen();
-			std::string input;
-			std::cout << "Would you like to save the game: ";
-       			std::getline(std::cin, input);
-			//set gamestate to false
-			if(input == "y" || input == "yes")
-			{
-				saveGameState();
-			}
-			this->setGameState(false);
+		if(listCommands[0]=="quit" || listCommands[0]=="exit"){
+			quit();
 			return true;
 		}
 		else if(listCommands[0]=="look"){
-			uiDisplay(this->gamePlayer.getCurrentLoc());
+			look();
 			return true;
 		}
 		else if(listCommands[0]=="help"){
@@ -497,7 +488,7 @@ bool GameEngine::readCommand() {
 			return true;
 		}
 		else if(listCommands[0]=="inventory"){
-			inventory(itemsMap);
+			inventory();
 			return true;
 		}
 		else if(listCommands[0]=="take"){
@@ -553,6 +544,10 @@ bool GameEngine::readCommand() {
 				}
 				return true;
 			}
+		}
+		else if(listCommands[0]=="clear") {
+			clearScreen();
+			return true;
 		}
 	}
 	return false;
@@ -739,11 +734,11 @@ void GameEngine::go(std::string room) {
 ** Output: 
 *********************************************************************/
 
-void GameEngine::inventory(std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap) {
+void GameEngine::inventory() {
   std::cout << "Inventory" << std::endl;
   std::cout << "----------" << std::endl;
   int count = 0;
-  for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+  for (auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++) {
     if (std::get<2>(it->second) != nullptr) {
       std::cout << it->first << std::endl;
       count++;
@@ -908,3 +903,19 @@ bool GameEngine::testTubePuzzle() {
 	return true;
 }
 
+void GameEngine::quit(){
+	//check if player would like to save
+	clearScreen();
+	std::string input;
+	std::cout << "Would you like to save the game: ";
+	std::getline(std::cin, input);
+	//set gamestate to false
+	if(input == "y" || input == "yes")
+	{
+		saveGameState();
+	}
+	this->setGameState(false);
+}
+void GameEngine::look(){
+	uiDisplay(this->gamePlayer.getCurrentLoc());
+}

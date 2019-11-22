@@ -23,8 +23,8 @@ Good luck adventurer!
 entry
 </found_in>
 <hidden>
-true
+false
 </hidden>
 <trigger>
-monitor
+none
 </trigger>
