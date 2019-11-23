@@ -42,9 +42,8 @@ class GameEngine
 		void inventory(); // Displays entire inventory
 		void quit();
 		void look();
-		
-		// void take();
-		// void drop();
+		void take(Item*);
+		void drop(Item*);
 	public:
 		/** Default constructor */
 		GameEngine();
@@ -66,9 +65,9 @@ class GameEngine
 		void getObjectContents(std::string file);
 		void displayMenu();//menu for each location
 		bool readCommand();
-		void updateItemLoc(player*, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>&);
-		void updateInvent(Item*, player*, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>&);
-		void updatePuzzMap(Puzzle*, player*, std::unordered_map<std::string, std::tuple<Puzzle*, Space*, player*>>&);
+		void updateItemLoc();
+		void updateInvent(Item*, player*);
+		void updatePuzzMap(Puzzle*);
 		bool parser(std::string &original, std::string tofind);
 		std::string getFileContents (std::ifstream& File);//ascii display
 };

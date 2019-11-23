@@ -53,7 +53,8 @@ GameEngine::GameEngine(std::string savedGame)
 {
 	//initialize command list
 	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
-                        "loadgame", "take", "inventory", "use", "combine", "quit", "solve"};
+                        "loadgame", "take", "inventory", "use", "combine", "quit", "solve",
+			"clear"};
 
 	//setup default world
 	initializeGameMap();
@@ -307,6 +308,7 @@ void GameEngine::saveGameState(){
 				std::to_string(std::get<0>(it->second)->isHidden()) << "," << 
 				std::to_string(std::get<0>(it->second)->isTakeable()) << std::endl;
 			}
+			//[itemName], player, isHidden, isTakeable
 			else{
 				file << it->first << "," << "player,false,true" << std::endl;
 			}
@@ -494,9 +496,7 @@ bool GameEngine::readCommand() {
 		else if(listCommands[0]=="take"){
 			if (listRoomObjects.size() > 0) {
 				if (listRoomObjects[0]->isTakeable() && !listRoomObjects[0]->isHidden()) {
-					this->updateInvent(listRoomObjects[0], &gamePlayer, itemsMap);
-					listRoomObjects[0]->setTaken(true);
-					std::cout << listRoomObjects[0]->getItemName() << " added to inventory." << std::endl;
+					take(listRoomObjects[0]);
 					return true;
 				}
 				else {
@@ -506,9 +506,7 @@ bool GameEngine::readCommand() {
 		}
 		else if(listCommands[0]=="drop"){
 			if (listInventory.size() > 0) {
-				this->updateInvent(listInventory[0], nullptr, itemsMap);
-				listInventory[0]->setTaken(false);
-				std::cout << listInventory[0]->getItemName() << " dropped." << std::endl;
+				drop(listInventory[0]);
 				return true;	
 			}
 			else {
@@ -518,7 +516,7 @@ bool GameEngine::readCommand() {
 		else if(listCommands[0]=="look at") {
 			if (listRoomObjects.size() > 0) {
 				std::cout << listRoomObjects[0]->getItemDesc() << std::endl;
-				for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+				for (auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++) {
 					if (std::get<0>(it->second)->getTrigger() == listRoomObjects[0]->getItemName())
 						std::get<0>(it->second)->setHidden(false);
 				}
@@ -537,7 +535,7 @@ bool GameEngine::readCommand() {
 				std::cout << listPuzzles[0]->getPuzzDesc() << std::endl;
 				if (solve(listPuzzles[0]->getPuzzName())) {
 					std::cout << listPuzzles[0]->getSuccess() << std::endl;
-					updatePuzzMap(listPuzzles[0], &gamePlayer, puzzleTracker);
+					updatePuzzMap(listPuzzles[0]);
 				}
 				else {
 					std::cout << listPuzzles[0]->getFail() << std::endl;
@@ -594,14 +592,14 @@ void GameEngine::testMap()
 /*********************************************************************
 ** Description: Updates the tuple in itemMaps to reflect
 ** items moving around the map
-** Input: Item*, player*, unordered_map<string, tuple<Item*, Space*, player*>>
+** Input: 
 ** Output: 
 *********************************************************************/
-void GameEngine::updateItemLoc(player* p, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> &itemsMap)
+void GameEngine::updateItemLoc()
 {
-	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+	for (auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++) {
 		if (std::get<2>(it->second) != nullptr)
-			std::get<1>(it->second) = p->getCurrentLoc();
+			std::get<1>(it->second) = this->gamePlayer.getCurrentLoc();
 	}
 }
 
@@ -609,12 +607,12 @@ void GameEngine::updateItemLoc(player* p, std::unordered_map<std::string, std::t
 /*********************************************************************
 ** Description: Updates the tuple in itemMaps to reflect
 ** items being taken and added to inventory
-** Input: Item*, player*, unordered_map<string, tuple<Item*, Space*, player*>>
+** Input: Item*
 ** Output: 
 *********************************************************************/
-void GameEngine::updateInvent(Item* update, player* p, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> &itemsMap)
+void GameEngine::updateInvent(Item* update, player* p)
 {
-	for (auto it = itemsMap.begin(); it != itemsMap.end(); it++) {
+	for (auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++) {
 		if (!it->first.compare(update->getItemName()))
 			std::get<2>(it->second) = p;
 	}
@@ -623,14 +621,14 @@ void GameEngine::updateInvent(Item* update, player* p, std::unordered_map<std::s
 /*********************************************************************
 ** Description: Updates the tuple in puzzleTracker to reflect
 ** puzzles being solved
-** Input: Puzzle*, player*, unordered_map<string, tuple<Item*, Space*, player*>>
+** Input: Puzzle*
 ** Output: 
 *********************************************************************/
-void GameEngine::updatePuzzMap(Puzzle* update, player* p, std::unordered_map<std::string, std::tuple<Puzzle*, Space*, player*>> &puzzleTracker)
+void GameEngine::updatePuzzMap(Puzzle* update)
 {
-	for (auto it = puzzleTracker.begin(); it != puzzleTracker.end(); it++) {
+	for (auto it = this->puzzleTracker.begin(); it != this->puzzleTracker.end(); it++) {
 		if (!it->first.compare(update->getPuzzName()))
-			std::get<2>(it->second) = p;
+			std::get<2>(it->second) = &(this->gamePlayer);
 	}
 }
 
@@ -721,7 +719,7 @@ void GameEngine::go(std::string room) {
 	this->gamePlayer.setCurrentLoc(this->gamePlayer.getCurrentLoc()->exitMap.at(room));
 	if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
 		this->gamePlayer.getCurrentLoc()->setVisited(true);
-	updateItemLoc(&gamePlayer, itemsMap);
+	this->updateItemLoc();
   }
   else {
     std::cout << room << " is currently not a valid location. Please try again." << std::endl;
@@ -903,6 +901,11 @@ bool GameEngine::testTubePuzzle() {
 	return true;
 }
 
+/*********************************************************************
+** Description: Quits the game and prompts user for save
+** Input:
+** Output:
+*********************************************************************/
 void GameEngine::quit(){
 	//check if player would like to save
 	clearScreen();
@@ -916,6 +919,38 @@ void GameEngine::quit(){
 	}
 	this->setGameState(false);
 }
+
+/*********************************************************************
+** Description: Gives the long form of the room again
+** Input:
+** Output:
+*********************************************************************/
 void GameEngine::look(){
 	uiDisplay(this->gamePlayer.getCurrentLoc());
 }
+
+
+/*********************************************************************
+** Description: Drops items in rooms
+** Input:
+** Output:
+*********************************************************************/
+void GameEngine::drop(Item* droppedItem) {
+	this->updateInvent(droppedItem, nullptr);
+	droppedItem->setTaken(false);
+	std::cout << droppedItem->getItemName() << " dropped." << std::endl;
+
+}
+
+/*********************************************************************
+** Description: Takes items in rooms
+** Input:
+** Output:
+*********************************************************************/
+void GameEngine::take(Item* takenItem) {
+	this->updateInvent(takenItem, &(this->gamePlayer));
+	takenItem->setTaken(true);
+	std::cout << takenItem->getItemName() << " added to inventory." << std::endl;
+
+}
+
