@@ -29,27 +29,14 @@ void uiDisplay(Space* room){
         while ( myfile.good() ){    // read to end of file
 
             std::getline (myfile, line);
-	    if(!room->getVisited()) {
-	        if(!line.compare("<long_desc>")){
-		   while(line.compare("</long_desc>"))
-		   {
-		       std::getline (myfile , line);
-		       if(line.compare("</long_desc>"))
+	    if(!line.compare("<long_desc>")){
+	       while(line.compare("</long_desc>"))
+	       {
+	           std::getline (myfile , line);
+	           if(line.compare("</long_desc>"))
 		           std::cout << line << '\n';
-		   }
-		}
+	       }
 	    }
-	    else {
-	        if(!line.compare("<short_desc>")){
-	           while(line.compare("</short_desc>"))
-		   {
-		       std::getline (myfile , line);
-		       if(line.compare("</short_desc>"))
-		           std::cout << line << '\n';
-		   }
-	        }
-            }
-
         }
     myfile.close();
     }
