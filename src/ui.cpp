@@ -44,6 +44,36 @@ void longDescDisplay(Space* room){
 }
 
 /*********************************************************************
+** Description: display, output file contents
+** Input: Space pointer
+** Output: none.
+*********************************************************************/
+void shortDescDisplay(Space* room){
+
+    //clearScreen();
+
+    std::string line;
+    std::string location = "Data/Spaces/"+room->getSpaceName()+".txt";
+    std::ifstream myfile (location);
+
+    if (myfile.is_open()){          // comfirm file opened
+        while ( myfile.good() ){    // read to end of file
+
+            std::getline (myfile, line);
+	    if(!line.compare("<short_desc>")){
+	       while(line.compare("</short_desc>"))
+	       {
+	           std::getline (myfile , line);
+	           if(line.compare("</short_desc>"))
+		           std::cout << line << '\n';
+	       }
+	    }
+        }
+    myfile.close();
+    }
+    else std::cout << "Unable to open file" << std::endl; 
+}
+/*********************************************************************
 ** Description: display, output exits
 ** Input: Space pointer
 ** Output: none.

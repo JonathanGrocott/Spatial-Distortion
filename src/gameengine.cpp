@@ -342,9 +342,10 @@ void GameEngine::saveGameState(){
 ** Output:
 *********************************************************************/
 void GameEngine::mainGameLoop(){
+	//start game by displaying location
+	displayMenu();
+	//start game loop
 	do{
-		//output to ui
-		displayMenu();
 		//get and process input
 		bool loop =false;
 		while (!loop){
@@ -380,10 +381,14 @@ void GameEngine::setGameState(bool b){
 ** Output: 
 *********************************************************************/
 void GameEngine::displayMenu() {
+		clearScreen();
 		std::cout << std::endl << std::endl;
 		std::cout << "............................................" << std::endl;
 		std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
-		longDescDisplay(this->gamePlayer.getCurrentLoc());
+		if(!this->gamePlayer.getCurrentLoc()->getVisited())
+			longDescDisplay(this->gamePlayer.getCurrentLoc());
+		else
+			shortDescDisplay(this->gamePlayer.getCurrentLoc());
 		std::cout << "............................................" << std::endl;
 		std::cout << "Objects in Room: " << std::endl;
 		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
@@ -696,7 +701,7 @@ void GameEngine::help() {
 
 /*********************************************************************
 ** Description: Moves the player to a room
-** Input: string
+** Input: stringlook
 ** Output: 
 *********************************************************************/
 
@@ -704,6 +709,8 @@ void GameEngine::go(std::string room) {
   // Check if room name is a valid choice and move player 
   if (this->gamePlayer.getCurrentLoc()->exitMap.count(room) == 1) {
 	this->gamePlayer.setCurrentLoc(this->gamePlayer.getCurrentLoc()->exitMap.at(room));
+	clearScreen();
+	displayMenu();
 	if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
 		this->gamePlayer.getCurrentLoc()->setVisited(true);
 	this->updateItemLoc();
@@ -913,7 +920,18 @@ void GameEngine::quit(){
 ** Output:
 *********************************************************************/
 void GameEngine::look(){
-	longDescDisplay(this->gamePlayer.getCurrentLoc());
+		clearScreen();
+		std::cout << std::endl << std::endl;
+		std::cout << "............................................" << std::endl;
+		std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
+		longDescDisplay(this->gamePlayer.getCurrentLoc());
+		std::cout << "............................................" << std::endl;
+		std::cout << "Objects in Room: " << std::endl;
+		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
+		std::cout << "............................................" << std::endl;
+		std::cout << "Solvable Puzzles: " << std::endl;
+		puzzlesDisp(this->gamePlayer.getCurrentLoc(), this->puzzleTracker);
+		std::cout << "............................................" << std::endl;
 }
 
 
