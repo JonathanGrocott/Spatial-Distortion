@@ -17,7 +17,7 @@
 ** Input: Space pointer
 ** Output: none.
 *********************************************************************/
-void uiDisplay(Space* room){
+void longDescDisplay(Space* room){
 
     //clearScreen();
 

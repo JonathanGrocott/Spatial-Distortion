@@ -383,7 +383,7 @@ void GameEngine::displayMenu() {
 		std::cout << std::endl << std::endl;
 		std::cout << "............................................" << std::endl;
 		std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
-		uiDisplay(this->gamePlayer.getCurrentLoc());
+		longDescDisplay(this->gamePlayer.getCurrentLoc());
 		std::cout << "............................................" << std::endl;
 		std::cout << "Objects in Room: " << std::endl;
 		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
@@ -574,19 +574,6 @@ std::vector<std::string> GameEngine::split(std::string str, std::string token) {
 		}
 	}
 	return result;
-}
-
-/*********************************************************************
-** Description: A test function that prints out the names of the 
-** Space objects that exit in the gameMap.
-** Input: 
-** Output: 
-*********************************************************************/
-void GameEngine::testMap()
-{
-	std::cout << "game spaces loaded:" << std::endl;
-	for (std::unordered_map<std::string,Space*>::iterator it=this->gameMap.begin(); it!=this->gameMap.end(); ++it)
-    	std::cout << it->first << std::endl;
 }
 
 /*********************************************************************
@@ -926,7 +913,7 @@ void GameEngine::quit(){
 ** Output:
 *********************************************************************/
 void GameEngine::look(){
-	uiDisplay(this->gamePlayer.getCurrentLoc());
+	longDescDisplay(this->gamePlayer.getCurrentLoc());
 }
 
 
