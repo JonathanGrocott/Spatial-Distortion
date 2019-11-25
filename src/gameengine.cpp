@@ -958,4 +958,3 @@ void GameEngine::take(Item* takenItem) {
 	std::cout << takenItem->getItemName() << " added to inventory." << std::endl;
 
 }
-
