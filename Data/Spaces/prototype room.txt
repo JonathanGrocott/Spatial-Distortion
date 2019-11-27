@@ -2,12 +2,16 @@
 Prototype Room
 </name>
 <long_desc>
-Highway to the dangerzone... I mean welcome to the Prototype Room.
+As you enter the room the distinct smell of burnt electronics
+assualt your nose. Suprisingly the large machine in the room 
+is still running. The machine appears to be drawing a lot of power.
+
+
 
 To the south is the Entry.
 </long_desc>
 <short_desc>
-Protype Room Short
+The Infinity Machine is here and running.
 
 To the south is the Entry.
 </short_desc>

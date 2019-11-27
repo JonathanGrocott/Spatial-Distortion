@@ -2,12 +2,15 @@
 Generator Room
 </name>
 <long_desc>
-Generator Room long
+You are in the generator room. There is a large generator here in case
+of power failure. The generator looks to be in good working condition.
+The controls for the generator are dusty as if they haven't seen use for 
+a long time.
 
 To the west is the Basement.
 </long_desc>
 <short_desc>
-Generator Room short
+You are in the generator room.
 
 To the west is the Basement.
 </short_desc>
