@@ -38,7 +38,7 @@ GameEngine::GameEngine()
 	//initialize command list
 	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
                         "loadgame", "take", "inventory", "use", "combine", "quit", "solve",
-			"clear"};
+			"clear", "teleport"};
 
 	//setup default world
 	//load map from files in Space directory
@@ -46,6 +46,7 @@ GameEngine::GameEngine()
 
 	//set player to starting place
 	this->gamePlayer.setCurrentLoc(this->gameMap.at("entry"));
+	this->gameMap.at("entry")->setVisited(true);
 	this->gameState = true;
 }
 
@@ -54,7 +55,7 @@ GameEngine::GameEngine(std::string savedGame)
 	//initialize command list
 	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
                         "loadgame", "take", "inventory", "use", "combine", "quit", "solve",
-			"clear"};
+			"clear", "teleport"};
 
 	//setup default world
 	initializeGameMap();
@@ -428,6 +429,15 @@ bool GameEngine::readCommand() {
 		}
 	}
 
+	for(auto it = this->gameMap.begin(); it!= this->gameMap.end(); it++)
+	{
+		if(parser(input, it->first))
+		{
+			//std::cout << it->first << std::endl;
+			listLocations.push_back(it->first);
+		}
+	}
+
 	//find objects in the input
 	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
 	{
@@ -473,86 +483,109 @@ bool GameEngine::readCommand() {
 			listCommands.push_back(*it);
 	}
 	
-
-	//handles a location by moving
-	if(listLocations.size() == 1){
-		go(listLocations[0]);
-		return true;
-	}
-
 	//handles a single command
-	if(listCommands.size() == 1){
-		if(listCommands[0]=="quit" || listCommands[0]=="exit"){
-			quit();
-			return true;
-		}
-		else if(listCommands[0]=="look"){
-			look();
-			return true;
-		}
-		else if(listCommands[0]=="help"){
-			help();
-			return true;
-		}
-		else if(listCommands[0]=="inventory"){
-			inventory();
-			return true;
-		}
-		else if(listCommands[0]=="take"){
-			if (listRoomObjects.size() > 0) {
-				if (listRoomObjects[0]->isTakeable() && !listRoomObjects[0]->isHidden()) {
-					take(listRoomObjects[0]);
+	if(!listCommands.empty()){
+		if(listCommands.size() == 1){
+			if(listCommands[0]=="quit" || listCommands[0]=="exit"){
+				quit();
+				return true;
+			}
+			else if(listCommands[0]=="look"){
+				look();
+				return true;
+			}
+			else if(listCommands[0]=="help"){
+				help();
+				return true;
+			}
+			else if(listCommands[0]=="inventory"){
+				inventory();
+				return true;
+			}
+			else if(listCommands[0]=="take"){
+				if (listRoomObjects.size() > 0) {
+					if (listRoomObjects[0]->isTakeable() && !listRoomObjects[0]->isHidden()) {
+						take(listRoomObjects[0]);
+						return true;
+					}
+					else {
+						std::cout << listRoomObjects[0]->getItemName() << " is not valid to take." << std::endl;
+					}
+				}
+			}
+			else if(listCommands[0]=="drop"){
+				if (listInventory.size() > 0) {
+					drop(listInventory[0]);
+					return true;	
+				}
+				else {
+					std::cout << listInventory[0]->getItemName() << " is not in your inventory." << std::endl;
+				}
+			}
+			else if(listCommands[0]=="look at") {
+				if (listRoomObjects.size() > 0) {
+					std::cout << listRoomObjects[0]->getItemDesc() << std::endl;
+					for (auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++) {
+						if (std::get<0>(it->second)->getTrigger() == listRoomObjects[0]->getItemName())
+							std::get<0>(it->second)->setHidden(false);
+					}
+					return true;
+				}
+				else if (listInventory.size() > 0) {
+					std::cout << listInventory[0]->getItemDesc() << std::endl;
 					return true;
 				}
 				else {
-					std::cout << listRoomObjects[0]->getItemName() << " is not valid to take." << std::endl;
+					std::cout << "This object is not valid to look at!" << std::endl;
 				}
 			}
-		}
-		else if(listCommands[0]=="drop"){
-			if (listInventory.size() > 0) {
-				drop(listInventory[0]);
-				return true;	
-			}
-			else {
-				std::cout << listInventory[0]->getItemName() << " is not in your inventory." << std::endl;
-			}
-		}
-		else if(listCommands[0]=="look at") {
-			if (listRoomObjects.size() > 0) {
-				std::cout << listRoomObjects[0]->getItemDesc() << std::endl;
-				for (auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++) {
-					if (std::get<0>(it->second)->getTrigger() == listRoomObjects[0]->getItemName())
-						std::get<0>(it->second)->setHidden(false);
+			else if(listCommands[0]=="solve") {
+				if (listPuzzles.size() > 0) {
+					std::cout << listPuzzles[0]->getPuzzDesc() << std::endl;
+					if (solve(listPuzzles[0]->getPuzzName())) {
+						std::cout << listPuzzles[0]->getSuccess() << std::endl;
+						updatePuzzMap(listPuzzles[0]);
+					}
+					else {
+						std::cout << listPuzzles[0]->getFail() << std::endl;
+					}
+					return true;
 				}
+			}
+			else if(listCommands[0]=="clear") {
+				clearScreen();
 				return true;
 			}
-			else if (listInventory.size() > 0) {
-				std::cout << listInventory[0]->getItemDesc() << std::endl;
-				return true;
+			else if(listCommands[0]=="teleport") {
+				if(listLocations.size() == 1){
+					teleport(listLocations[0]);
+					return true;
+				}
+				else
+				std::cout << "You must provide a room name to teleport to." << std::endl;
+				return false;
 			}
-			else {
-				std::cout << "This object is not valid to look at!" << std::endl;
+			else if(listCommands[0]=="go") {
+				if(listLocations.size() == 1){
+					go(listLocations[0]);
+					return true;
+				}
+				else
+				return false;
 			}
 		}
-		else if(listCommands[0]=="solve") {
-			if (listPuzzles.size() > 0) {
-				std::cout << listPuzzles[0]->getPuzzDesc() << std::endl;
-				if (solve(listPuzzles[0]->getPuzzName())) {
-					std::cout << listPuzzles[0]->getSuccess() << std::endl;
-					updatePuzzMap(listPuzzles[0]);
-				}
-				else {
-					std::cout << listPuzzles[0]->getFail() << std::endl;
-				}
-				return true;
-			}
+		else {
+			std::cout << "Multiple command keywords were given! Please try again." << std::endl;
 		}
-		else if(listCommands[0]=="clear") {
-			clearScreen();
+
+	}
+	if(!listLocations.empty()){
+		if(listLocations.size() == 1 && listCommands.size() == 0){
+			go(listLocations[0]);
 			return true;
 		}
 	}
+
 	return false;
 }
 
@@ -956,5 +989,28 @@ void GameEngine::take(Item* takenItem) {
 	this->updateInvent(takenItem, &(this->gamePlayer));
 	takenItem->setTaken(true);
 	std::cout << takenItem->getItemName() << " added to inventory." << std::endl;
+
+}
+
+/*********************************************************************
+** Description: Teleport to any previously visited room
+** Input:
+** Output:
+*********************************************************************/
+void GameEngine::teleport(std::string room) {
+  if (this->gameMap.count(room) == 1) {
+	if(this->gameMap.at(room)->getVisited())
+	{
+		clearScreen();
+		this->gamePlayer.setCurrentLoc(this->gameMap.at(room));
+		this->updateItemLoc();
+		displayMenu();
+	}
+	else
+		std::cout << room << " is currently not a valid teleport location." << std::endl;
+  }
+  else {
+    std::cout << room << " is currently not a valid teleport location." << std::endl;
+  }
 
 }
