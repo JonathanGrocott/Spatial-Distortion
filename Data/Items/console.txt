@@ -1,5 +1,5 @@
-<name>
-sink
+<name
+console
 </name>
 <breakable>
 false
@@ -8,11 +8,12 @@ false
 false
 </takeable>
 <desc>
-A typical porcelain sink. The knobs seem to
-be missing though.
+A console with many buttons and switches.
+There appears to be a key slot labeled
+"GET FLASHLIGHTS".
 </desc>
 <found_in>
-washroom
+robotics lab
 </found_in>
 <hidden>
 false

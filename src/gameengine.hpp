@@ -65,6 +65,7 @@ class GameEngine
 		void getSpaceContents(std::string file);
 		void getObjectContents(std::string file);
 		void displayMenu();//menu for each location
+		void displayObjects();
 		bool readCommand();
 		void updateItemLoc();
 		void updateInvent(Item*, player*);

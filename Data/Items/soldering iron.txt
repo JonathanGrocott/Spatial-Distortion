@@ -1,18 +1,18 @@
 <name>
-sink
+soldering iron
 </name>
 <breakable>
 false
 </breakable>
 <takeable>
-false
+true
 </takeable>
 <desc>
-A typical porcelain sink. The knobs seem to
-be missing though.
+A state-of-the-art soldering iron. It
+appears to be missing a power cable though.
 </desc>
 <found_in>
-washroom
+electronics lab
 </found_in>
 <hidden>
 false

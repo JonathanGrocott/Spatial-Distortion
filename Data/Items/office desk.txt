@@ -1,5 +1,5 @@
 <name>
-sink
+office desk
 </name>
 <breakable>
 false
@@ -8,11 +8,12 @@ false
 false
 </takeable>
 <desc>
-A typical porcelain sink. The knobs seem to
-be missing though.
+On the table, there are papers scattered everywhere.
+There's an engraved nameplate on the desk that reads
+"Esteemed Mr. Director."
 </desc>
 <found_in>
-washroom
+office
 </found_in>
 <hidden>
 false

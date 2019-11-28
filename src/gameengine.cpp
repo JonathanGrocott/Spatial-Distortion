@@ -377,26 +377,36 @@ void GameEngine::setGameState(bool b){
 
 /*********************************************************************
 ** Description: Main menu driver for game. 
-**
 ** Input:
 ** Output: 
 *********************************************************************/
 void GameEngine::displayMenu() {
-		clearScreen();
-		std::cout << std::endl << std::endl;
-		std::cout << "............................................" << std::endl;
-		std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
-		if(!this->gamePlayer.getCurrentLoc()->getVisited())
-			longDescDisplay(this->gamePlayer.getCurrentLoc());
-		else
-			shortDescDisplay(this->gamePlayer.getCurrentLoc());
-		std::cout << "............................................" << std::endl;
-		std::cout << "Objects in Room: " << std::endl;
-		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
-		std::cout << "............................................" << std::endl;
-		std::cout << "Solvable Puzzles: " << std::endl;
-		puzzlesDisp(this->gamePlayer.getCurrentLoc(), this->puzzleTracker);
-		std::cout << "............................................" << std::endl;
+	clearScreen();
+	std::cout << std::endl << std::endl;
+	std::cout << "............................................" << std::endl;
+	std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
+	if(!this->gamePlayer.getCurrentLoc()->getVisited())
+		longDescDisplay(this->gamePlayer.getCurrentLoc());
+	else
+		shortDescDisplay(this->gamePlayer.getCurrentLoc());
+	displayObjects();
+	std::cout << "Solvable Puzzles: " << std::endl;
+	puzzlesDisp(this->gamePlayer.getCurrentLoc(), this->puzzleTracker);
+	std::cout << "............................................" << std::endl;
+}
+
+/*********************************************************************
+** Description: Used to display objects in a room. 
+** Input:
+** Output: 
+*********************************************************************/
+
+void GameEngine::displayObjects() {
+	std::cout << "............................................" << std::endl;
+	std::cout << "Objects in Room: " << std::endl;
+	objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
+	std::cout << "............................................" << std::endl;
+
 }
 
 /*********************************************************************
@@ -516,6 +526,7 @@ bool GameEngine::readCommand() {
 			else if(listCommands[0]=="drop"){
 				if (listInventory.size() > 0) {
 					drop(listInventory[0]);
+					displayObjects();
 					return true;	
 				}
 				else {
@@ -526,8 +537,10 @@ bool GameEngine::readCommand() {
 				if (listRoomObjects.size() > 0) {
 					std::cout << listRoomObjects[0]->getItemDesc() << std::endl;
 					for (auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++) {
-						if (std::get<0>(it->second)->getTrigger() == listRoomObjects[0]->getItemName())
+						if (std::get<0>(it->second)->getTrigger() == listRoomObjects[0]->getItemName()) {
 							std::get<0>(it->second)->setHidden(false);
+							displayObjects();
+						}
 					}
 					return true;
 				}
@@ -541,6 +554,7 @@ bool GameEngine::readCommand() {
 			}
 			else if(listCommands[0]=="solve") {
 				if (listPuzzles.size() > 0) {
+					clearScreen();
 					std::cout << listPuzzles[0]->getPuzzDesc() << std::endl;
 					if (solve(listPuzzles[0]->getPuzzName())) {
 						std::cout << listPuzzles[0]->getSuccess() << std::endl;
@@ -551,10 +565,6 @@ bool GameEngine::readCommand() {
 					}
 					return true;
 				}
-			}
-			else if(listCommands[0]=="clear") {
-				clearScreen();
-				return true;
 			}
 			else if(listCommands[0]=="teleport") {
 				if(listLocations.size() == 1){

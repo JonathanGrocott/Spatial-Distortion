@@ -5,14 +5,19 @@ flashlight
 false
 </breakable>
 <takeable>
-true
+false
 </takeable>
 <desc>
 Lights up any room in a jiffy.
+Commonly stolen from the robotics lab.
+You didn't steal this one did you?
 </desc>
 <found_in>
-office
+robotics lab
 </found_in>
 <hidden>
 false
 </hidden>
+<trigger>
+none
+</trigger>
