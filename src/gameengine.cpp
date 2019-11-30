@@ -377,8 +377,8 @@ void GameEngine::setGameState(bool b){
 
 /*********************************************************************
 ** Description: Main menu driver for game. 
-** Input:
-** Output: 
+** Input: none
+** Output: console
 *********************************************************************/
 void GameEngine::displayMenu() {
 	clearScreen();

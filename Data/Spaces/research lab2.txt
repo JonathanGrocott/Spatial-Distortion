@@ -2,14 +2,16 @@
 Research Lab2
 </name>
 <long_desc>
-Research Lab2 long
+You find yourself in the second research lab. 
+It is very dark but you can make out a faint 
+shape of a large work desk on your left. 
 
 To the north is Research Lab1.
 To the east is the Basement.
 To the west is Hallway2.
 </long_desc>
 <short_desc>
-Research Lab2 short
+You are back in the second Research Lab. 
 
 To the north is Research Lab1.
 To the east is the Basement.

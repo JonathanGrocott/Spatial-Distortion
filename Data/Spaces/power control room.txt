@@ -2,12 +2,14 @@
 Power Control Room
 </name>
 <long_desc>
-Power Control Room long
+You have entered a large space with two huge generators. 
+There is a small amount of water on the floor of the room. 
+The control board is peeping loadly.  
 
 To the west is the Imaging Room.
 </long_desc>
 <short_desc>
-Power Control Room short
+You are back in the Power Control Room. The generators are not running.  
 
 To the west is the Imaging Room.
 </short_desc>
