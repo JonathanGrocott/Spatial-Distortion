@@ -72,6 +72,7 @@ class GameEngine
 		void updatePuzzMap(Puzzle*);
 		bool parser(std::string &original, std::string tofind);
 		std::string getFileContents (std::ifstream& File);//ascii display
+		void displayASCII(std::string name); 
 };
 
 #endif // GAMEENGINE_HPP

@@ -383,6 +383,9 @@ void GameEngine::setGameState(bool b){
 void GameEngine::displayMenu() {
 	clearScreen();
 	std::cout << std::endl << std::endl;
+	//display ascii art if matches space name
+	displayASCII(this->gamePlayer.getCurrentLoc()->getSpaceName());
+
 	std::cout << "............................................" << std::endl;
 	std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
 	if(!this->gamePlayer.getCurrentLoc()->getVisited())
@@ -393,6 +396,44 @@ void GameEngine::displayMenu() {
 	std::cout << "Solvable Puzzles: " << std::endl;
 	puzzlesDisp(this->gamePlayer.getCurrentLoc(), this->puzzleTracker);
 	std::cout << "............................................" << std::endl;
+}
+/*********************************************************************
+** Description: Used to display ascii art that matches input name
+** Input: string name
+** Output: asciii art to console
+*********************************************************************/
+void GameEngine::displayASCII(std::string name) {
+	std::string temp = "Data/Art/" + name + ".txt";
+	std::ifstream Reader(temp);
+	if (Reader) {
+		std::string Art = getFileContents(Reader);
+		std::cout << Art << std::endl;
+	}
+	Reader.close();
+}
+
+/*********************************************************************
+** Description: Reads a text file into a ifstream and then returns
+the input as a string. Used for ascii picture display to console.
+** Input: ifstream by reference
+** Output: string of file contents
+*********************************************************************/
+std::string GameEngine::getFileContents(std::ifstream& File)
+{
+	std::string Lines = "";        //All lines
+
+	if (File) {
+		while (File.good()) {
+			std::string TempLine;            //Temp line
+			std::getline(File, TempLine);
+			TempLine += "\n";
+			Lines += TempLine;
+		}
+		return Lines;
+	}
+	else { //Return error
+		return "ERROR File does not exist.";
+	}
 }
 
 /*********************************************************************
@@ -526,6 +567,7 @@ bool GameEngine::readCommand() {
 			else if(listCommands[0]=="drop"){
 				if (listInventory.size() > 0) {
 					drop(listInventory[0]);
+					displayASCII(listInventory[0]->getItemName());//display ascii
 					displayObjects();
 					return true;	
 				}
@@ -535,6 +577,8 @@ bool GameEngine::readCommand() {
 			}
 			else if(listCommands[0]=="look at") {
 				if (listRoomObjects.size() > 0) {
+					displayASCII(listRoomObjects[0]->getItemName()); //display ascii
+
 					std::cout << listRoomObjects[0]->getItemDesc() << std::endl;
 					for (auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++) {
 						if (std::get<0>(it->second)->getTrigger() == listRoomObjects[0]->getItemName()) {
@@ -557,6 +601,7 @@ bool GameEngine::readCommand() {
 					clearScreen();
 					std::cout << listPuzzles[0]->getPuzzDesc() << std::endl;
 					if (solve(listPuzzles[0]->getPuzzName())) {
+						displayASCII(listPuzzles[0]->getPuzzName()); //display ascii
 						std::cout << listPuzzles[0]->getSuccess() << std::endl;
 						updatePuzzMap(listPuzzles[0]);
 					}
@@ -998,6 +1043,7 @@ void GameEngine::drop(Item* droppedItem) {
 void GameEngine::take(Item* takenItem) {
 	this->updateInvent(takenItem, &(this->gamePlayer));
 	takenItem->setTaken(true);
+	displayASCII(takenItem->getItemName());
 	std::cout << takenItem->getItemName() << " added to inventory." << std::endl;
 
 }
