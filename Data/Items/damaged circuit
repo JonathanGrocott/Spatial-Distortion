@@ -1,0 +1,22 @@
+<name>
+damaged circuit board
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+A PCB board with several burnt up electrical
+components. It looks repairable.
+</desc>
+<found_in>
+prototype room
+</found_in>
+<hidden>
+true
+</hidden>
+<trigger>
+Look at
+</trigger>
