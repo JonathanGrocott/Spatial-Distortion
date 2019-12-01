@@ -2,12 +2,14 @@
 Power Control Room
 </name>
 <long_desc>
-Power Control Room long
+All the power controls for the building are located in this room. 
+There is a control panel with instructions on changing the power
+source from the local grid to the backup generator.
 
 To the west is the Imaging Room.
 </long_desc>
 <short_desc>
-Power Control Room short
+There is equipment for controlling power for the building.
 
 To the west is the Imaging Room.
 </short_desc>
