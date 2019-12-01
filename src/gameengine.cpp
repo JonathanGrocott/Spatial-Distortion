@@ -137,7 +137,7 @@ void GameEngine::initializeGameMap(){
 	}
 	else
 		std::cout << "Error in Item Directory" << std::endl;
-
+	
 	fs::path puzzDir("Data/Puzzles/");
 
 	if (fs::is_directory(puzzDir)) {
@@ -423,76 +423,77 @@ bool GameEngine::readCommand() {
 	std::getline(std::cin, input);
 	// Convert command to lowercase
 	boost::algorithm::to_lower(input);
+
 	std::vector<std::string> listLocations;
 	std::vector<Item*> listRoomObjects;
 	std::vector<Item*> listInventory;
 	std::vector<Puzzle*> listPuzzles;
 	std::vector<std::string> listCommands;
-	
 	//find all locations in input
-	for(auto it = this->gamePlayer.getCurrentLoc()->exitMap.begin(); it!= this->gamePlayer.getCurrentLoc()->exitMap.end(); it++)
+	if(input.size()>1)
 	{
-		if(parser(input, it->first))
+		for(auto it = this->gamePlayer.getCurrentLoc()->exitMap.begin(); it!= this->gamePlayer.getCurrentLoc()->exitMap.end(); it++)
 		{
-			//std::cout << it->first << std::endl;
-			listLocations.push_back(it->first);
+			if(parser(input, it->first))
+			{
+				//std::cout << it->first << std::endl;
+				listLocations.push_back(it->first);
+			}
 		}
-	}
 
-	for(auto it = this->gameMap.begin(); it!= this->gameMap.end(); it++)
-	{
-		if(parser(input, it->first))
+		for(auto it = this->gameMap.begin(); it!= this->gameMap.end(); it++)
 		{
-			//std::cout << it->first << std::endl;
-			listLocations.push_back(it->first);
+			if(parser(input, it->first))
+			{
+				//std::cout << it->first << std::endl;
+				listLocations.push_back(it->first);
+			}
 		}
-	}
 
-	//find objects in the input
-	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
-	{
-		if (std::get<2>(it->second) == nullptr) {
-			if(parser(input, it->first)) {
-				if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
-					if (!(std::get<0>(it->second)->isTaken())) { 
-						listRoomObjects.push_back(std::get<0>(it->second));
+		//find objects in the input
+		for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
+		{
+			if (std::get<2>(it->second) == nullptr) {
+				if(parser(input, it->first)) {
+					if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
+						if (!(std::get<0>(it->second)->isTaken())) { 
+							listRoomObjects.push_back(std::get<0>(it->second));
+						}
 					}
 				}
 			}
 		}
-	}
-	//find inventory items in the input
-	for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
-	{
-		if(parser(input, it->first)) {
-			if (std::get<2>(it->second) != nullptr)
-				listInventory.push_back(std::get<0>(it->second));
+		//find inventory items in the input
+		for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
+		{
+			if(parser(input, it->first)) {
+				if (std::get<2>(it->second) != nullptr)
+					listInventory.push_back(std::get<0>(it->second));
+			}
 		}
-	}
-	
-	//find puzzle names in the input
-	for(auto it = this->puzzleTracker.begin(); it != this->puzzleTracker.end(); it++)
-	{
-		if(parser(input, it->first)) {
-			if (std::get<2>(it->second) == nullptr) {
-				if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
-					listPuzzles.push_back(std::get<0>(it->second));
+
+		//find puzzle names in the input
+		for(auto it = this->puzzleTracker.begin(); it != this->puzzleTracker.end(); it++)
+		{
+			if(parser(input, it->first)) {
+				if (std::get<2>(it->second) == nullptr) {
+					if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
+						listPuzzles.push_back(std::get<0>(it->second));
+					}
+				}
+				else {
+					std::cout << it->first << " has already been solved!" << std::endl;
 				}
 			}
-			else {
-				std::cout << it->first << " has already been solved!" << std::endl;
-			}
+		}
+
+		//find commands in input
+		for(auto it = this->commandList.begin(); it != this->commandList.end(); it++)
+		{
+			if(parser(input,*it))
+				listCommands.push_back(*it);
 		}
 	}
-
-		
-	//find commands in input
-	for(auto it = this->commandList.begin(); it != this->commandList.end(); it++)
-	{
-		if(parser(input,*it))
-			listCommands.push_back(*it);
-	}
-	
 	//handles a single command
 	if(!listCommands.empty()){
 		if(listCommands.size() == 1){
