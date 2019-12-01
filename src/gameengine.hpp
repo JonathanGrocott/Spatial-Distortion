@@ -42,6 +42,7 @@ class GameEngine
 		void inventory(); // Displays entire inventory
 		void quit();
 		void look();
+		void playerMap();
 		void teleport(std::string room);
 		void take(Item*);
 		void drop(Item*);

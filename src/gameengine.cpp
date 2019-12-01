@@ -38,7 +38,7 @@ GameEngine::GameEngine()
 	//initialize command list
 	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
                         "loadgame", "take", "inventory", "use", "combine", "quit", "solve",
-			"clear", "teleport"};
+			"clear", "teleport", "map"};
 
 	//setup default world
 	//load map from files in Space directory
@@ -55,7 +55,7 @@ GameEngine::GameEngine(std::string savedGame)
 	//initialize command list
 	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
                         "loadgame", "take", "inventory", "use", "combine", "quit", "solve",
-			"clear", "teleport"};
+			"clear", "teleport", "map"};
 
 	//setup default world
 	initializeGameMap();
@@ -584,6 +584,10 @@ bool GameEngine::readCommand() {
 				else
 				return false;
 			}
+			else if(listCommands[0]=="map"){
+				playerMap();
+				return true;
+			}
 		}
 		else {
 			std::cout << "Multiple command keywords were given! Please try again." << std::endl;
@@ -1024,4 +1028,18 @@ void GameEngine::teleport(std::string room) {
     std::cout << room << " is currently not a valid teleport location." << std::endl;
   }
 
+}
+/*********************************************************************
+** Description: List out rooms a player has been in
+** Input:
+** Output:
+*********************************************************************/
+void GameEngine::playerMap() {
+	std::cout << std::endl << "Visited Rooms:" << std::endl;
+	std::cout << "--------------" << std::endl;
+	for(auto it = this->gameMap.begin(); it!= this->gameMap.end(); it++)
+	{
+		if(it->second->getVisited())
+			std::cout << it->second->getSpaceName() << std::endl;
+	}
 }
