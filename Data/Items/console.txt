@@ -1,4 +1,4 @@
-<name
+<name>
 console
 </name>
 <breakable>

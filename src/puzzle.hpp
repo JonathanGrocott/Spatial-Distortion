@@ -15,6 +15,7 @@ class Puzzle {
 		std::string failMessage;
 		std::string successMessage;
 		std::string puzzFilePath;
+		bool hidden;
 		std::unordered_map<std::string, Space*> location;
 	public:
 		Puzzle(std::string, std::unordered_map<std::string, Space*>);
@@ -23,7 +24,9 @@ class Puzzle {
 		std::string getPuzzDesc();
 		std::string getFail();
 		std::string getSuccess();
+		bool isHidden();
 		Space* getPuzzLocation();
+		void setHidden(bool);
 };
 
 #endif

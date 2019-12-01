@@ -22,3 +22,6 @@ sits in the box.
 <found_in>
 basement
 </found_in>
+<hidden>
+true
+</hidden>

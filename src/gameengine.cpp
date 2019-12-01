@@ -799,6 +799,9 @@ bool GameEngine::solve(std::string puzzleName) {
 	else if (puzzleName == "test tubes") {
 		return testTubePuzzle();
 	}
+	else if (puzzleName == "robot") {
+		return robotPuzzle();
+	}
 }
 
 /*********************************************************************
@@ -1043,3 +1046,66 @@ void GameEngine::playerMap() {
 			std::cout << it->second->getSpaceName() << std::endl;
 	}
 }
+
+/*********************************************************************
+** Description: Robot grabbing flashlight puzzle checker
+** Input:
+** Output: bool
+*********************************************************************/
+bool GameEngine::robotPuzzle() {
+	int player = 1; // player's current position
+	const int WIDTH = 9;
+	int move = 1; // How much the robot moves
+	std::string input;
+	do {
+
+		// Display
+		std::cout << "Robot is currently moving: " << move << " spaces." << std::endl;
+		for (int i = 0; i < WIDTH; i++) {
+			std::cout << "|";
+			if (i == player - 1)
+				std::cout << "X";
+			else if (i == WIDTH - 1)
+				std::cout << "F";
+			else
+				std::cout << "-";
+			std::cout << "|";
+		}
+		// User input
+		std::cout << std::endl;
+		std::cout << "Your move: ";
+		std::getline(std::cin, input);
+		if (input == "q" || input == "quit" || input == "reset")
+			return false;
+
+		if (input == "left") {
+			if (player - move < 1) 
+				std::cout << "The robot slams into the wall and resets its position" << std::endl;
+			else {
+				player -= move;
+				if (move + 1 > 3)
+					move = 1;
+				else
+					move++;
+			}
+		}
+		else if (input == "right") {
+			if (player + move > WIDTH)
+				std::cout << "The robot slams into the wall and resets its position" << std::endl;
+			else {
+				player += move;
+				if (move + 1 > 3)
+					move = 1;
+				else
+					move++;
+			}
+		}
+		else
+			std::cout << input << " is not a valid move!" << std::endl;
+
+	} while (player != WIDTH);	
+	std::get<0>(this->itemsMap.at("flashlight"))->setTakeable(true);	
+	return true;
+}
+
+

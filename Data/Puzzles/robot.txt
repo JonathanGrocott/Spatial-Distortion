@@ -1,0 +1,33 @@
+<name>
+robot
+</name>
+<desc>
+
+The screen lights up and says, "Due to recent budget cuts, the
+robots to grab flashlights move in a peculiar way. They can
+only move left or right. In addition, they move in a specific
+pattern. The robots can move one space forward, then two spaces
+forward, then three spaces forward. After moving three spaces
+forward, the robots begin the pattern again going from one to
+three spaces. If you really need a flashlight, you have to maneuver
+the robot to the flashlight space."
+
+To move the robot: type "left" or "right".
+</desc>
+<fail>
+
+The robot shuts down. A giant crane appears from the ceiling and places
+the robot back to the original position. You wonder why they don't
+just use the crane to place the robots in front of the flashlights.
+</fail>
+<success>
+
+The robot retrieves the flashlight and places it on a conveyer belt
+that brings the flashlight to the console.
+</success>
+<found_in>
+robotics lab
+</found_in>
+<hidden>
+false
+</hidden>
