@@ -13,6 +13,7 @@ three spaces. If you really need a flashlight, you have to maneuver
 the robot to the flashlight space."
 
 To move the robot: type "left" or "right".
+The X refers to the robot's current position and the F is the flashlight.
 </desc>
 <fail>
 
