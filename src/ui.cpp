@@ -123,4 +123,7 @@ void puzzlesDisp(Space* room, std::unordered_map<std::string, std::tuple<Puzzle*
 *********************************************************************/
 void clearScreen(){
     printf("\e[2J\e[H");
+	
+	//used for VS on Win10
+	//system("CLS");
 }

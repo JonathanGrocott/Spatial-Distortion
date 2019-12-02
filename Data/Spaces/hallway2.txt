@@ -2,7 +2,9 @@
 Hallway2
 </name>
 <long_desc>
-Hallway2 long
+The hallway you have entered has bare walls and a 
+carpet that runs the length of the floor. 
+One of the lights is flickering on and off as walk. 
 
 To the north is the Robotics Lab.
 To the east is Research Lab2.
@@ -10,7 +12,7 @@ To the south is the Deck.
 To the west is an Office.
 </long_desc>
 <short_desc>
-Hallway2 short
+You have found your way back to the second hallway. 
 
 To the north is the Robotics Lab.
 To the east is Research Lab2.

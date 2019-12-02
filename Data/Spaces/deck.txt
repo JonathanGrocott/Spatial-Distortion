@@ -2,12 +2,15 @@
 Deck
 </name>
 <long_desc>
-Deck long
+You have found the covered deck that overlooks the 
+courtyard of Aperature Science. There are large 
+trees directly in front of you, and a small fountain below. 
+The fountain has no water in it and looks to be in disrepair.   
 
 To the north is Hallway2.
 </long_desc>
 <short_desc>
-Deck short
+You are back on the deck overlooking the courtyard. 
 
 To the north is Hallway2.
 </short_desc>
