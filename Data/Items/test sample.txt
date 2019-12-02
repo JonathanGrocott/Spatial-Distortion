@@ -1,0 +1,22 @@
+<name>
+test sample
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+You can't quite tell what material the researchers
+were testing, but you guess it might be unobtainium.
+</desc>
+<found_in>
+research lab2
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

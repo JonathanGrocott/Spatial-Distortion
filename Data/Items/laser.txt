@@ -1,0 +1,22 @@
+<name>
+laser
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+It is a large CO2 laser that is being used to research
+light absorption spectroscopy.
+</desc>
+<found_in>
+research lab2
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>
