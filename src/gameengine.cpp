@@ -46,7 +46,6 @@ GameEngine::GameEngine()
 
 	//set player to starting place
 	this->gamePlayer.setCurrentLoc(this->gameMap.at("entry"));
-	this->gameMap.at("entry")->setVisited(true);
 	this->gameState = true;
 }
 
@@ -345,6 +344,7 @@ void GameEngine::saveGameState(){
 void GameEngine::mainGameLoop(){
 	//start game by displaying location
 	displayMenu();
+	this->gameMap.at("entry")->setVisited(true);
 	//start game loop
 	do{
 		//get and process input
@@ -640,7 +640,7 @@ bool GameEngine::readCommand() {
 
 	}
 	if(!listLocations.empty()){
-		if(listLocations.size() == 1 && listCommands.size() == 0){
+		if(listLocations.size() == 1 && listCommands.size() == 0 && input.length() == 0){
 			go(listLocations[0]);
 			return true;
 		}
