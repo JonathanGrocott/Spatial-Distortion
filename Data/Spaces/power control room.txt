@@ -2,14 +2,14 @@
 Power Control Room
 </name>
 <long_desc>
-You have entered a large space with two huge generators. 
-There is a small amount of water on the floor of the room. 
-The control board is peeping loadly.  
+All the power controls for the building are located in this room. 
+There is a control panel with instructions on changing the power
+source from the local grid to the backup generator.
 
 To the west is the Imaging Room.
 </long_desc>
 <short_desc>
-You are back in the Power Control Room. The generators are not running.  
+There is equipment for controlling power for the building.
 
 To the west is the Imaging Room.
 </short_desc>

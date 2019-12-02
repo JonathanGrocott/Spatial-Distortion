@@ -30,3 +30,6 @@ You hear a motor running and the dome containing the key opens.
 <found_in>
 research lab1
 </found_in>
+<hidden>
+false
+</hidden>

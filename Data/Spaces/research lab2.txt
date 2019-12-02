@@ -2,16 +2,17 @@
 Research Lab2
 </name>
 <long_desc>
-You find yourself in the second research lab. 
-It is very dark but you can make out a faint 
-shape of a large work desk on your left. 
+As you look around this looks to be a laser laboratory.
+There are several large optical tables in the room. There
+are mirrors and lenses directing the laser over the optical
+table and into some sample chambers.
 
 To the north is Research Lab1.
 To the east is the Basement.
 To the west is Hallway2.
 </long_desc>
 <short_desc>
-You are back in the second Research Lab. 
+This is the laser research lab.
 
 To the north is Research Lab1.
 To the east is the Basement.

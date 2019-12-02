@@ -19,7 +19,7 @@ To the south is Hallway2
 </long_desc>
 <short_desc>
 This is the robotics lab with the out-of-reach
-soldering irons.
+flashlights.
 
 To the south is Hallway2
 </short_desc>

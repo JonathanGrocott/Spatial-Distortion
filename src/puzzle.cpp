@@ -44,6 +44,14 @@ Puzzle::Puzzle(std::string path, std::unordered_map<std::string, Space*> gameMap
 				this->location[tempLine] = nullptr;	
 				
 			}
+			if (!tempLine.compare("<hidden>")) {
+				std::getline(File, tempLine);
+				boost::algorithm::to_lower(tempLine);
+				if (!tempLine.compare("true"))
+					this->hidden = true;
+				else
+					this->hidden = false;	
+			}
 
 		}
 		File.close();
@@ -86,3 +94,12 @@ Space* Puzzle::getPuzzLocation() {
 	return this->location.begin()->second;
 }
 
+// Gets the puzzle's hidden status
+bool Puzzle::isHidden() {
+	return this->hidden;
+}
+
+// Sets the puzzle's hidden status
+void Puzzle::setHidden(bool status) {
+	this->hidden = status;
+}

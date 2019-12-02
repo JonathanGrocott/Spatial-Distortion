@@ -1,5 +1,5 @@
 <name>
-console
+trees
 </name>
 <breakable>
 false
@@ -8,12 +8,11 @@ false
 false
 </takeable>
 <desc>
-A console with many buttons and switches.
-There appears to be a key slot labeled
-"GET FLASHLIGHTS".
+The trees seem to be relatively healthy even
+though there aren't any water sources nearby.
 </desc>
 <found_in>
-robotics lab
+deck
 </found_in>
 <hidden>
 false

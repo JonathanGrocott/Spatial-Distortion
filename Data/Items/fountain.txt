@@ -1,5 +1,5 @@
 <name>
-console
+fountain
 </name>
 <breakable>
 false
@@ -8,12 +8,12 @@ false
 false
 </takeable>
 <desc>
-A console with many buttons and switches.
-There appears to be a key slot labeled
-"GET FLASHLIGHTS".
+This fountain hasn't seen use in a very long time.
+The structure is cracking and there is foilage
+growing over the fountain.
 </desc>
 <found_in>
-robotics lab
+deck
 </found_in>
 <hidden>
 false

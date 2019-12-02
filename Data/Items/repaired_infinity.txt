@@ -1,0 +1,23 @@
+<name>
+Infinity Machine
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+A large machine that is distorting the space inside the building.
+You'll have to find a way to shut it down to return the area to normal
+and escape.
+</desc>
+<found_in>
+prototype room
+</found_in>
+<hidden>
+true
+</hidden>
+<trigger>
+repaired circuit
+</trigger>

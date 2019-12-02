@@ -1,5 +1,5 @@
 <name>
-console
+walls
 </name>
 <breakable>
 false
@@ -8,12 +8,13 @@ false
 false
 </takeable>
 <desc>
-A console with many buttons and switches.
-There appears to be a key slot labeled
-"GET FLASHLIGHTS".
+Unlike the other hallway, this hallway is
+devoid of any artwork. There's an interesting
+pattern on the wallpaper that resembles a
+wave.
 </desc>
 <found_in>
-robotics lab
+hallway2
 </found_in>
 <hidden>
 false

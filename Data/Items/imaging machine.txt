@@ -1,5 +1,5 @@
 <name>
-console
+imaging machine
 </name>
 <breakable>
 false
@@ -8,12 +8,13 @@ false
 false
 </takeable>
 <desc>
-A console with many buttons and switches.
-There appears to be a key slot labeled
-"GET FLASHLIGHTS".
+It resembles a MRI machine, but the
+shape is cubical. The cube has two
+alternating sections that move in
+opposite directions.
 </desc>
 <found_in>
-robotics lab
+imaging room
 </found_in>
 <hidden>
 false

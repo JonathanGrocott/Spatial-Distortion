@@ -1,5 +1,5 @@
 <name>
-console
+carpet
 </name>
 <breakable>
 false
@@ -8,12 +8,12 @@ false
 false
 </takeable>
 <desc>
-A console with many buttons and switches.
-There appears to be a key slot labeled
-"GET FLASHLIGHTS".
+The amount of dust that is being kicked up
+as you walk along the carpet is unreal.
+This hallway hasn't seen use in a long time.
 </desc>
 <found_in>
-robotics lab
+hallway2
 </found_in>
 <hidden>
 false
