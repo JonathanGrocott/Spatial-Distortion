@@ -1,0 +1,22 @@
+<name>
+trees
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+The trees seem to be relatively healthy even
+though there aren't any water sources nearby.
+</desc>
+<found_in>
+deck
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

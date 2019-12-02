@@ -1,0 +1,24 @@
+<name>
+imaging machine
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+It resembles a MRI machine, but the
+shape is cubical. The cube has two
+alternating sections that move in
+opposite directions.
+</desc>
+<found_in>
+imaging room
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

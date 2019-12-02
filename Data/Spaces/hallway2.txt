@@ -4,7 +4,7 @@ Hallway2
 <long_desc>
 The hallway you have entered has bare walls and a 
 carpet that runs the length of the floor. 
-One of the lights is flickering on and off as walk. 
+One of the lights is flickering on and off as you walk. 
 
 To the north is the Robotics Lab.
 To the east is Research Lab2.

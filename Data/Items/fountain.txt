@@ -1,0 +1,23 @@
+<name>
+fountain
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+This fountain hasn't seen use in a very long time.
+The structure is cracking and there is foilage
+growing over the fountain.
+</desc>
+<found_in>
+deck
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

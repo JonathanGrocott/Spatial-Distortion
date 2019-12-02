@@ -1,0 +1,23 @@
+<name>
+humming machine
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+It seems like an x-ray machine of sorts,
+but its not quite the same. There's a large
+magnet in the front.
+</desc>
+<found_in>
+imaging room
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

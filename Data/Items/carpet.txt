@@ -1,0 +1,23 @@
+<name>
+carpet
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+The amount of dust that is being kicked up
+as you walk along the carpet is unreal.
+This hallway hasn't seen use in a long time.
+</desc>
+<found_in>
+hallway2
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

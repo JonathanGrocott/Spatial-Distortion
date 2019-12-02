@@ -1,0 +1,24 @@
+<name>
+walls
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+Unlike the other hallway, this hallway is
+devoid of any artwork. There's an interesting
+pattern on the wallpaper that resembles a
+wave.
+</desc>
+<found_in>
+hallway2
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>
