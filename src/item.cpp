@@ -3,6 +3,7 @@
 // Item constructor
 Item::Item(std::string path, std::unordered_map<std::string, Space*> gameMap) {
 	this->taken = false;
+	this->itemDesc = "";
 	std::ifstream File(path);
 	if (File) {
 		this->itemFilePath = path;
@@ -32,13 +33,29 @@ Item::Item(std::string path, std::unordered_map<std::string, Space*> gameMap) {
 					this->takeable = false;
 			}
 			if (!tempLine.compare("<desc>")) {
-				std::getline(File, tempLine);
-				this->itemDesc = tempLine;
+				while (tempLine.compare("</desc>")) {
+					std::getline(File, tempLine);
+					if (tempLine.compare("</desc>"))
+						this->itemDesc = this->itemDesc + tempLine + "\n";
+				}
 			}
 			if (!tempLine.compare("<found_in>")) {
 				std::getline(File, tempLine);
 				boost::algorithm::to_lower(tempLine);
 				this->foundAt[tempLine] = nullptr;
+			}
+			if (!tempLine.compare("<hidden>")) {
+				std::getline(File, tempLine);
+				boost::algorithm::to_lower(tempLine);
+				if (!tempLine.compare("true"))
+					this->hidden = true;
+				else
+					this->hidden = false;
+			}
+			if (!tempLine.compare("<trigger>")) {
+				std::getline(File, tempLine);
+				boost::algorithm::to_lower(tempLine);
+				this->trigger = tempLine;
 			}
 		}
 		File.close();
@@ -90,6 +107,16 @@ bool Item::isTakeable() {
 	return this->takeable;
 }
 
+// Checks if the item is hidden
+bool Item::isHidden() {
+	return this->hidden;
+}
+
+// Gets the item's trigger
+std::string Item::getTrigger() {
+	return this->trigger;
+}
+
 // Sets the item's taken status
 void Item::setTaken(bool status) {
 	this->taken = status;
@@ -103,4 +130,9 @@ void Item::setBreakable(bool status) {
 // Sets the item's takeable status
 void Item::setTakeable(bool status) {
 	this->takeable = status;
+}
+
+// Sets the item's hidden status
+void Item::setHidden(bool status) {
+	this->hidden = status;
 }

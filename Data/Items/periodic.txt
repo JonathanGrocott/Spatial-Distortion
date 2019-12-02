@@ -1,0 +1,24 @@
+<name>
+periodic table
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+The standard periodic table of elements. Upon closer inspection,
+you notice the elements Lutetium (LU), Phospohorus (P), and
+Sulfur (S) are highlighted. The numbers on Carbon (6) and
+Krypton (36) are circled.
+</desc>
+<found_in>
+hallway
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

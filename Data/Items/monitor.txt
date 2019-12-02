@@ -13,3 +13,9 @@ There appears to be a lot of sticky notes stuck to the screen.
 <found_in>
 entry
 </found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

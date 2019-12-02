@@ -2,13 +2,19 @@
 Electronics Lab
 </name>
 <long_desc>
-Electronics Lab long
+There is a lot of functioning equipment that could be used to make or
+repair electronic boards. As you look around the room you see various 
+power supplies, oscilloscopes, multimeters, and soldering equipment.
 
 To the east is the Imaging Room.
 To the south is the Hallway.
 </long_desc>
 <short_desc>
-Electronics Lab short
+There is a variety of specialized equipment for working with electronic
+circuitry.
+
+To the east is the Imaging Room.
+To the south is the Hallway.
 </short_desc>
 <exits>
 Imaging Room,east

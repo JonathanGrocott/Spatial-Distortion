@@ -2,13 +2,21 @@
 Entry
 </name>
 <long_desc>
-You have entered the reception area for Aperture Science it is a small carpeted area with a waiting area consisting of several chairs and a small table. There are some pop culture engineering magazines on top of the small table. Across from the waiting area is a wooden desk with a computer and phone. You see several post-it notes attached to the monitor. 
+You have entered the reception area for Aperture Science, 
+it is a small carpeted area with a waiting area consisting 
+of several chairs and a small table. There are some pop culture 
+engineering magazines on top of the small table. 
+Across from the waiting area is a wooden desk with a computer and phone. 
+You see several post-it notes attached to the monitor. 
 
 To the north is the Prototype Room.
 To the east is a Hallway.
 </long_desc>
 <short_desc>
-Entry short
+The main reception area for Aperture Science.
+
+To the north is the Prototype Room.
+To the east is a Hallway.
 </short_desc>
 <exits>
 Hallway,east

@@ -1,0 +1,22 @@
+<name>
+lab notebook
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+true
+</takeable>
+<desc>
+To get the key, the large and medium tubes must have the same
+amount of liquid.
+</desc>
+<found_in>
+research lab1
+</found_in>
+<hidden>
+true
+</hidden>
+<trigger>
+lab bench
+</trigger>

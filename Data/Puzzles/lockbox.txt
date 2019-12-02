@@ -1,0 +1,24 @@
+<name>
+lockbox
+</name>
+<desc>
+
+The keypad is a standard numerical keypad with the numbers 0-9.
+You can barely make out the words etched on top of the lockbox.
+It says: "What is the meaning of life, the universe, and
+everything?"
+</desc>
+<fail>
+
+The keypad illuminates red and resets to its original position.
+That probably wasn't the correct number. Perhaps a look
+at a periodic table might help.
+</fail>
+<success>
+
+The lockbox gently swings open. A strange power cord with six prongs
+sits in the box.
+</success>
+<found_in>
+basement
+</found_in>

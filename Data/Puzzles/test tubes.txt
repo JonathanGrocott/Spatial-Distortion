@@ -1,0 +1,32 @@
+<name>
+test tubes
+</name>
+<desc>
+
+The largest tube, labeled 1, holds 12 units of the liquid.
+The medium tube, labeled 2, holds 7 units of the liquid.
+The smallest tube, labeled 3, holds 5 units of the liquid.
+The largest tube is currently full of liquid.
+The other tubes are currently empty.
+If you attempt to overflow the tubes, the liquid bounces back
+into the original tube.
+
+A large reset button is next to the key.
+To move liquids between tubes, enter "x to y".
+For example, if you want to move liquids from tube 1 to tube 3,
+then you would type 1 to 3.
+(Enter quit or q to exit the puzzle at any time)
+</desc>
+<fail>
+
+You feel defeated and press the reset button. The test tubes shine
+brightly for a few seconds and you notice the tubes have reset
+to their default levels of liquids.
+</fail>
+<success>
+
+You hear a motor running and the dome containing the key opens.
+</success>
+<found_in>
+research lab1
+</found_in>

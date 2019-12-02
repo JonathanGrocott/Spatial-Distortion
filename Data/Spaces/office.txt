@@ -2,17 +2,23 @@
 Office
 </name>
 <long_desc>
-Office long
+You enter an office. There's a large bookshelf
+against the left wall with a variety of hard-covered
+books filling the shelves. In the back of the room,
+there's a wooden desk with a black desk lamp and
+a computer. There are various papers scattered
+around on the desk and surrounding floor. 
 
 To the east is Hallway2.
 </long_desc>
 <short_desc>
-Office short
+This is the office. There are papers scattered
+everywhere.
+
+To the east is Hallway2.
 </short_desc>
 <exits>
 Hallway2,east
 </exits>
-<items>
-</items>
 <special>
 </special>

@@ -1,0 +1,23 @@
+<name>
+office desk
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+On the table, there are papers scattered everywhere.
+There's an engraved nameplate on the desk that reads
+"Esteemed Mr. Director."
+</desc>
+<found_in>
+office
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

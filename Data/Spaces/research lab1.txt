@@ -2,13 +2,21 @@
 Research Lab1
 </name>
 <long_desc>
-Research Lab1 long
+This seems to be an abandoned chemistry lab. There is glassware
+and empty labeled bottles everywhere. On one of the lab
+countertops, there's three test tubes of decreasing size.
+The largest tube is filled to the top with a fluorescent green
+liquid. There is a brass key encased in a transparent dome behind
+the test tubes. 
 
 To the south is Research Lab2.
 To the west is the Hallway.
 </long_desc>
 <short_desc>
-Research Lab1 short
+A chemistry lab with a peculiar set of test tubes.
+
+To the south is Research Lab2.
+To the west is the Hallway.
 </short_desc>
 <exits>
 Research Lab2,south

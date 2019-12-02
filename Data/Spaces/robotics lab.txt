@@ -2,12 +2,26 @@
 Robotics Lab
 </name>
 <long_desc>
-Robotics Lab long
+This appears to be a robotics lab.
+There is a u-shaped panel with
+many different glowing buttons
+and switches. In front of the panel,
+there's an assortment of different
+types of robots. You see a variety of
+soldering irons on a shelf out of reach.
+On the main panel, a screen reads, "Due
+to recent theft concerns, only authorized
+personnel have access to the flashlights.
+Please see the director for the key to access
+the robots to retrieve a flashlight."
 
 To the south is Hallway2
 </long_desc>
 <short_desc>
-Robotics Lab short
+This is the robotics lab with the out-of-reach
+soldering irons.
+
+To the south is Hallway2
 </short_desc>
 <exits>
 Hallway2,south

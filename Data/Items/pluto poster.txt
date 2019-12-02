@@ -1,0 +1,23 @@
+<name>
+pluto poster
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+A picture of the former 9th planet.
+It has in bold words "Relegated to dwarf status"
+You will be missed Pluto.
+</desc>
+<found_in>
+hallway
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

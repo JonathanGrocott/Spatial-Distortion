@@ -1,0 +1,22 @@
+<name>
+lab bench
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+A lab bench with three test tubes on top.
+There appears to be a lab notebook next to the tubes.
+</desc>
+<found_in>
+research lab1
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

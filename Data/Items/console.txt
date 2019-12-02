@@ -1,0 +1,23 @@
+<name
+console
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+A console with many buttons and switches.
+There appears to be a key slot labeled
+"GET FLASHLIGHTS".
+</desc>
+<found_in>
+robotics lab
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

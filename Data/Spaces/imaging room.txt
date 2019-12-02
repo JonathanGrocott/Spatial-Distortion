@@ -2,14 +2,21 @@
 Imaging Room
 </name>
 <long_desc>
-Imaging Room long
+You have entered a dark room that contains many pieces of equipment. 
+It appears to be used for radiology but much of the equipment 
+looks foreign to you. A few of the machines are making a low 
+humming sound, they must be turned on.   
 
 To the east is the Power Control Room.
 To the south is the Basement.
 To the west is the Electronics Lab.
 </long_desc>
 <short_desc>
-Imaging Room short
+You have come back to the imaging room. Much of the equipment is now turned off. 
+
+To the east is the Power Control Room.
+To the south is the Basement.
+To the west is the Electronics Lab.
 </short_desc>
 <exits>
 Basement,south

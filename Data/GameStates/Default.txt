@@ -1,6 +1,0 @@
-How to store game states?
-NumSpaces: 2
-Spaces: Entry PrototypeRoom
-NumObjects: 
-Objects: 
-CurrentLocation:

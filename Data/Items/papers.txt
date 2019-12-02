@@ -1,0 +1,26 @@
+<name>
+papers
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+true
+</takeable>
+<desc>
+This seems to be a set of letters. Only one
+is legible. It reads as follows: "I can't
+remember where I misplaced my key to engage
+the robots. I recall leaving it with the lab
+assistant in research lab 1. Hopefully,
+no one needs flashlights."
+</desc>
+<found_in>
+office
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

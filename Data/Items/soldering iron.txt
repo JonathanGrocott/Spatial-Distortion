@@ -1,0 +1,22 @@
+<name>
+soldering iron
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+true
+</takeable>
+<desc>
+A state-of-the-art soldering iron. It
+appears to be missing a power cable though.
+</desc>
+<found_in>
+electronics lab
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

@@ -8,8 +8,15 @@ false
 false
 </takeable>
 <desc>
-This sink appears to missing knobs to turn the water on.
+A typical porcelain sink. The knobs seem to
+be missing though.
 </desc>
 <found_in>
 washroom
 </found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

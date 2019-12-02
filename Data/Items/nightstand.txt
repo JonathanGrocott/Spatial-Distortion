@@ -1,0 +1,22 @@
+<name>
+nightstand
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+The nightstand has a small glass lamp that illiuminates
+a steel lockbox with a keypad.
+</desc>
+<found_in>
+basement
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

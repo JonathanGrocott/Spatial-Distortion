@@ -1,0 +1,21 @@
+<name>
+brass key
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+Looks like a standard key. Wonder what it opens?
+</desc>
+<found_in>
+research lab1
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>
