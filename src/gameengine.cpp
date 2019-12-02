@@ -38,7 +38,7 @@ GameEngine::GameEngine()
 	//initialize command list
 	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
                         "loadgame", "take", "inventory", "use", "combine", "quit", "solve",
-			"clear", "teleport", "map"};
+			"clear", "teleport", "look at map"};
 
 	//setup default world
 	//load map from files in Space directory
@@ -54,7 +54,7 @@ GameEngine::GameEngine(std::string savedGame)
 	//initialize command list
 	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
                         "loadgame", "take", "inventory", "use", "combine", "quit", "solve",
-			"clear", "teleport", "map"};
+			"clear", "teleport", "look at map"};
 
 	//setup default world
 	initializeGameMap();
@@ -629,7 +629,7 @@ bool GameEngine::readCommand() {
 				else
 				return false;
 			}
-			else if(listCommands[0]=="map"){
+			else if(listCommands[0]=="look at map"){
 				playerMap();
 				return true;
 			}
