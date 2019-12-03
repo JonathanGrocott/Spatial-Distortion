@@ -22,20 +22,21 @@
 class GameEngine
 {
 	private:
+		//variables
+		std::vector<std::string> commandList;
 		std::unordered_map<std::string, Space*> gameMap; //collection of pointers for all spaces in the game
 		std::unordered_map<std::string, std::tuple<Item*, Space*, player*>> itemsMap;
 		std::unordered_map<std::string, std::tuple<Puzzle*, Space*, player*>> puzzleTracker; 
-		void initializeGameMap();
-		void linkExitPtrs(std::string room, std::unordered_map<std::string,std::string> alias);
-		void loadGameState(std::string savedGame);
-		void saveGameState();
 		bool gameState;
 		player gamePlayer;
+		//init
+		void initializeGameMap();
+		void linkExitPtrs(std::string room, std::unordered_map<std::string,std::string> alias);
 		// commands
-		std::vector<std::string> commandList;
 		void help(); // Shows all commands
 		void go(std::string room); // Moves user to another room
 		bool solve(std::string); // Find the appropriate puzzle and checks the answer 
+		bool use(std::string); // Find the appropriate puzzle and checks the answer 
 		void lookAt(std::vector<Item*>); // Gives description of room or inventory objects 
 		void inventory(); // Displays entire inventory
 		void quit();
@@ -43,7 +44,15 @@ class GameEngine
 		void playerMap();
 		void teleport(std::string room);
 		void take(Item*);
-		void drop(Item*);
+		void drop(Item*);		
+		void loadGameState(std::string savedGame);
+		void saveGameState();
+		//helper functions
+		std::string playerInput();
+		void inventoryParser(std::vector<Item*>&, std::string&);
+		void roomItemParser(std::vector<Item*>&, std::string&);
+		void locationParser(std::vector<std::string>&, std::string&);
+		void puzzleParser(std::vector<Puzzle*>&,std::string&);
 	public:
 		/** Default constructor */
 		GameEngine();

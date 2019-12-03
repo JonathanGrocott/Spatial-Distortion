@@ -41,6 +41,8 @@ GameEngine::GameEngine()
                         "loadgame", "take", "inventory", "use", "combine", "quit", "solve",
 			"clear", "teleport", "look at map"};
 
+	//sort commands by size
+	std::sort(this->commandList.begin(), this->commandList.end(), [](const std::string &s1, const std::string &s2) {return s1.size() > s2.size(); });
 	//setup default world
 	//load map from files in Space directory
 	initializeGameMap();
@@ -57,6 +59,8 @@ GameEngine::GameEngine(std::string savedGame)
                         "loadgame", "take", "inventory", "use", "combine", "quit", "solve",
 			"clear", "teleport", "look at map"};
 
+	//sort commands by size
+	std::sort(this->commandList.begin(), this->commandList.end(), [](const std::string &s1, const std::string &s2) {return s1.size() > s2.size(); });
 	//setup default world
 	initializeGameMap();
 
@@ -460,192 +464,147 @@ void GameEngine::displayObjects() {
 
 bool GameEngine::readCommand() {
 	
-	std::cout << "What next? ";
-	std::string input;
-	std::getline(std::cin, input);
-	// Convert command to lowercase
-	boost::algorithm::to_lower(input);
-
-	std::vector<std::string> listLocations;
-	std::vector<Item*> listRoomObjects;
-	std::vector<Item*> listInventory;
-	std::vector<Puzzle*> listPuzzles;
+	// get player input
+	std::string input = playerInput();
 	std::vector<std::string> listCommands;
 	//find all locations in input
 	if(input.size()>1)
 	{
-		for(auto it = this->gamePlayer.getCurrentLoc()->exitMap.begin(); it!= this->gamePlayer.getCurrentLoc()->exitMap.end(); it++)
-		{
-			if(parser(input, it->first))
-			{
-				//std::cout << it->first << std::endl;
-				listLocations.push_back(it->first);
-			}
-		}
-
-		for(auto it = this->gameMap.begin(); it!= this->gameMap.end(); it++)
-		{
-			if(parser(input, it->first))
-			{
-				//std::cout << it->first << std::endl;
-				listLocations.push_back(it->first);
-			}
-		}
-
-		//find objects in the input
-		for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
-		{
-			if (std::get<2>(it->second) == nullptr) {
-				if(parser(input, it->first)) {
-					if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
-						if (!(std::get<0>(it->second)->isTaken())) { 
-							listRoomObjects.push_back(std::get<0>(it->second));
-						}
-					}
-				}
-			}
-		}
-		//find inventory items in the input
-		for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
-		{
-			if(parser(input, it->first)) {
-				if (std::get<2>(it->second) != nullptr)
-					listInventory.push_back(std::get<0>(it->second));
-			}
-		}
-
-		//find puzzle names in the input
-		for(auto it = this->puzzleTracker.begin(); it != this->puzzleTracker.end(); it++)
-		{
-			if(parser(input, it->first)) {
-				if (std::get<2>(it->second) == nullptr) {
-					if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
-						listPuzzles.push_back(std::get<0>(it->second));
-					}
-				}
-				else {
-					std::cout << it->first << " has already been solved!" << std::endl;
-				}
-			}
-		}
-
 		//find commands in input
 		for(auto it = this->commandList.begin(); it != this->commandList.end(); it++)
 		{
 			if(parser(input,*it))
 				listCommands.push_back(*it);
 		}
-	}
-	//handles a single command
-	if(!listCommands.empty()){
-		if(listCommands.size() == 1){
-			if(listCommands[0]=="quit" || listCommands[0]=="exit"){
-				quit();
-				return true;
-			}
-			else if(listCommands[0]=="look"){
-				look();
-				return true;
-			}
-			else if(listCommands[0]=="help"){
-				help();
-				return true;
-			}
-			else if(listCommands[0]=="inventory"){
-				inventory();
-				return true;
-			}
-			else if(listCommands[0]=="take"){
-				if (listRoomObjects.size() > 0) {
-					if (listRoomObjects[0]->isTakeable() && !listRoomObjects[0]->isHidden()) {
-						take(listRoomObjects[0]);
+		std::cout << "Commands found: " << listCommands.size() << std::endl;
+		//handles a single command
+		if(!listCommands.empty()){
+			if(listCommands.size() == 1){
+				if(listCommands[0]=="quit" || listCommands[0]=="exit"){
+					quit();
+					return true;
+				}
+				else if(listCommands[0]=="look"){
+					look();
+					return true;
+				}
+				else if(listCommands[0]=="help"){
+					help();
+					return true;
+				}
+				else if(listCommands[0]=="inventory"){
+					inventory();
+					return true;
+				}
+				else if(listCommands[0]=="take"){
+					std::vector<Item*> listRoomObjects;
+					roomItemParser(listRoomObjects, input);
+					if (listRoomObjects.size() > 0) {
+						if (listRoomObjects[0]->isTakeable() && !listRoomObjects[0]->isHidden()) {
+							take(listRoomObjects[0]);
+							return true;
+						}
+						else {
+							std::cout << listRoomObjects[0]->getItemName() << " is not valid to take." << std::endl;
+						}
+					}
+				}
+				else if(listCommands[0]=="drop"){
+					std::vector<Item*> listInventory;
+					inventoryParser(listInventory,input);
+					if (listInventory.size() > 0) {
+						drop(listInventory[0]);
+						displayASCII(listInventory[0]->getItemName());//display ascii
+						displayObjects();
+						return true;	
+					}
+					else {
+						std::cout << listInventory[0]->getItemName() << " is not in your inventory." << std::endl;
+					}
+				}
+				else if(listCommands[0]=="look at") {
+					std::vector<Item*> listRoomObjects;
+					roomItemParser(listRoomObjects, input);
+					std::vector<Item*> listInventory;
+					inventoryParser(listInventory,input);
+					if (listRoomObjects.size() > 0) {
+						displayASCII(listRoomObjects[0]->getItemName()); //display ascii
+
+						std::cout << listRoomObjects[0]->getItemDesc() << std::endl;
+						for (auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++) {
+							if (std::get<0>(it->second)->getTrigger() == listRoomObjects[0]->getItemName()) {
+								std::get<0>(it->second)->setHidden(false);
+								displayObjects();
+							}
+						}
+						return true;
+					}
+					else if (listInventory.size() > 0) {
+						std::cout << listInventory[0]->getItemDesc() << std::endl;
 						return true;
 					}
 					else {
-						std::cout << listRoomObjects[0]->getItemName() << " is not valid to take." << std::endl;
+						std::cout << "This object is not valid to look at!" << std::endl;
 					}
 				}
-			}
-			else if(listCommands[0]=="drop"){
-				if (listInventory.size() > 0) {
-					drop(listInventory[0]);
-					displayASCII(listInventory[0]->getItemName());//display ascii
-					displayObjects();
-					return true;	
-				}
-				else {
-					std::cout << listInventory[0]->getItemName() << " is not in your inventory." << std::endl;
-				}
-			}
-			else if(listCommands[0]=="look at") {
-				if (listRoomObjects.size() > 0) {
-					displayASCII(listRoomObjects[0]->getItemName()); //display ascii
-
-					std::cout << listRoomObjects[0]->getItemDesc() << std::endl;
-					for (auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++) {
-						if (std::get<0>(it->second)->getTrigger() == listRoomObjects[0]->getItemName()) {
-							std::get<0>(it->second)->setHidden(false);
-							displayObjects();
+				else if(listCommands[0]=="solve") {
+					std::vector<Puzzle*> listPuzzles;
+					puzzleParser(listPuzzles,input);
+					if (listPuzzles.size() > 0) {
+						clearScreen();
+						std::cout << listPuzzles[0]->getPuzzDesc() << std::endl;
+						if (solve(listPuzzles[0]->getPuzzName())) {
+							displayASCII(listPuzzles[0]->getPuzzName()); //display ascii
+							std::cout << listPuzzles[0]->getSuccess() << std::endl;
+							updatePuzzMap(listPuzzles[0]);
 						}
+						else {
+							std::cout << listPuzzles[0]->getFail() << std::endl;
+						}
+						return true;
 					}
-					return true;
 				}
-				else if (listInventory.size() > 0) {
-					std::cout << listInventory[0]->getItemDesc() << std::endl;
-					return true;
-				}
-				else {
-					std::cout << "This object is not valid to look at!" << std::endl;
-				}
-			}
-			else if(listCommands[0]=="solve") {
-				if (listPuzzles.size() > 0) {
-					clearScreen();
-					std::cout << listPuzzles[0]->getPuzzDesc() << std::endl;
-					if (solve(listPuzzles[0]->getPuzzName())) {
-						displayASCII(listPuzzles[0]->getPuzzName()); //display ascii
-						std::cout << listPuzzles[0]->getSuccess() << std::endl;
-						updatePuzzMap(listPuzzles[0]);
+				else if(listCommands[0]=="teleport") {
+					std::vector<std::string> listLocations;
+					locationParser(listLocations,input);
+					if(listLocations.size() == 1){
+						teleport(listLocations[0]);
+						return true;
 					}
-					else {
-						std::cout << listPuzzles[0]->getFail() << std::endl;
+					else
+					std::cout << "You must provide a room name to teleport to." << std::endl;
+					return false;
+				}
+				else if(listCommands[0]=="go") {
+					std::vector<std::string> listLocations;
+					locationParser(listLocations,input);
+					if(listLocations.size() == 1){
+						go(listLocations[0]);
+						return true;
 					}
+					else
+					return false;
+				}
+				else if(listCommands[0]=="look at map"){
+					playerMap();
 					return true;
 				}
 			}
-			else if(listCommands[0]=="teleport") {
-				if(listLocations.size() == 1){
-					teleport(listLocations[0]);
-					return true;
-				}
-				else
-				std::cout << "You must provide a room name to teleport to." << std::endl;
-				return false;
+			else {
+				std::cout << "Multiple command keywords were given! Please try again." << std::endl;
 			}
-			else if(listCommands[0]=="go") {
-				if(listLocations.size() == 1){
-					go(listLocations[0]);
-					return true;
-				}
-				else
-				return false;
-			}
-			else if(listCommands[0]=="look at map"){
-				playerMap();
+		}
+		std::vector<std::string> listLocations;
+		locationParser(listLocations,input);
+		if(!listLocations.empty()){
+			if(listLocations.size() == 1 && listCommands.size() == 0 && input.length() == 0){
+				go(listLocations[0]);
 				return true;
 			}
 		}
-		else {
-			std::cout << "Multiple command keywords were given! Please try again." << std::endl;
-		}
-
 	}
-	if(!listLocations.empty()){
-		if(listLocations.size() == 1 && listCommands.size() == 0 && input.length() == 0){
-			go(listLocations[0]);
-			return true;
-		}
-	}
+	else
+		return false;
 
 	return false;
 }
@@ -731,6 +690,15 @@ bool GameEngine::parser(std::string &original, std::string tofind){
 		size_t found = original.find(tofind);
 		if(found!=std::string::npos)
 		{
+			/*
+			testing outputs
+			std::cout << "to find: " << tofind << std::endl;
+			std::cout << "original: " << original << std:: endl;
+			std::cout << "to find length: " << tofind.length() << std::endl;
+			std::cout << "original length: " << original.length() << std::endl;
+			std::cout << "found at: " << found << std::endl;
+			*/
+
 			// if find and original are same length then they are identical
 			if(original.length() == tofind.length())
 			{
@@ -738,9 +706,10 @@ bool GameEngine::parser(std::string &original, std::string tofind){
 				boost::algorithm::trim_all(original);
 				return true;
 			}
+			// look for space after tofind
 			else if (found == 0)
 			{
-				if(original.at(found+1) == ' '){
+				if(original.at(found+tofind.length()) == ' '){
 					original.erase(found,tofind.length());
 					boost::algorithm::trim_all(original);
 					return true;
@@ -748,9 +717,10 @@ bool GameEngine::parser(std::string &original, std::string tofind){
 				else
 					return false;
 			}
-			else if ((found-1)>=0 && (found+1)<= (original.length()-1))
+			// look for space on both sides of tofind
+			else if ((found-1)>=0 && (found+tofind.length())<= (original.length()))
 			{
-				if(original.at(found-1) == ' ' && original.at(found+1 ==' ')){
+				if(original.at(found-1) == ' ' && original.at(found+tofind.length() ==' ')){
 					original.erase(found,tofind.length());
 					boost::algorithm::trim_all(original);
 					return true;
@@ -758,7 +728,8 @@ bool GameEngine::parser(std::string &original, std::string tofind){
 				else
 					return false;
 			}
-			else if ((found+tofind.length())<= (original.length()-1))
+			// look for space before tofind
+			else if ((found+tofind.length())<= (original.length()))
 			{
 				if(original.at(found-1) == ' '){
 					original.erase(found,tofind.length());
@@ -972,6 +943,101 @@ void GameEngine::playerMap() {
 	}
 }
 
+/*********************************************************************
+** Description: Prompt player for input
+** Input: 
+** Output: returns player input in lower case
+*********************************************************************/
+std::string GameEngine::playerInput() {
+	std::cout << "What next? ";
+	std::string input;
+	std::getline(std::cin, input);
+	// Convert command to lowercase
+	boost::algorithm::to_lower(input);
 
+	return input;
+}
 
+/*********************************************************************
+** Description: Helper function for parsing Items in Inventory
+** Input: reference to array of item*
+** Output: 
+*********************************************************************/
+void GameEngine::inventoryParser(std::vector<Item*>& listInventory, std::string& input){
+		//find inventory items in the input
+		for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
+		{
+			if(parser(input, it->first)) {
+				if (std::get<2>(it->second) != nullptr)
+					listInventory.push_back(std::get<0>(it->second));
+			}
+		}
+}
+/*********************************************************************
+** Description: Helper function for parsing Items in Room
+** Input: reference to array of item*
+** Output: 
+*********************************************************************/
+void GameEngine::roomItemParser(std::vector<Item*>& listRoomObjects, std::string& input){
+			//find objects in the room from input
+		for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
+		{
+			if (std::get<2>(it->second) == nullptr) {
+				if(parser(input, it->first)) {
+					if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
+						if (!(std::get<0>(it->second)->isTaken())) { 
+							listRoomObjects.push_back(std::get<0>(it->second));
+						}
+					}
+				}
+			}
+		}
 
+}
+/*********************************************************************
+** Description: Helper function for parsing locations
+** Input: reference to array of string
+** Output: 
+*********************************************************************/
+void GameEngine::locationParser(std::vector<std::string>& listLocations, std::string& input){
+
+		for(auto it = this->gamePlayer.getCurrentLoc()->exitMap.begin(); it!= this->gamePlayer.getCurrentLoc()->exitMap.end(); it++)
+		{
+			if(parser(input, it->first))
+			{
+				//std::cout << it->first << std::endl;
+				listLocations.push_back(it->first);
+			}
+		}
+
+		for(auto it = this->gameMap.begin(); it!= this->gameMap.end(); it++)
+		{
+			if(parser(input, it->first))
+			{
+				//std::cout << it->first << std::endl;
+				listLocations.push_back(it->first);
+			}
+		}
+
+}
+/*********************************************************************
+** Description: Helper function for parsing puzzles
+** Input: reference to array of puzzle*
+** Output: 
+*********************************************************************/
+void GameEngine::puzzleParser(std::vector<Puzzle*>& listPuzzles, std::string& input){
+	//find puzzle names in the input
+	for(auto it = this->puzzleTracker.begin(); it != this->puzzleTracker.end(); it++)
+	{
+		if(parser(input, it->first)) {
+			if (std::get<2>(it->second) == nullptr) {
+				if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
+					listPuzzles.push_back(std::get<0>(it->second));
+				}
+			}
+			else {
+				std::cout << it->first << " has already been solved!" << std::endl;
+			}
+		}
+	}
+}
