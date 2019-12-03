@@ -589,6 +589,10 @@ bool GameEngine::readCommand() {
 					playerMap();
 					return true;
 				}
+				else if(listCommands[0]=="use") {
+					use(input);
+					return true;
+				}
 			}
 			else {
 				std::cout << "Multiple command keywords were given! Please try again." << std::endl;
@@ -1040,4 +1044,17 @@ void GameEngine::puzzleParser(std::vector<Puzzle*>& listPuzzles, std::string& in
 			}
 		}
 	}
+}
+
+/*********************************************************************
+** Description: Use item functions
+** Input: string, string
+** Output: 
+*********************************************************************/
+void GameEngine::use(std::string& input) {
+	std::vector<Item*> validItems;
+	roomItemParser(validItems, input); // items in current room
+	inventoryParser(validItems, input); // items in inventory
+
+	
 }

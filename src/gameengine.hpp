@@ -36,7 +36,7 @@ class GameEngine
 		void help(); // Shows all commands
 		void go(std::string room); // Moves user to another room
 		bool solve(std::string); // Find the appropriate puzzle and checks the answer 
-		bool use(std::string); // Find the appropriate puzzle and checks the answer 
+		void use(std::string&);// Use item
 		void lookAt(std::vector<Item*>); // Gives description of room or inventory objects 
 		void inventory(); // Displays entire inventory
 		void quit();

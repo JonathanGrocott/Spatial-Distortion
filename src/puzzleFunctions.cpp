@@ -1,8 +1,8 @@
 /***************************************************************
-** Program Filename: ui.cpp
-** Author: Adam Powell
-** Date: 10/27/19
-** Description: User Interface functions.
+** Program Filename: puzzleFunctions.cpp
+** Author: 
+** Date: 12/3/2019
+** Description: puzzle functions.
 ***************************************************************/
 
 #include "puzzleFunctions.hpp"
