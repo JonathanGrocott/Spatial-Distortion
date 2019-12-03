@@ -476,7 +476,6 @@ bool GameEngine::readCommand() {
 			if(parser(input,*it))
 				listCommands.push_back(*it);
 		}
-		std::cout << "Commands found: " << listCommands.size() << std::endl;
 		//handles a single command
 		if(!listCommands.empty()){
 			if(listCommands.size() == 1){
