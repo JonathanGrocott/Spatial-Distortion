@@ -36,9 +36,6 @@ class GameEngine
 		void help(); // Shows all commands
 		void go(std::string room); // Moves user to another room
 		bool solve(std::string); // Find the appropriate puzzle and checks the answer 
-		bool lockboxPuzzle(); // Checks answer for lockbox puzzle.
-		bool testTubePuzzle(); // Checks answer for testtube puzzle.
-		bool robotPuzzle(); // Checks answer for robot puzzle.
 		void lookAt(std::vector<Item*>); // Gives description of room or inventory objects 
 		void inventory(); // Displays entire inventory
 		void quit();
