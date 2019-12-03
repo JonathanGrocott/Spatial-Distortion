@@ -20,6 +20,8 @@ class Space
 		bool looped;
 		bool filledLiquid;
 		bool filledSolid;
+		bool bReqItem;
+		std::string requiredItem = "";
 		std::string spaceName;
 		std::string spaceFilePath;
 
@@ -36,13 +38,15 @@ class Space
 		std::unordered_map<std::string, Space*> exitMap;
 		
 		// get functions for private variables
-        	std::string getSpaceName();
+        std::string getSpaceName();
 		std::string getFilePath();
 		bool getVisited();
 		bool getLooped();
 		bool getFilledLiquid();
 		bool getFilledSolid();
 		std::string findExits();
+		std::string getReqItem();
+		bool getbReqItem();
 		//set functions for private variables
 		void setVisited(bool b);
 		void setLooped(bool b);

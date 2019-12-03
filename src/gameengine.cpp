@@ -776,12 +776,49 @@ void GameEngine::help() {
 void GameEngine::go(std::string room) {
   // Check if room name is a valid choice and move player 
   if (this->gamePlayer.getCurrentLoc()->exitMap.count(room) == 1) {
-	this->gamePlayer.setCurrentLoc(this->gamePlayer.getCurrentLoc()->exitMap.at(room));
-	clearScreen();
-	displayMenu();
-	if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
-		this->gamePlayer.getCurrentLoc()->setVisited(true);
-	this->updateItemLoc();
+	// check if player has required item to access room
+	if(this->gamePlayer.getCurrentLoc()->exitMap.at(room)->getbReqItem()){
+		std::vector<Item*> listInventory;
+		std::string temp = this->gamePlayer.getCurrentLoc()->exitMap.at(room)->getReqItem();
+		inventoryParser(listInventory,temp);
+		
+		if(this->gamePlayer.getCurrentLoc()->exitMap.at(room)->getReqItem() == "flashlight"){
+			if(listInventory.size()>0){
+				this->gamePlayer.setCurrentLoc(this->gamePlayer.getCurrentLoc()->exitMap.at(room));
+				clearScreen();
+				displayMenu();
+				if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
+					this->gamePlayer.getCurrentLoc()->setVisited(true);
+				this->updateItemLoc();
+			}
+			else{
+				std::cout << "The " << room << " is too dark to see in, you cannot go there yet!" << std::endl;
+			}
+
+		}
+		if(this->gamePlayer.getCurrentLoc()->exitMap.at(room)->getReqItem() == "brass key"){
+			if(listInventory.size()>0){
+				this->gamePlayer.setCurrentLoc(this->gamePlayer.getCurrentLoc()->exitMap.at(room));
+				clearScreen();
+				displayMenu();
+				if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
+					this->gamePlayer.getCurrentLoc()->setVisited(true);
+				this->updateItemLoc();
+			}
+			else{
+				std::cout << "The " << room << " door is locked, you cannot go there yet!" << std::endl;
+			}
+		}
+
+	}
+	else{
+		this->gamePlayer.setCurrentLoc(this->gamePlayer.getCurrentLoc()->exitMap.at(room));
+		clearScreen();
+		displayMenu();
+		if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
+			this->gamePlayer.getCurrentLoc()->setVisited(true);
+		this->updateItemLoc();
+	}
   }
   else {
     std::cout << room << " is currently not a valid location. Please try again." << std::endl;

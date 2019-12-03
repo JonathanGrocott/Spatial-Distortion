@@ -23,5 +23,6 @@ Imaging Room,north
 Generator Room,east
 Research Lab2,west
 </exits>
-<special>
-</special>
+<reqItem>
+flashlight
+</reqItem>
