@@ -590,8 +590,8 @@ bool GameEngine::readCommand() {
 					return true;
 				}
 				else if(listCommands[0]=="use") {
-					use(input);
-					return true;
+
+					return use(input);
 				}
 			}
 			else {
@@ -1049,12 +1049,32 @@ void GameEngine::puzzleParser(std::vector<Puzzle*>& listPuzzles, std::string& in
 /*********************************************************************
 ** Description: Use item functions
 ** Input: string, string
-** Output: 
+** Output: bool
 *********************************************************************/
-void GameEngine::use(std::string& input) {
+bool GameEngine::use(std::string& input) {
 	std::vector<Item*> validItems;
-	roomItemParser(validItems, input); // items in current room
-	inventoryParser(validItems, input); // items in inventory
+	if(input.size > 0)
+	{
+		roomItemParser(validItems, input); // items in current room
+		inventoryParser(validItems, input); // items in inventory
+		if(validItems.size()>0 && input.size() == 0){
+			//call item functions in here
 
-	
+
+		}
+		else{
+			if(validItems.size() == 0){
+				std::cout << "No valid items were specified!" << std::endl;
+				return false;
+			}
+			else{
+				std::cout << input << " is not a valid item!" << std::endl;
+			}
+		}
+	}
+	else
+	{
+		std::cout << "Nothing was specified to be used!" << std::endl;
+		return false;
+	}
 }
