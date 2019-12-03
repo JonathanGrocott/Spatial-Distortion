@@ -5,7 +5,7 @@ soldering iron
 false
 </breakable>
 <takeable>
-true
+false
 </takeable>
 <desc>
 A state-of-the-art soldering iron. It
