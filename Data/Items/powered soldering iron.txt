@@ -1,0 +1,21 @@
+<name>
+soldering iron
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+A state-of-the-art soldering iron. It is powered on and ready to use.
+</desc>
+<found_in>
+electronics lab
+</found_in>
+<hidden>
+true
+</hidden>
+<trigger>
+none
+</trigger>
