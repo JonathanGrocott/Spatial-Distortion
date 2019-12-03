@@ -53,6 +53,10 @@ class GameEngine
 		void roomItemParser(std::vector<Item*>&, std::string&);
 		void locationParser(std::vector<std::string>&, std::string&);
 		void puzzleParser(std::vector<Puzzle*>&,std::string&);
+
+		bool paradox;
+		bool generatorSwitch;
+
 	public:
 		/** Default constructor */
 		GameEngine();
@@ -81,6 +85,7 @@ class GameEngine
 		bool parser(std::string &original, std::string tofind);
 		std::string getFileContents (std::ifstream& File);//ascii display
 		void displayASCII(std::string name); 
+		void gameComplete();
 };
 
 #endif // GAMEENGINE_HPP

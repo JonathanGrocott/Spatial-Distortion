@@ -1,5 +1,5 @@
 <name>
-soldering iron
+powered soldering iron
 </name>
 <breakable>
 false

@@ -48,7 +48,7 @@ GameEngine::GameEngine()
 	initializeGameMap();
 
 	//set player to starting place
-	this->gamePlayer.setCurrentLoc(this->gameMap.at("entry"));
+	this->gamePlayer.setCurrentLoc(this->gameMap.at("electronics lab"));
 	this->gameState = true;
 }
 
@@ -1094,8 +1094,39 @@ bool GameEngine::use(std::string& input){
 		roomItemParser(validItems, input); // items in current room
 		inventoryParser(validItems, input); // items in inventory
 		if(validItems.size()>0 && input.size() == 0){
+			std::vector<std::string> itemList;
+			for(auto it = validItems.begin(); it != validItems.end(); it++ ){
+				itemList.push_back((*it)->getItemName());
+			}
 			//call item functions in here
+			if(std::find(itemList.begin(), itemList.end(), "powered soldering iron") != itemList.end()
+				&& std::find(itemList.begin(), itemList.end(), "damaged circuit") != itemList.end()
+				&& std::find(itemList.begin(), itemList.end(), "electrical components") != itemList.end())
+				{
+					std::get<0>(this->itemsMap.at("repaired circuit"))->setHidden(false);
+					std::get<0>(this->itemsMap.at("repaired circuit"))->setTakeable(true);
 
+					std::get<0>(this->itemsMap.at("damaged circuit"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("damaged circuit"))->setTakeable(false);
+
+					std::get<0>(this->itemsMap.at("electrical components"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("electrical components"))->setTakeable(false);
+					return true;
+				}
+				else if(std::find(itemList.begin(), itemList.end(), "soldering iron") != itemList.end()
+				&& std::find(itemList.begin(), itemList.end(), "power cord") != itemList.end())
+				{
+					std::cout << "got inside" << std::endl;
+					std::get<0>(this->itemsMap.at("powered soldering iron"))->setHidden(false);
+					std::get<0>(this->itemsMap.at("soldering iron"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("power cord"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("power cord"))->setTakeable(false);
+					std::get<0>(this->itemsMap.at("power cord"))->setTaken(false);\
+					this->updateInvent(std::get<0>(this->itemsMap.at("power cord")), nullptr);
+
+					std::cout << "You connect the power cord to the soldering iron. It turns on and is heating up." << std::endl;
+					return true;
+				}
 
 		}
 		else{

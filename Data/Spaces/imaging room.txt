@@ -25,3 +25,6 @@ Electronics Lab,west
 </exits>
 <special>
 </special>
+<reqItem>
+flashlight
+</reqItem>

@@ -1,0 +1,23 @@
+<name>
+electrical components
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+true
+</takeable>
+<desc>
+A variety of resistors, transistors, capacitors,
+and diodes. Useful for simple repairs of pcb 
+boards.
+</desc>
+<found_in>
+office
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>
