@@ -1111,6 +1111,8 @@ bool GameEngine::use(std::string& input){
 
 					std::get<0>(this->itemsMap.at("electrical components"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("electrical components"))->setTakeable(false);
+
+					std::cout << "You use the soldering iron and electrical components to repair the circuit board." << std::endl;
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "soldering iron") != itemList.end()
@@ -1128,15 +1130,15 @@ bool GameEngine::use(std::string& input){
 					return true;
 				}
 
-		}
-		else{
-			if(validItems.size() == 0){
-				std::cout << "No valid items were specified!" << std::endl;
-				return false;
-			}
-			else{
+			else
+			{
 				std::cout << input << " is not a valid item!" << std::endl;
 			}
+		}
+		else
+		{
+			std::cout << "No valid items were specified!" << std::endl;
+			return false;
 		}
 	}
 	else
