@@ -1051,9 +1051,9 @@ void GameEngine::puzzleParser(std::vector<Puzzle*>& listPuzzles, std::string& in
 ** Input: string, string
 ** Output: bool
 *********************************************************************/
-bool GameEngine::use(std::string& input) {
+bool GameEngine::use(std::string& input){
 	std::vector<Item*> validItems;
-	if(input.size > 0)
+	if(input.size() > 0)
 	{
 		roomItemParser(validItems, input); // items in current room
 		inventoryParser(validItems, input); // items in inventory
