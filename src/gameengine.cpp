@@ -1294,12 +1294,12 @@ bool GameEngine::use(std::string& input){
 
 			else
 			{
-				std::cout << input << " is not a valid item!" << std::endl;
+				std::cout << "That item cann't be used like that." << std::endl;
 			}
 		}
 		else
 		{
-			std::cout << "No valid items were specified!" << std::endl;
+			std::cout << input << " is not a valid item!" << std::endl;
 			return false;
 		}
 	}
