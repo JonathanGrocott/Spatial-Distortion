@@ -808,19 +808,6 @@ void GameEngine::go(std::string room) {
 			}
 
 		}
-		if(this->gamePlayer.getCurrentLoc()->exitMap.at(room)->getReqItem() == "brass key"){
-			if(listInventory.size()>0){
-				this->gamePlayer.setCurrentLoc(this->gamePlayer.getCurrentLoc()->exitMap.at(room));
-				displayMenu(true);
-				if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
-					this->gamePlayer.getCurrentLoc()->setVisited(true);
-				this->updateItemLoc();
-			}
-			else{
-				std::cout << "The " << room << " door is locked, you cannot go there yet!" << std::endl;
-			}
-		}
-
 	}
 	else{
 		this->gamePlayer.setCurrentLoc(this->gamePlayer.getCurrentLoc()->exitMap.at(room));
