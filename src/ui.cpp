@@ -116,6 +116,24 @@ void puzzlesDisp(Space* room, std::unordered_map<std::string, std::tuple<Puzzle*
 	}
 }
 
+/*********************************************************************
+** Description: helper function that clears the screen
+** Input: none
+** Output: none
+*********************************************************************/
+void printFile(std::string location){
+    std::string line;
+    std::ifstream myfile (location);
+    if (myfile.is_open())// comfirm file opened
+	{          
+        while ( myfile.good() )// read to end of file
+		{    
+			std::cout << line << std::endl;
+	    }
+		myfile.close();
+    }
+    else std::cout << "Unable to open file" << std::endl; 
+}
 
 /*********************************************************************
 ** Description: helper function that clears the screen

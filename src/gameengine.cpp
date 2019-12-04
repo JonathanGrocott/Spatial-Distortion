@@ -468,6 +468,7 @@ void GameEngine::displayObjects() {
 bool GameEngine::readCommand() {
 	
 	// get player input
+	std::cout << "What next? ";
 	std::string input = playerInput();
 	std::vector<std::string> listCommands;
 	//find all locations in input
@@ -697,15 +698,6 @@ bool GameEngine::parser(std::string &original, std::string tofind){
 		size_t found = original.find(tofind);
 		if(found!=std::string::npos)
 		{
-			/*
-			testing outputs
-			std::cout << "to find: " << tofind << std::endl;
-			std::cout << "original: " << original << std:: endl;
-			std::cout << "to find length: " << tofind.length() << std::endl;
-			std::cout << "original length: " << original.length() << std::endl;
-			std::cout << "found at: " << found << std::endl;
-			*/
-
 			// if find and original are same length then they are identical
 			if(original.length() == tofind.length())
 			{
@@ -989,7 +981,6 @@ void GameEngine::playerMap() {
 ** Output: returns player input in lower case
 *********************************************************************/
 std::string GameEngine::playerInput() {
-	std::cout << "What next? ";
 	std::string input;
 	std::getline(std::cin, input);
 	// Convert command to lowercase
@@ -1081,6 +1072,83 @@ void GameEngine::puzzleParser(std::vector<Puzzle*>& listPuzzles, std::string& in
 		}
 	}
 }
+
+/*********************************************************************
+** Description: Check win condition and end game
+** Input: 
+** Output: 
+*********************************************************************/
+void GameEngine::wincon(){
+
+	if(this->paradox)
+	{
+		this->gameState = false;
+
+		std::cout << "Congratulations you have stopped HAL 9001 and saved yourself from" << std::endl;
+		std::cout << "living the rest of your life in this tiny building." <<std::endl;
+	}
+
+}
+
+/*********************************************************************
+** Description: Check win condition and end game
+** Input: 
+** Output: 
+*********************************************************************/
+void GameEngine::infin(){
+	clearScreen();
+	printFile("Data/infin/HAL.txt");
+
+	std::string input;
+	while (input != "quit") 
+	{
+		std::cout << "HAL 9001:~/$ ";
+		input = playerInput();
+
+		if(input.find("loop")!=std::string::npos)
+		{
+			if(input.find("generator room")!=std::string::npos)
+			{
+				if(this->generatorSwitch)
+				{
+					this->paradox = true;
+					wincon();
+				}
+				else
+				{
+					std::cout << "Please don't loop this room, it's not very useful at all." << std::endl;
+				}
+				
+			}
+			else
+			{
+				std::cout << "Enjoy using that loop command over and over and over." << std::endl;
+			}
+			
+		}
+		else if(input == "map"){
+			std::cout << std::endl << "Here are the rooms you know about:" << std::endl;
+			std::cout << "--------------" << std::endl;
+			for(auto it = this->gameMap.begin(); it!= this->gameMap.end(); it++)
+			{
+				if(it->second->getVisited())
+					std::cout << it->second->getSpaceName() << std::endl;
+			}
+			std::cout << "--------------" << std::endl;
+		}
+		else if(input == "quit"){
+		}
+		else
+		{
+			std::cout << "Im afraid I that " << input << " just doesn't make any sense!" << std::endl;
+		}
+	}
+
+	std::cout << "Im afraid I can't let you make any of those loop changes you might get hurt." << std::endl;
+	std::cout << "Im afraid I can't let you make any of those l00p changes you might get hurt." << std::endl;
+	std::cout << "Im afraid I can't l37 you mak3 a*y of thos3 l**p ch@ng3s you might g3t hurt." << std::endl;
+	std::cout << "The building has been returned to 'normal' but you are still trapped." << std::endl;
+}
 /*********************************************************************
 ** Description: Use item functions
 ** Input: string, string
@@ -1144,6 +1212,12 @@ bool GameEngine::use(std::string& input){
 						}
 					
 					}
+					return true;
+				}
+				else if(std::find(itemList.begin(), itemList.end(), "repaired infinity machine") != itemList.end()
+				&& itemList.size()==1)
+				{
+					infin();
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "broken infinity machine") != itemList.end()
