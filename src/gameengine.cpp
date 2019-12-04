@@ -348,7 +348,7 @@ void GameEngine::saveGameState(){
 *********************************************************************/
 void GameEngine::mainGameLoop(){
 	//start game by displaying location
-	displayMenu();
+	displayMenu(true);
 	this->gameMap.at("entry")->setVisited(true);
 	//start game loop
 	do{
@@ -385,8 +385,9 @@ void GameEngine::setGameState(bool b){
 ** Input: none
 ** Output: console
 *********************************************************************/
-void GameEngine::displayMenu() {
-	clearScreen();
+void GameEngine::displayMenu(bool clear) {
+	if (clear)
+		clearScreen();
 	std::cout << std::endl << std::endl;
 	//display ascii art if matches space name
 	displayASCII(this->gamePlayer.getCurrentLoc()->getSpaceName());
@@ -549,13 +550,14 @@ bool GameEngine::readCommand() {
 				else if(listCommands[0]=="solve") {
 					std::vector<Puzzle*> listPuzzles;
 					puzzleParser(listPuzzles,input);
-					if (listPuzzles.size() > 0) {
+					if (listPuzzles.size() > 0 && !listPuzzles[0]->isHidden()) {
 						clearScreen();
 						std::cout << listPuzzles[0]->getPuzzDesc() << std::endl;
 						if (solve(listPuzzles[0]->getPuzzName())) {
 							displayASCII(listPuzzles[0]->getPuzzName()); //display ascii
 							std::cout << listPuzzles[0]->getSuccess() << std::endl;
 							updatePuzzMap(listPuzzles[0]);
+							displayMenu(false);
 						}
 						else {
 							std::cout << listPuzzles[0]->getFail() << std::endl;
@@ -785,8 +787,7 @@ void GameEngine::go(std::string room) {
 		if(this->gamePlayer.getCurrentLoc()->exitMap.at(room)->getReqItem() == "flashlight"){
 			if(listInventory.size()>0){
 				this->gamePlayer.setCurrentLoc(this->gamePlayer.getCurrentLoc()->exitMap.at(room));
-				clearScreen();
-				displayMenu();
+				displayMenu(true);
 				if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
 					this->gamePlayer.getCurrentLoc()->setVisited(true);
 				this->updateItemLoc();
@@ -799,8 +800,7 @@ void GameEngine::go(std::string room) {
 		if(this->gamePlayer.getCurrentLoc()->exitMap.at(room)->getReqItem() == "brass key"){
 			if(listInventory.size()>0){
 				this->gamePlayer.setCurrentLoc(this->gamePlayer.getCurrentLoc()->exitMap.at(room));
-				clearScreen();
-				displayMenu();
+				displayMenu(true);
 				if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
 					this->gamePlayer.getCurrentLoc()->setVisited(true);
 				this->updateItemLoc();
@@ -813,8 +813,7 @@ void GameEngine::go(std::string room) {
 	}
 	else{
 		this->gamePlayer.setCurrentLoc(this->gamePlayer.getCurrentLoc()->exitMap.at(room));
-		clearScreen();
-		displayMenu();
+		displayMenu(true);
 		if(!(this->gamePlayer.getCurrentLoc()->getVisited()))
 			this->gamePlayer.getCurrentLoc()->setVisited(true);
 		this->updateItemLoc();
@@ -955,10 +954,9 @@ void GameEngine::teleport(std::string room) {
   if (this->gameMap.count(room) == 1) {
 	if(this->gameMap.at(room)->getVisited())
 	{
-		clearScreen();
 		this->gamePlayer.setCurrentLoc(this->gameMap.at(room));
 		this->updateItemLoc();
-		displayMenu();
+		displayMenu(true);
 	}
 	else
 		std::cout << room << " is currently not a valid teleport location." << std::endl;
@@ -1081,7 +1079,6 @@ void GameEngine::puzzleParser(std::vector<Puzzle*>& listPuzzles, std::string& in
 		}
 	}
 }
-
 /*********************************************************************
 ** Description: Use item functions
 ** Input: string, string
@@ -1153,9 +1150,47 @@ bool GameEngine::use(std::string& input){
 					std::get<0>(this->itemsMap.at("repaired circuit board"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("repaired circuit board"))->setTakeable(false);
 					std::get<0>(this->itemsMap.at("broken infinity machine"))->setHidden(true);
-
-
+					
 				}
+				else if(std::find(itemList.begin(), itemList.end(), "flashlight") != itemList.end()) {
+					if (this->gamePlayer.getCurrentLoc()->getSpaceName() == "basement" &&
+					    std::get<2>(this->puzzleTracker.at("lockbox")) == nullptr) {
+						if (std::get<0>(this->puzzleTracker.at("lockbox"))->isHidden()) {
+							std::get<0>(this->puzzleTracker.at("lockbox"))->setHidden(false);
+							std::cout << "The flashlight reveals a lockbox on a table." << std::endl;
+							std::cout << "New Solvable Puzzles: ";
+							puzzlesDisp(this->gamePlayer.getCurrentLoc(), this->puzzleTracker);
+							std::cout << std::endl;
+						}
+						else
+							std::cout << "You wave your flashlight around. Nothing eventful happens." << std::endl;
+					}
+					else
+						std::cout << "You wave your flashlight around. Nothing eventful happens." << std::endl;
+
+					return true;
+				}
+				else if(std::find(itemList.begin(), itemList.end(), "brass key") != itemList.end()) {
+					if (this->gamePlayer.getCurrentLoc()->getSpaceName() == "robotics lab" &&
+					    std::get<2>(this->puzzleTracker.at("robot")) == nullptr) {
+						if (std::get<0>(this->puzzleTracker.at("robot"))->isHidden()) {
+							std::get<0>(this->puzzleTracker.at("robot"))->setHidden(false);
+							std::cout << "The key inserts into the console and activates the robot" << std::endl;
+							std::cout << std::endl;
+							std::cout << "New Solvable Puzzles: ";
+							puzzlesDisp(this->gamePlayer.getCurrentLoc(), this->puzzleTracker);
+							std::cout << std::endl;
+						}
+						else {
+							std::cout << "You turn the key in the console again, but nothing happens" << std::endl;
+						}
+					}
+					else
+						std::cout << "You swing the brass key around wildly seeking answers, but nothing happens." << std::endl;
+
+					return true;
+				}
+
 			else
 			{
 				std::cout << input << " is not a valid item!" << std::endl;

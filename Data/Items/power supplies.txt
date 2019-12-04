@@ -1,5 +1,5 @@
 <name>
-nightstand
+power supplies
 </name>
 <breakable>
 false
@@ -8,11 +8,13 @@ false
 false
 </takeable>
 <desc>
-The nightstand seems to have some sort of object
-resting on top of it.
+There are RGB power supplies bolted to the
+ceiling. The alternating colors of
+the power supplies creates a very festive
+lighting.
 </desc>
 <found_in>
-basement
+electronics lab
 </found_in>
 <hidden>
 false

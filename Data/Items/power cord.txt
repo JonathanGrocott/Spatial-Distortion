@@ -8,7 +8,9 @@ false
 true
 </takeable>
 <desc>
-A six-pronged power cable on both ends.
+A power cable of sorts with a small
+sticker that reads, "for use with
+soldering irons".
 </desc>
 <found_in>
 basement

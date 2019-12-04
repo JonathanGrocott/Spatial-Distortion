@@ -1,11 +1,12 @@
 /***************************************************************
-** Program Filename: ui.hpp
+** Program Filename: itemsFunctions.hpp
 ** Author: 
 ** Date: 12/3/2019
-** Description: Puzzle function definintions.
+** Description: Item function definintions.
 ***************************************************************/
 
 #ifndef ITEMFUNCTIONS_HPP
 #define ITEMFUNCTIONS_HPP
+
 
 #endif

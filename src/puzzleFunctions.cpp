@@ -26,6 +26,9 @@ bool lockboxPuzzle() {
 	if (answer == "42" || answer == "forty two" || answer == "forty-two") {
 		return true;
 	}
+	else if (answer == "cheat") {
+		return true;
+	}
 	else { 
 		return false;
 	}
@@ -56,6 +59,9 @@ bool testTubePuzzle() {
 		std::getline(std::cin, input);
 		if (input == "q" || input == "quit" || input == "reset") 
 			return false;
+		
+		if (input == "cheat")
+			return true;
 
 		// Parse input
 		std::vector<std::string> splitInput;
@@ -181,6 +187,9 @@ bool robotPuzzle() {
 		std::getline(std::cin, input);
 		if (input == "q" || input == "quit" || input == "reset")
 			return false;
+		
+		if (input == "cheat")
+			return true;
 
 		if (input == "left") {
 			if (player - move < 1) 
