@@ -1106,9 +1106,11 @@ bool GameEngine::use(std::string& input){
 
 					std::get<0>(this->itemsMap.at("damaged circuit board"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("damaged circuit board"))->setTakeable(false);
+					this->updateInvent(std::get<0>(this->itemsMap.at("damaged circuit board")), nullptr);
 
 					std::get<0>(this->itemsMap.at("electrical components"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("electrical components"))->setTakeable(false);
+					this->updateInvent(std::get<0>(this->itemsMap.at("electrical components")), nullptr);
 
 					std::cout << "You use the soldering iron and electrical components to repair the circuit board." << std::endl;
 					return true;
@@ -1150,7 +1152,10 @@ bool GameEngine::use(std::string& input){
 					std::get<0>(this->itemsMap.at("repaired circuit board"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("repaired circuit board"))->setTakeable(false);
 					std::get<0>(this->itemsMap.at("broken infinity machine"))->setHidden(true);
-					
+					std::get<0>(this->itemsMap.at("repaired infinity machine"))->setHidden(false);
+					this->updateInvent(std::get<0>(this->itemsMap.at("repaired circuit board")), nullptr);
+
+					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "flashlight") != itemList.end()) {
 					if (this->gamePlayer.getCurrentLoc()->getSpaceName() == "basement" &&
