@@ -44,7 +44,8 @@ class GameEngine
 		void playerMap();
 		void teleport(std::string room);
 		void take(Item*);
-		void drop(Item*);		
+		void drop(Item*);
+		void loadGameStateMenu();		
 		void loadGameState(std::string savedGame);
 		void saveGameState();
 		void wincon();

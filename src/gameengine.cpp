@@ -616,6 +616,14 @@ bool GameEngine::readCommand() {
 
 					return use(input);
 				}
+				else if(listCommands[0]=="savegame"){
+					saveGameState();
+					return true;
+				}
+				else if(listCommands[0]=="loadgame"){
+					loadGameStateMenu();
+					return true;
+				}
 			}
 			else {
 				std::cout << "Multiple command keywords were given! Please try again." << std::endl;
@@ -1162,6 +1170,50 @@ void GameEngine::infin(){
 		std::cout << "The building has been returned to 'normal' but you are still trapped." << std::endl;
 	}
 
+}
+
+void GameEngine::loadGameStateMenu(){
+	clearScreen();
+
+	// list out saved game files
+	int i = 0;
+	int input = 0;
+	std::cout << i << ": return to game." << std::endl;
+
+	namespace fs = boost::filesystem;
+	fs::path spaceDir("Data/Saves/");
+	std::vector<std::string> saveFiles;
+	if(fs::is_directory(spaceDir)){
+		for(auto& entry : boost::make_iterator_range(fs::directory_iterator(spaceDir), {}))
+		{
+			//check that entry is a file
+			if(fs::is_regular_file(entry))
+			{
+				//setup room name and path vector
+				i++;
+				std::string filename = entry.path().filename().string();
+				saveFiles.push_back(filename);
+				std::cout << i << ": " << filename << std::endl;
+			}
+		}
+	}
+	// check user input and get user selected file
+	do{
+		if(!(input >= 0 && input <= saveFiles.size()))
+		std::cout << "Not a valid choice! please choose an option between 0 and " << saveFiles.size() << std::endl;
+		std::cout << "Enter Option: ";
+		std::cin >> input;
+	}while(input < 0 && input < saveFiles.size());
+	
+	//clear and flush stream
+	std::cin.clear();
+	std::cin.ignore(INT_MAX,'\n');
+
+	if(input != 0)
+	{
+		loadGameState(saveFiles[input-1]);
+		look();
+	}
 }
 /*********************************************************************
 ** Description: Use item functions
