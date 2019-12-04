@@ -195,6 +195,15 @@ void GameEngine::loadGameState(std::string savedGame){
 				boost::algorithm::to_lower(TempLine);
 				this->gamePlayer.setCurrentLoc(this->gameMap.at(TempLine));
 			}
+			// set switch
+			if(!TempLine.compare("<switch>")){
+				std::getline (File , TempLine);
+				boost::algorithm::to_lower(TempLine);
+				if(TempLine == "true")
+					this->generatorSwitch = true;
+				else
+					this->generatorSwitch = false;
+			}
 			
 			// set visted rooms
 			if(!TempLine.compare("<visted>")){
@@ -297,6 +306,14 @@ void GameEngine::saveGameState(){
 		file << "<player>" << std::endl;
 		file << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
 		file << "</player>" << std::endl;
+
+		// power switch state 
+		file << "<switch>" << std::endl;
+		if(this->generatorSwitch)
+			file << "true" << std::endl;
+		else
+			file << "false" << std::endl;
+		file << "</switch>" << std::endl;
 
 		// save visted rooms
 		file << "<visted>" << std::endl;
@@ -1195,6 +1212,7 @@ bool GameEngine::use(std::string& input){
 					std::get<0>(this->itemsMap.at("power cord"))->setTakeable(false);
 					std::get<0>(this->itemsMap.at("power cord"))->setTaken(false);\
 					this->updateInvent(std::get<0>(this->itemsMap.at("power cord")), nullptr);
+					this->updateInvent(std::get<0>(this->itemsMap.at("cold soldering iron")), nullptr);
 
 					std::cout << "You connect the power cord to the soldering iron. It turns on and is heating up." << std::endl;
 					return true;
@@ -1230,6 +1248,7 @@ bool GameEngine::use(std::string& input){
 					std::get<0>(this->itemsMap.at("broken infinity machine"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("repaired infinity machine"))->setHidden(false);
 					this->updateInvent(std::get<0>(this->itemsMap.at("repaired circuit board")), nullptr);
+					this->updateInvent(std::get<0>(this->itemsMap.at("broken infinity machine")), nullptr);
 
 					return true;
 				}
