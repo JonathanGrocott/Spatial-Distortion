@@ -239,6 +239,8 @@ void GameEngine::loadGameState(std::string savedGame){
 							std::get<1>(this->itemsMap.at(result[0])) = this->gameMap.at(result[1]);
 							if(result[2] == "0") 
 								std::get<0>(this->itemsMap.at(result[0]))->setHidden(false);
+							else
+								std::get<0>(this->itemsMap.at(result[0]))->setHidden(true);
 							if(result[3] == "1")
 								std::get<0>(this->itemsMap.at(result[0]))->setTakeable(true);
 							
@@ -1087,9 +1089,13 @@ void GameEngine::wincon(){
 	if(this->paradox)
 	{
 		this->gameState = false;
+		clearScreen();
+		std::cout << "Congratulations you have stopped HAL 9001 using an infinite energy paradox," << std::endl;
+		std::cout << "saving yourself from living the rest of your life in this tiny building." <<std::endl<<std::endl;
 
-		std::cout << "Congratulations you have stopped HAL 9001 and saved yourself from" << std::endl;
-		std::cout << "living the rest of your life in this tiny building." <<std::endl;
+		std::string temp;
+		std::cout << "Press Enter to return to main menu... ";
+		std::getline(std::cin, temp);
 	}
 
 }
@@ -1117,6 +1123,7 @@ void GameEngine::infin(){
 				{
 					this->paradox = true;
 					wincon();
+					break;
 				}
 				else
 				{
@@ -1144,14 +1151,17 @@ void GameEngine::infin(){
 		}
 		else
 		{
-			std::cout << "Im afraid I that " << input << " just doesn't make any sense!" << std::endl;
+			std::cout << "Im afraid that the command " << input << " just doesn't make any sense!" << std::endl;
 		}
 	}
+	if(input == "quit")
+	{
+		std::cout << "Im afraid I can't let you actually use any of those loop changes you might get hurt." << std::endl;
+		std::cout << "I can't let you actually use you might get hurt." << std::endl;
+		std::cout << "Im afraid I can't l37 you mak3 a*y of thos3 l**p ch@ng3s you might g3t hurt." << std::endl;
+		std::cout << "The building has been returned to 'normal' but you are still trapped." << std::endl;
+	}
 
-	std::cout << "Im afraid I can't let you make any of those loop changes you might get hurt." << std::endl;
-	std::cout << "Im afraid I can't let you make any of those l00p changes you might get hurt." << std::endl;
-	std::cout << "Im afraid I can't l37 you mak3 a*y of thos3 l**p ch@ng3s you might g3t hurt." << std::endl;
-	std::cout << "The building has been returned to 'normal' but you are still trapped." << std::endl;
 }
 /*********************************************************************
 ** Description: Use item functions
@@ -1197,7 +1207,7 @@ bool GameEngine::use(std::string& input){
 					std::get<0>(this->itemsMap.at("cold soldering iron"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("power cord"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("power cord"))->setTakeable(false);
-					std::get<0>(this->itemsMap.at("power cord"))->setTaken(false);\
+					std::get<0>(this->itemsMap.at("power cord"))->setTaken(false);
 					this->updateInvent(std::get<0>(this->itemsMap.at("power cord")), nullptr);
 					this->updateInvent(std::get<0>(this->itemsMap.at("cold soldering iron")), nullptr);
 
@@ -1243,11 +1253,11 @@ bool GameEngine::use(std::string& input){
 				&& itemList.size() == 1)
 				{
 					if(this->generatorSwitch == false){
-						this->generatorSwitch == true;
+						this->generatorSwitch = true;
 						std::cout << "As you flip the switch you hear the generators\nstart up in a distant part of the building."<<std::endl;
 					}
 					else{
-						this->generatorSwitch == false;
+						this->generatorSwitch = false;
 						std::cout << "As you flip the switch you hear the generators\nstop running."<<std::endl;
 					}
 

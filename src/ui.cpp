@@ -128,6 +128,7 @@ void printFile(std::string location){
 	{          
         while ( myfile.good() )// read to end of file
 		{    
+			std::getline (myfile, line);
 			std::cout << line << std::endl;
 	    }
 		myfile.close();
