@@ -1159,6 +1159,20 @@ bool GameEngine::use(std::string& input){
 
 					return true;
 				}
+				else if(std::find(itemList.begin(), itemList.end(), "switch") != itemList.end()
+				&& itemList.size() == 1)
+				{
+					if(this->generatorSwitch == false){
+						this->generatorSwitch == true;
+						std::cout << "As you flip the switch you hear the generators\nstart up in a distant part of the building."<<std::endl;
+					}
+					else{
+						this->generatorSwitch == false;
+						std::cout << "As you flip the switch you hear the generators\nstop running."<<std::endl;
+					}
+
+					return true;
+				}
 				else if(std::find(itemList.begin(), itemList.end(), "flashlight") != itemList.end()) {
 					if (this->gamePlayer.getCurrentLoc()->getSpaceName() == "basement" &&
 					    std::get<2>(this->puzzleTracker.at("lockbox")) == nullptr) {
