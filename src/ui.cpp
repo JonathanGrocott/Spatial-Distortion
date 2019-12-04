@@ -107,8 +107,9 @@ void objectsDisp(Space* room, std::unordered_map<std::string, std::tuple<Item*, 
 void puzzlesDisp(Space* room, std::unordered_map<std::string, std::tuple<Puzzle*, Space*, player*>> puzzlesMap){
 	for (auto it = puzzlesMap.begin(); it != puzzlesMap.end(); it++) {
 		if (!(std::get<1>(it->second)->getSpaceName().compare(room->getSpaceName()))) {
-			// If not completed
-			if (std::get<2>(it->second) == nullptr) {
+			// If not completed and not hidden
+			if (std::get<2>(it->second) == nullptr &&
+			    !std::get<0>(it->second)->isHidden()) {
 				std::cout << it->first << std::endl;
 			}
 		}
