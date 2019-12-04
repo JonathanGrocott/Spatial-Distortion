@@ -5,7 +5,7 @@ damaged circuit board
 false
 </breakable>
 <takeable>
-true
+false
 </takeable>
 <desc>
 A PCB board with several burnt up electrical
@@ -15,7 +15,7 @@ components. It looks repairable.
 prototype room
 </found_in>
 <hidden>
-false
+true
 </hidden>
 <trigger>
 Look at

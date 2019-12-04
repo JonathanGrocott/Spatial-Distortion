@@ -48,7 +48,7 @@ GameEngine::GameEngine()
 	initializeGameMap();
 
 	//set player to starting place
-	this->gamePlayer.setCurrentLoc(this->gameMap.at("electronics lab"));
+	this->gamePlayer.setCurrentLoc(this->gameMap.at("entry"));
 	this->gameState = true;
 }
 
@@ -1093,21 +1093,22 @@ bool GameEngine::use(std::string& input){
 	{
 		roomItemParser(validItems, input); // items in current room
 		inventoryParser(validItems, input); // items in inventory
-		if(validItems.size()>0 && input.size() == 0){
+		if(validItems.size()>0){
 			std::vector<std::string> itemList;
 			for(auto it = validItems.begin(); it != validItems.end(); it++ ){
 				itemList.push_back((*it)->getItemName());
 			}
 			//call item functions in here
 			if(std::find(itemList.begin(), itemList.end(), "powered soldering iron") != itemList.end()
-				&& std::find(itemList.begin(), itemList.end(), "damaged circuit") != itemList.end()
-				&& std::find(itemList.begin(), itemList.end(), "electrical components") != itemList.end())
+				&& std::find(itemList.begin(), itemList.end(), "damaged circuit board") != itemList.end()
+				&& std::find(itemList.begin(), itemList.end(), "electrical components") != itemList.end()
+				&& itemList.size() == 3)
 				{
-					std::get<0>(this->itemsMap.at("repaired circuit"))->setHidden(false);
-					std::get<0>(this->itemsMap.at("repaired circuit"))->setTakeable(true);
+					std::get<0>(this->itemsMap.at("repaired circuit board"))->setHidden(false);
+					std::get<0>(this->itemsMap.at("repaired circuit board"))->setTakeable(true);
 
-					std::get<0>(this->itemsMap.at("damaged circuit"))->setHidden(true);
-					std::get<0>(this->itemsMap.at("damaged circuit"))->setTakeable(false);
+					std::get<0>(this->itemsMap.at("damaged circuit board"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("damaged circuit board"))->setTakeable(false);
 
 					std::get<0>(this->itemsMap.at("electrical components"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("electrical components"))->setTakeable(false);
@@ -1115,12 +1116,12 @@ bool GameEngine::use(std::string& input){
 					std::cout << "You use the soldering iron and electrical components to repair the circuit board." << std::endl;
 					return true;
 				}
-				else if(std::find(itemList.begin(), itemList.end(), "soldering iron") != itemList.end()
-				&& std::find(itemList.begin(), itemList.end(), "power cord") != itemList.end())
+				else if(std::find(itemList.begin(), itemList.end(), "cold soldering iron") != itemList.end()
+				&& std::find(itemList.begin(), itemList.end(), "power cord") != itemList.end()
+				&& itemList.size() == 2)
 				{
-					std::cout << "got inside" << std::endl;
 					std::get<0>(this->itemsMap.at("powered soldering iron"))->setHidden(false);
-					std::get<0>(this->itemsMap.at("soldering iron"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("cold soldering iron"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("power cord"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("power cord"))->setTakeable(false);
 					std::get<0>(this->itemsMap.at("power cord"))->setTaken(false);\
@@ -1129,7 +1130,32 @@ bool GameEngine::use(std::string& input){
 					std::cout << "You connect the power cord to the soldering iron. It turns on and is heating up." << std::endl;
 					return true;
 				}
+				else if(std::find(itemList.begin(), itemList.end(), "broken infinity machine") != itemList.end()
+				&& itemList.size()==1)
+				{
+					std::cout << "You attempt to use the Infinity Machine. But the screen is none functional." << std::endl;
+					if(std::get<0>(this->itemsMap.at("damaged circuit board"))->isHidden()){
+											if(std::get<1>(this->itemsMap.at("damaged circuit board"))->getSpaceName() == "prototype room")
+						{
+						std::cout << "While attempting to use the Infinity Machine you noticed one of the exposed\ncircuits has been damaged." << std::endl;	
+						std::get<0>(this->itemsMap.at("damaged circuit board"))->setHidden(false);
+						std::get<0>(this->itemsMap.at("damaged circuit board"))->setTakeable(true);
+						}
+					
+					}
+					return true;
+				}
+				else if(std::find(itemList.begin(), itemList.end(), "broken infinity machine") != itemList.end()
+				&& std::find(itemList.begin(), itemList.end(), "repaired circuit board") != itemList.end()
+				&& itemList.size() == 2)
+				{
+					std::cout << "As you insert the repaired board, the monitor for the machine lights up." << std::endl;
+					std::get<0>(this->itemsMap.at("repaired circuit board"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("repaired circuit board"))->setTakeable(false);
+					std::get<0>(this->itemsMap.at("broken infinity machine"))->setHidden(true);
 
+
+				}
 			else
 			{
 				std::cout << input << " is not a valid item!" << std::endl;
