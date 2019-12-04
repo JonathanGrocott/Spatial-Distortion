@@ -8,6 +8,5 @@
 #ifndef ITEMFUNCTIONS_HPP
 #define ITEMFUNCTIONS_HPP
 
-bool flashlight();
 
 #endif
