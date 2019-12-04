@@ -50,6 +50,8 @@ GameEngine::GameEngine()
 	//set player to starting place
 	this->gamePlayer.setCurrentLoc(this->gameMap.at("entry"));
 	this->gameState = true;
+	this->paradox = false;
+	this->generatorSwitch = false;
 }
 
 GameEngine::GameEngine(std::string savedGame)
