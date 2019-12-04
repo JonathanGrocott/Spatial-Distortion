@@ -48,6 +48,3 @@ Space* player::getCurrentLoc(){
 void player::setCurrentLoc(Space* loc){
    this->currentLoc = loc;
 }
-
-
-
