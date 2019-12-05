@@ -12,7 +12,7 @@ help: This is how you got here. Shows all the main commands.
 clear: Cleans up the screen.
 savegame: Saves the current progress of the game to a default file.
 loadgame: Loads up the save progress of the default save file.
-exit: Quits the game. Will prompt to save before quitting.
+exit or quit: Quits the game. Will prompt to save before quitting.
 
 
                                            Room Commands
@@ -31,5 +31,5 @@ solve [puzzle]: Attempts to solve a puzzle if valid.
 inventory: Lists all the current items in your inventory.
 look at [item]: Shows details about the specified item.
 use [item]: Consumes the item if valid and performs the item's action (if any).
-combine [item1] [item2]: Combines the two items if valid and adds the combined item to your inventory.
+combine [item1]...[itemX]: Combines the items if valid.
 drop [item]: Drops an item in the current room.

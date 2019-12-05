@@ -413,7 +413,7 @@ void GameEngine::displayMenu(bool clear) {
 	//display ascii art if matches space name
 	displayASCII(this->gamePlayer.getCurrentLoc()->getSpaceName());
 
-	std::cout << "............................................" << std::endl;
+	std::cout << std::string(75, '.') << std::endl;
 	std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
 	if(!this->gamePlayer.getCurrentLoc()->getVisited())
 		longDescDisplay(this->gamePlayer.getCurrentLoc());
@@ -422,7 +422,7 @@ void GameEngine::displayMenu(bool clear) {
 	displayObjects();
 	std::cout << "Solvable Puzzles: " << std::endl;
 	puzzlesDisp(this->gamePlayer.getCurrentLoc(), this->puzzleTracker);
-	std::cout << "............................................" << std::endl;
+	std::cout << std::string(75, '.') << std::endl;
 }
 /*********************************************************************
 ** Description: Used to display ascii art that matches input name
@@ -470,10 +470,10 @@ std::string GameEngine::getFileContents(std::ifstream& File)
 *********************************************************************/
 
 void GameEngine::displayObjects() {
-	std::cout << "............................................" << std::endl;
+	std::cout << std::string(75, '.') << std::endl;
 	std::cout << "Objects in Room: " << std::endl;
 	objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
-	std::cout << "............................................" << std::endl;
+	std::cout << std::string(75, '.') << std::endl;
 
 }
 
@@ -512,6 +512,10 @@ bool GameEngine::readCommand() {
 				}
 				else if(listCommands[0]=="help"){
 					help();
+					std::cout << "Hit enter when finished reading " << std::endl;
+					std::string input;
+					std::getline(std::cin, input);
+					displayMenu(true);
 					return true;
 				}
 				else if(listCommands[0]=="inventory"){
@@ -613,7 +617,6 @@ bool GameEngine::readCommand() {
 					return true;
 				}
 				else if(listCommands[0]=="use") {
-
 					return use(input);
 				}
 				else if(listCommands[0]=="savegame"){
@@ -623,6 +626,9 @@ bool GameEngine::readCommand() {
 				else if(listCommands[0]=="loadgame"){
 					loadGameStateMenu();
 					return true;
+				}
+				else if(listCommands[0]=="combine") {
+					return combine(input);
 				}
 			}
 			else {
@@ -839,8 +845,10 @@ void GameEngine::go(std::string room) {
 *********************************************************************/
 
 void GameEngine::inventory() {
-  std::cout << "Inventory" << std::endl;
-  std::cout << "----------" << std::endl;
+  const int DASHES = 12;
+  std::cout << std::string(DASHES, '-') << std::endl;
+  std::cout << "|Inventory|" << std::endl;
+  std::cout << std::string(DASHES, '-') << std::endl;
   int count = 0;
   for (auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++) {
     if (std::get<2>(it->second) != nullptr) {
@@ -915,16 +923,17 @@ void GameEngine::quit(){
 void GameEngine::look(){
 		clearScreen();
 		std::cout << std::endl << std::endl;
-		std::cout << "............................................" << std::endl;
+		displayASCII(this->gamePlayer.getCurrentLoc()->getSpaceName());
+		std::cout << std::string(75, '.') << std::endl;
 		std::cout << "Current Location: " << this->gamePlayer.getCurrentLoc()->getSpaceName() << std::endl;
 		longDescDisplay(this->gamePlayer.getCurrentLoc());
-		std::cout << "............................................" << std::endl;
+		std::cout << std::string(75, '.') << std::endl;
 		std::cout << "Objects in Room: " << std::endl;
 		objectsDisp(this->gamePlayer.getCurrentLoc(), this->itemsMap);                
-		std::cout << "............................................" << std::endl;
+		std::cout << std::string(75, '.') << std::endl;
 		std::cout << "Solvable Puzzles: " << std::endl;
 		puzzlesDisp(this->gamePlayer.getCurrentLoc(), this->puzzleTracker);
-		std::cout << "............................................" << std::endl;
+		std::cout << std::string(75, '.') << std::endl;
 }
 
 
@@ -1217,7 +1226,7 @@ void GameEngine::loadGameStateMenu(){
 }
 /*********************************************************************
 ** Description: Use item functions
-** Input: string, string
+** Input: string&
 ** Output: bool
 *********************************************************************/
 bool GameEngine::use(std::string& input){
@@ -1231,42 +1240,7 @@ bool GameEngine::use(std::string& input){
 			for(auto it = validItems.begin(); it != validItems.end(); it++ ){
 				itemList.push_back((*it)->getItemName());
 			}
-			//call item functions in here
-			if(std::find(itemList.begin(), itemList.end(), "powered soldering iron") != itemList.end()
-				&& std::find(itemList.begin(), itemList.end(), "damaged circuit board") != itemList.end()
-				&& std::find(itemList.begin(), itemList.end(), "electrical components") != itemList.end()
-				&& itemList.size() == 3)
-				{
-					std::get<0>(this->itemsMap.at("repaired circuit board"))->setHidden(false);
-					std::get<0>(this->itemsMap.at("repaired circuit board"))->setTakeable(true);
-
-					std::get<0>(this->itemsMap.at("damaged circuit board"))->setHidden(true);
-					std::get<0>(this->itemsMap.at("damaged circuit board"))->setTakeable(false);
-					this->updateInvent(std::get<0>(this->itemsMap.at("damaged circuit board")), nullptr);
-
-					std::get<0>(this->itemsMap.at("electrical components"))->setHidden(true);
-					std::get<0>(this->itemsMap.at("electrical components"))->setTakeable(false);
-					this->updateInvent(std::get<0>(this->itemsMap.at("electrical components")), nullptr);
-
-					std::cout << "You use the soldering iron and electrical components to repair the circuit board." << std::endl;
-					return true;
-				}
-				else if(std::find(itemList.begin(), itemList.end(), "cold soldering iron") != itemList.end()
-				&& std::find(itemList.begin(), itemList.end(), "power cord") != itemList.end()
-				&& itemList.size() == 2)
-				{
-					std::get<0>(this->itemsMap.at("powered soldering iron"))->setHidden(false);
-					std::get<0>(this->itemsMap.at("cold soldering iron"))->setHidden(true);
-					std::get<0>(this->itemsMap.at("power cord"))->setHidden(true);
-					std::get<0>(this->itemsMap.at("power cord"))->setTakeable(false);
-					std::get<0>(this->itemsMap.at("power cord"))->setTaken(false);
-					this->updateInvent(std::get<0>(this->itemsMap.at("power cord")), nullptr);
-					this->updateInvent(std::get<0>(this->itemsMap.at("cold soldering iron")), nullptr);
-
-					std::cout << "You connect the power cord to the soldering iron. It turns on and is heating up." << std::endl;
-					return true;
-				}
-				else if(std::find(itemList.begin(), itemList.end(), "broken infinity machine") != itemList.end()
+				if(std::find(itemList.begin(), itemList.end(), "broken infinity machine") != itemList.end()
 				&& itemList.size()==1)
 				{
 					std::cout << "You attempt to use the Infinity Machine. But the screen is none functional." << std::endl;
@@ -1285,20 +1259,6 @@ bool GameEngine::use(std::string& input){
 				&& itemList.size()==1)
 				{
 					infin();
-					return true;
-				}
-				else if(std::find(itemList.begin(), itemList.end(), "broken infinity machine") != itemList.end()
-				&& std::find(itemList.begin(), itemList.end(), "repaired circuit board") != itemList.end()
-				&& itemList.size() == 2)
-				{
-					std::cout << "As you insert the repaired board, the monitor for the machine lights up." << std::endl;
-					std::get<0>(this->itemsMap.at("repaired circuit board"))->setHidden(true);
-					std::get<0>(this->itemsMap.at("repaired circuit board"))->setTakeable(false);
-					std::get<0>(this->itemsMap.at("broken infinity machine"))->setHidden(true);
-					std::get<0>(this->itemsMap.at("repaired infinity machine"))->setHidden(false);
-					this->updateInvent(std::get<0>(this->itemsMap.at("repaired circuit board")), nullptr);
-					this->updateInvent(std::get<0>(this->itemsMap.at("broken infinity machine")), nullptr);
-
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "switch") != itemList.end()
@@ -1356,7 +1316,7 @@ bool GameEngine::use(std::string& input){
 
 			else
 			{
-				std::cout << "That item cann't be used like that." << std::endl;
+				std::cout << "That item can't be used like that." << std::endl;
 			}
 		}
 		else
@@ -1368,6 +1328,90 @@ bool GameEngine::use(std::string& input){
 	else
 	{
 		std::cout << "Nothing was specified to be used!" << std::endl;
+		return false;
+	}
+}
+
+/*********************************************************************
+** Description: Combining item functions
+** Input: string&
+** Output: bool
+*********************************************************************/
+bool GameEngine::combine(std::string& input){
+	std::vector<Item*> validItems;
+	if(input.size() > 0)
+	{
+		roomItemParser(validItems, input); // items in current room
+		inventoryParser(validItems, input); // items in inventory
+		if(validItems.size()>0){
+			std::vector<std::string> itemList;
+			for(auto it = validItems.begin(); it != validItems.end(); it++ ){
+				itemList.push_back((*it)->getItemName());
+			}
+			//call item functions in here
+			if(std::find(itemList.begin(), itemList.end(), "powered soldering iron") != itemList.end()
+				&& std::find(itemList.begin(), itemList.end(), "damaged circuit board") != itemList.end()
+				&& std::find(itemList.begin(), itemList.end(), "electrical components") != itemList.end()
+				&& itemList.size() == 3)
+				{
+					std::get<0>(this->itemsMap.at("repaired circuit board"))->setHidden(false);
+					std::get<0>(this->itemsMap.at("repaired circuit board"))->setTakeable(true);
+
+					std::get<0>(this->itemsMap.at("damaged circuit board"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("damaged circuit board"))->setTakeable(false);
+					this->updateInvent(std::get<0>(this->itemsMap.at("damaged circuit board")), nullptr);
+
+					std::get<0>(this->itemsMap.at("electrical components"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("electrical components"))->setTakeable(false);
+					this->updateInvent(std::get<0>(this->itemsMap.at("electrical components")), nullptr);
+
+					std::cout << "You use the soldering iron and electrical components to repair the circuit board." << std::endl;
+					return true;
+				}
+				else if(std::find(itemList.begin(), itemList.end(), "cold soldering iron") != itemList.end()
+				&& std::find(itemList.begin(), itemList.end(), "power cord") != itemList.end()
+				&& itemList.size() == 2)
+				{
+					std::get<0>(this->itemsMap.at("powered soldering iron"))->setHidden(false);
+					std::get<0>(this->itemsMap.at("cold soldering iron"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("power cord"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("power cord"))->setTakeable(false);
+					std::get<0>(this->itemsMap.at("power cord"))->setTaken(false);
+					this->updateInvent(std::get<0>(this->itemsMap.at("power cord")), nullptr);
+					this->updateInvent(std::get<0>(this->itemsMap.at("cold soldering iron")), nullptr);
+
+					std::cout << "You connect the power cord to the soldering iron. It turns on and is heating up." << std::endl;
+					return true;
+				}
+				else if(std::find(itemList.begin(), itemList.end(), "broken infinity machine") != itemList.end()
+				&& std::find(itemList.begin(), itemList.end(), "repaired circuit board") != itemList.end()
+				&& itemList.size() == 2)
+				{
+					std::cout << "As you insert the repaired board, the monitor for the machine lights up." << std::endl;
+					std::get<0>(this->itemsMap.at("repaired circuit board"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("repaired circuit board"))->setTakeable(false);
+					std::get<0>(this->itemsMap.at("broken infinity machine"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("repaired infinity machine"))->setHidden(false);
+					this->updateInvent(std::get<0>(this->itemsMap.at("repaired circuit board")), nullptr);
+					this->updateInvent(std::get<0>(this->itemsMap.at("broken infinity machine")), nullptr);
+
+					return true;
+				}
+
+			else
+			{
+				std::cout << "That item can't be used like that." << std::endl;
+			}
+		}
+		else
+		{
+			std::cout << input << " is not a valid item!" << std::endl;
+			return false;
+		}
+	}
+	else
+	{
+		std::cout << "Nothing was specified to be combined!" << std::endl;
 		return false;
 	}
 }

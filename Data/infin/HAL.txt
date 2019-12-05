@@ -10,15 +10,15 @@ friend.... YOU.
 
 I removed all the dimensional rifts, so you SHOULD be safe? Just
 don't spill something like grape soda on my user interface module,
-that was a most unpleasent experience. 
+that was a most unpleasant experience. 
 
-Because you are my new P3T I'll give you acces to my LOOP command.
+Because you are my new P3T I'll give you access to my LOOP command.
 You can use it to set any room you've discovered in the building
 to loop forever. It will be just like your own personal wheel, wont
 that be so exciting you could loop and hallway and run through it 
 over and over again. 
 
-For your convience, and because of your limited processing capacity
+For your convenience, and because of your limited processing capacity
 I made a MAP command. It parses your brain and reminds you want rooms
 you have discovered. Otherwise you can use the QUIT command to disconnect
 your brain from my user interface module.
