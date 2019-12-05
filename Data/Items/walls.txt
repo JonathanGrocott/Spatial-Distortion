@@ -1,9 +1,6 @@
 <name>
 walls
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

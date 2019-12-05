@@ -1,9 +1,6 @@
 <name>
 nightstand
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

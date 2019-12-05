@@ -1,9 +1,6 @@
 <name>
 test sample
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

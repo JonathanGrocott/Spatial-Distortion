@@ -1,9 +1,6 @@
 <name>
 Repaired Infinity Machine
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

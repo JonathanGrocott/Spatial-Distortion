@@ -1,9 +1,6 @@
 <name>
 switch
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

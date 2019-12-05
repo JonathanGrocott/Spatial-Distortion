@@ -1,9 +1,6 @@
 <name>
 flashlight
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

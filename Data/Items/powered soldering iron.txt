@@ -1,9 +1,6 @@
 <name>
 powered soldering iron
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

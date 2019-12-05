@@ -1,15 +1,12 @@
 <name>
 sink
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>
 <desc>
-A typical porcelain sink. The knobs seem to
-be missing though.
+A typical porcelain sink. There seems
+to be some green slime residue on the sides.
 </desc>
 <found_in>
 washroom

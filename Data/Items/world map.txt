@@ -1,9 +1,6 @@
 <name>
 world map
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 true
 </takeable>

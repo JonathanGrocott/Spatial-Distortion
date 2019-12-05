@@ -1,9 +1,6 @@
 <name>
 papers
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 true
 </takeable>

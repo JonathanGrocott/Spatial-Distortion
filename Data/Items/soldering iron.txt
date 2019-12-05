@@ -1,9 +1,6 @@
 <name>
 cold soldering iron
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

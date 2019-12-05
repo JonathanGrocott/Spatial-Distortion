@@ -1,9 +1,6 @@
 <name>
 power supplies
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

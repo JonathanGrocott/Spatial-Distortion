@@ -1,9 +1,6 @@
 <name>
 pluto poster
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

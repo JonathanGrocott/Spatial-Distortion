@@ -1,9 +1,6 @@
 <name>
 electrical components
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 true
 </takeable>

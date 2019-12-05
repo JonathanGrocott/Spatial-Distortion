@@ -1,9 +1,6 @@
 <name>
 bucket
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 true
 </takeable>

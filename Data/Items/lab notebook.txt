@@ -1,9 +1,6 @@
 <name>
 lab notebook
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 true
 </takeable>

@@ -962,6 +962,7 @@ void GameEngine::take(Item* takenItem) {
 	takenItem->setTaken(true);
 	displayASCII(takenItem->getItemName());
 	std::cout << takenItem->getItemName() << " added to inventory." << std::endl;
+	displayMenu(false);
 
 }
 

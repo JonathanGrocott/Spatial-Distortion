@@ -1,9 +1,6 @@
 <name>
 generator
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

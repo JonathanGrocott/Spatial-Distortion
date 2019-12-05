@@ -1,9 +1,6 @@
 <name>
 Power Cord
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 true
 </takeable>

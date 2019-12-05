@@ -1,9 +1,6 @@
 <name>
 damaged circuit board
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>
