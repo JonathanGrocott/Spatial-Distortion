@@ -1,0 +1,23 @@
+<name>
+control panel
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+false
+</takeable>
+<desc>
+There are flashing buttons everywhere
+with various labels directing power.
+In the center, there's a large switch.
+</desc>
+<found_in>
+power control room
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

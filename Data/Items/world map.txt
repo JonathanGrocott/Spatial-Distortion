@@ -1,0 +1,25 @@
+<name>
+world map
+</name>
+<breakable>
+false
+</breakable>
+<takeable>
+true
+</takeable>
+<desc>
+The layout of all the rooms.
+There's a note written on the bottom:
+"DUE TO RECENT SURGES FROM THE INFINITY MACHINE,
+IT IS POSSIBLE TO TELEPORT TO ROOMS YOU HAVE
+VISITED."
+</desc>
+<found_in>
+generator room
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

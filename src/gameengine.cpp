@@ -1253,6 +1253,7 @@ bool GameEngine::use(std::string& input){
 						}
 					
 					}
+					displayMenu(false);
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "repaired infinity machine") != itemList.end()
@@ -1281,8 +1282,6 @@ bool GameEngine::use(std::string& input){
 						if (std::get<0>(this->puzzleTracker.at("lockbox"))->isHidden()) {
 							std::get<0>(this->puzzleTracker.at("lockbox"))->setHidden(false);
 							std::cout << "The flashlight reveals a lockbox on a table." << std::endl;
-							std::cout << "New Solvable Puzzles: ";
-							puzzlesDisp(this->gamePlayer.getCurrentLoc(), this->puzzleTracker);
 							std::cout << std::endl;
 						}
 						else
@@ -1290,7 +1289,7 @@ bool GameEngine::use(std::string& input){
 					}
 					else
 						std::cout << "You wave your flashlight around. Nothing eventful happens." << std::endl;
-
+					displayMenu(false);
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "brass key") != itemList.end()) {
@@ -1300,9 +1299,6 @@ bool GameEngine::use(std::string& input){
 							std::get<0>(this->puzzleTracker.at("robot"))->setHidden(false);
 							std::cout << "The key inserts into the console and activates the robot" << std::endl;
 							std::cout << std::endl;
-							std::cout << "New Solvable Puzzles: ";
-							puzzlesDisp(this->gamePlayer.getCurrentLoc(), this->puzzleTracker);
-							std::cout << std::endl;
 						}
 						else {
 							std::cout << "You turn the key in the console again, but nothing happens" << std::endl;
@@ -1310,7 +1306,7 @@ bool GameEngine::use(std::string& input){
 					}
 					else
 						std::cout << "You swing the brass key around wildly seeking answers, but nothing happens." << std::endl;
-
+					displayMenu(false);	
 					return true;
 				}
 
@@ -1366,6 +1362,7 @@ bool GameEngine::combine(std::string& input){
 					this->updateInvent(std::get<0>(this->itemsMap.at("electrical components")), nullptr);
 
 					std::cout << "You use the soldering iron and electrical components to repair the circuit board." << std::endl;
+					displayMenu(false);
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "cold soldering iron") != itemList.end()
@@ -1381,6 +1378,7 @@ bool GameEngine::combine(std::string& input){
 					this->updateInvent(std::get<0>(this->itemsMap.at("cold soldering iron")), nullptr);
 
 					std::cout << "You connect the power cord to the soldering iron. It turns on and is heating up." << std::endl;
+					displayMenu(false);
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "broken infinity machine") != itemList.end()
@@ -1394,7 +1392,7 @@ bool GameEngine::combine(std::string& input){
 					std::get<0>(this->itemsMap.at("repaired infinity machine"))->setHidden(false);
 					this->updateInvent(std::get<0>(this->itemsMap.at("repaired circuit board")), nullptr);
 					this->updateInvent(std::get<0>(this->itemsMap.at("broken infinity machine")), nullptr);
-
+					displayMenu(false);
 					return true;
 				}
 
