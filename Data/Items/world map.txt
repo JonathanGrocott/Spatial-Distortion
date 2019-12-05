@@ -13,6 +13,9 @@ There's a note written on the bottom:
 "DUE TO RECENT SURGES FROM THE INFINITY MACHINE,
 IT IS POSSIBLE TO TELEPORT TO ROOMS YOU HAVE
 VISITED."
+
+"look at map" shows you your visited locations.
+You can "teleport" to these locations.
 </desc>
 <found_in>
 generator room

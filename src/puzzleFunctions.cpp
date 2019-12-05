@@ -6,13 +6,6 @@
 ***************************************************************/
 
 #include "puzzleFunctions.hpp"
-#include <string>
-#include <vector>
-#include <iostream>
-#include "boost/range/iterator_range.hpp"
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/trim_all.hpp>
 
 /*********************************************************************
 ** Description: Checks the answer for lockbox puzzle
@@ -218,5 +211,150 @@ bool robotPuzzle() {
 
 	} while (player != WIDTH);	
 	
+	return true;
+}
+
+/*********************************************************************
+** Description: Robot grabbing flashlight puzzle checker
+** Input:
+** Output: bool
+*********************************************************************/
+bool powerPuzzle() {
+	namespace fs = boost::filesystem;
+	const int NUM_WIRES = 9;
+	int count = 0;
+	std::string wires[NUM_WIRES] = {};
+	std::string solution[NUM_WIRES] = {};
+
+	// Load all the path names for wires
+	fs::path wiresDir("Data/Wires/");
+	if (fs::is_directory(wiresDir)) {
+		for (auto& entry : boost::make_iterator_range(fs::directory_iterator(wiresDir), {})) {
+			if (fs::is_regular_file(entry)) {
+				std::string fileName = entry.path().filename().string();
+				fileName.erase(fileName.begin()+1, fileName.end());
+				int index = stoi(fileName);
+				solution[index-1] = entry.path().string();
+				wires[count] = entry.path().string();
+				count++;
+			}
+		}
+	}
+
+	// While the wires array is not equal to the solution array
+	while (!isEqual(wires, solution, NUM_WIRES)) {
+		// Display layout
+		std::cout << "CURRENT WIRING" << std::endl;
+		for (int i = 0; i < NUM_WIRES; i++) {
+			std::ifstream File(wires[i]);
+			while (File.good()) {
+				std::string tempLine;
+				std::getline(File, tempLine);
+				if (tempLine == "<end>") {
+					std::getline(File, tempLine);
+					std::cout << i + 1 << ": " << tempLine << std::endl;
+					break;
+				}
+				else {
+					tempLine += "\n";
+					std::cout << i + 1 << ": " << tempLine;
+				}
+			}
+			File.close();	
+		}
+		// User prompt to swap
+		std::cout << "Which to swap? ";
+		std::string input;
+		std::getline(std::cin, input);
+		if (input == "q" || input == "quit" || input == "false")
+			return false;
+		if (input == "cheat")
+			return true;
+		
+		// Check for valid integer inputs and swap if valid
+		std::vector<std::string> splitInput;
+		boost::split(splitInput, input, boost::is_any_of(" "));
+		if (splitInput.size() == 3 && splitInput[1] == "and") {
+			if (validNumber(splitInput[0]) && validNumber(splitInput[2])) {
+				const int INPUT_ZERO = stoi(splitInput[0]);
+				const int INPUT_TWO  = stoi(splitInput[2]);
+				if (INPUT_ZERO == INPUT_TWO)
+					std::cout << "Can't swap with itself" << std::endl;
+				else {
+					std::string temp = wires[INPUT_ZERO-1];
+					wires[INPUT_ZERO-1] = wires[INPUT_TWO-1];
+					wires[INPUT_TWO-1] = temp;
+				}
+			}
+		}
+		else {
+			std::cout << "Invalid input!" << std::endl;
+			std::cout << "The format is \"x and y\"" << std::endl;
+		}
+	}
+	
+	// Display correct solution if user succesfully clears
+	for (auto& wire : wires) {
+		std::ifstream File(wire);
+			while (File.good()) {
+				std::string tempLine;
+				std::getline(File, tempLine);
+				if (tempLine == "<end>") {
+					std::getline(File, tempLine);
+					std::cout << tempLine << std::endl;
+					break;
+				}
+				else {
+					tempLine += "\n";
+					std::cout << tempLine;
+				}
+			}
+			File.close();	
+
+	}
+	
+	return true;
+}
+
+/*********************************************************************
+** Description: Helper function to see if arrays are equal
+** Input: string array, string array, int
+** Output: bool
+*********************************************************************/
+bool isEqual(std::string arr1[], std::string arr2[], int size) {
+	for (int i = 0; i < size; i++) {
+		if (arr1[i] != arr2[i])
+			return false;
+	}
+	return true;
+}
+
+/*********************************************************************
+** Description: Helper function to see if inputs are valid numbers
+** Input: string
+** Output: bool
+*********************************************************************/
+bool validNumber(std::string str) {
+	for (char& c: str) {
+		if (!std::isdigit(c)) {
+			std::cout << str << " is not an integer." << std::endl;
+			return false;
+		}
+	}
+	if (str.length() > 10) {
+		std::cout << str << " will overflow." << std::endl;
+		return false;
+	}
+	if (str.length() == 10) {
+		if (stol(str) > INT_MAX) {
+			std::cout << str << " will overflow." << std::endl;
+			return false;
+		}
+	}
+	const int num = stoi(str);
+	if (num < 1 || num > 9) {
+		std::cout << str << " is out of range." << std::endl;
+		return false;
+	}
 	return true;
 }

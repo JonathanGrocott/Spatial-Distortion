@@ -1,0 +1,31 @@
+<name>
+power draw
+</name>
+<desc>
+
+You're almost there. You just need to redirect power from the generator
+to the infinity machine. Manipulate the wires to make a complete path
+from the infinity machine to the generator.
+
+The grid is 3 x 3.
+1 2 3
+4 5 6
+7 8 9
+
+To swap wires, type "x and y". i.e. 1 and 2.
+Type "q", "quit", or "exit" to leave the puzzle.
+</desc>
+<fail>
+
+The wires reset to their original positions.
+</fail>
+<success>
+
+The infinity machine is now sufficiently powered.
+</success>
+<found_in>
+power control room
+</found_in>
+<hidden>
+true
+</hidden>

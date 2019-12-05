@@ -862,7 +862,7 @@ void GameEngine::inventory() {
 
 /*********************************************************************
 ** Description: Finds the correct puzzle and checks the answer
-** Input: string, string
+** Input: string
 ** Output: bool
 *********************************************************************/
 bool GameEngine::solve(std::string puzzleName) {
@@ -891,6 +891,9 @@ bool GameEngine::solve(std::string puzzleName) {
 		}
 		else
 			return false;
+	}
+	else if (puzzleName == "power draw") {
+		return powerPuzzle();
 	}
 }
 
@@ -1259,15 +1262,25 @@ bool GameEngine::use(std::string& input){
 				else if(std::find(itemList.begin(), itemList.end(), "repaired infinity machine") != itemList.end()
 				&& itemList.size()==1)
 				{
-					infin();
-					return true;
+					if (std::get<2>(this->puzzleTracker.at("power draw")) != nullptr) {
+						infin();
+						return true;
+					}
+					else {
+						std::cout << "There is not enough power routed to the infinity machine!" << std::endl;
+						std::cout << "Check the wiring in the power supply room." << std::endl;
+						return false;
+					}
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "switch") != itemList.end()
 				&& itemList.size() == 1)
 				{
 					if(this->generatorSwitch == false){
 						this->generatorSwitch = true;
+						if (std::get<0>(this->puzzleTracker.at("power draw"))->isHidden())
+							std::get<0>(this->puzzleTracker.at("power draw"))->setHidden(false);
 						std::cout << "As you flip the switch you hear the generators\nstart up in a distant part of the building."<<std::endl;
+						displayMenu(false);
 					}
 					else{
 						this->generatorSwitch = false;
