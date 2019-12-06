@@ -16,14 +16,6 @@ Item::Item(std::string path, std::unordered_map<std::string, Space*> gameMap) {
 				boost::algorithm::to_lower(tempLine);
 				this->itemName = tempLine;
 			}
-			if (!tempLine.compare("<breakable>")) {
-				std::getline(File, tempLine);
-				boost::algorithm::to_lower(tempLine);
-				if (!tempLine.compare("true"))
-					this->breakable = true;
-				else
-					this->breakable = false;
-			}
 			if (!tempLine.compare("<takeable>")) {
 				std::getline(File, tempLine);
 				boost::algorithm::to_lower(tempLine);
@@ -97,11 +89,6 @@ bool Item::isTaken() {
 	return this->taken;
 }
 
-// Checks if the item can break or not
-bool Item::isBreakable() {
-	return this->breakable;
-}
-
 // Checks if the item is takeable or not
 bool Item::isTakeable() {
 	return this->takeable;
@@ -120,11 +107,6 @@ std::string Item::getTrigger() {
 // Sets the item's taken status
 void Item::setTaken(bool status) {
 	this->taken = status;
-}
-
-// Sets the item's breakable status
-void Item::setBreakable(bool status) {
-	this->breakable = status;
 }
 
 // Sets the item's takeable status

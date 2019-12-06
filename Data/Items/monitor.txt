@@ -1,9 +1,6 @@
 <name>
 monitor
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

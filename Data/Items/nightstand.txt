@@ -1,15 +1,12 @@
 <name>
 nightstand
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>
 <desc>
-The nightstand has a small glass lamp that illiuminates
-a steel lockbox with a keypad.
+The nightstand seems to have some sort of object
+resting on top of it.
 </desc>
 <found_in>
 basement

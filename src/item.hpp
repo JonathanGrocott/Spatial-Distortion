@@ -12,7 +12,6 @@ class Item {
 	private:
 		std::string itemName;
 		bool taken; // Has the item been taken?
-		bool breakable;
 		bool takeable;
 		bool hidden;
 		std::string trigger; // Trigger to reveal itself
@@ -26,12 +25,10 @@ class Item {
 		std::string getItemDesc();
 		Space* getBegLoc(); // Beginning Location
 		bool isTaken();
-		bool isBreakable();
 		bool isTakeable();
 		bool isHidden();
 		std::string getTrigger();
 		void setTaken(bool);
-		void setBreakable(bool);
 		void setTakeable(bool);
 		void setHidden(bool);
 };

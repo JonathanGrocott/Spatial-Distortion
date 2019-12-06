@@ -1,9 +1,6 @@
 <name>
 humming machine
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

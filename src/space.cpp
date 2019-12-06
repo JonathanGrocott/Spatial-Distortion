@@ -31,6 +31,7 @@ Space::Space(std::string path, std::unordered_map<std::string,std::string> &temp
 	this->looped = false;
 	this->filledLiquid = false;
 	this->filledSolid = false;
+	this->bReqItem = false;
 	std::ifstream File(path);
 
 	if(File){                      //Check if opens ok
@@ -45,7 +46,15 @@ Space::Space(std::string path, std::unordered_map<std::string,std::string> &temp
 				boost::algorithm::to_lower(TempLine);
 				this->spaceName = TempLine;
 			}
-			
+			if(!TempLine.compare("<reqItem>")){
+				std::getline (File , TempLine);
+				boost::algorithm::to_lower(TempLine);
+				if(TempLine.compare("</reqItem>")){
+					this->requiredItem = TempLine;
+					this->bReqItem = true;
+				}
+					
+			}
 			//setup exits map
 			if(!TempLine.compare("<exits>")){
 				while(TempLine.compare("</exits>"))
@@ -149,6 +158,24 @@ bool Space::getFilledLiquid() {
 *********************************************************************/
 bool Space::getFilledSolid() {
 	return this->filledSolid;
+}
+
+/*********************************************************************
+** Description: is an item required to access
+** Input: 
+** Output: bool
+*********************************************************************/
+bool Space::getbReqItem() {
+	return this->bReqItem;
+}
+
+/*********************************************************************
+** Description: return item name needed
+** Input: 
+** Output: string
+*********************************************************************/
+std::string Space::getReqItem() {
+	return this->requiredItem;
 }
 
 /*********************************************************************

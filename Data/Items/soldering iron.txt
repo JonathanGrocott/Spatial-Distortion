@@ -1,15 +1,14 @@
 <name>
-soldering iron
+cold soldering iron
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
-true
+false
 </takeable>
 <desc>
 A state-of-the-art soldering iron. It
 appears to be missing a power cable though.
+It is small enough to move, but it has been mounted
+to the workstation and would be a pain to take.
 </desc>
 <found_in>
 electronics lab

@@ -16,8 +16,7 @@ at a periodic table might help.
 </fail>
 <success>
 
-The lockbox gently swings open. A strange power cord with six prongs
-sits in the box.
+The lockbox gently swings open. A power cord sits in the box.
 </success>
 <found_in>
 basement

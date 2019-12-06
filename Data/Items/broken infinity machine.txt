@@ -1,9 +1,6 @@
 <name>
 Broken Infinity Machine
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

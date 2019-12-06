@@ -1,0 +1,21 @@
+<name>
+power supplies
+</name>
+<takeable>
+false
+</takeable>
+<desc>
+There are RGB power supplies bolted to the
+ceiling. The alternating colors of
+the power supplies creates a very festive
+lighting.
+</desc>
+<found_in>
+electronics lab
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

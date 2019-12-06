@@ -1,0 +1,21 @@
+<name>
+hidden message
+</name>
+<takeable>
+false
+</takeable>
+<desc>
+The liquid in the fountain spells out J.C.,
+A.P., and D.T. I wonder what these initials
+stand for. The slime has taken the form of
+a beaver with 467 etched on its body.
+</desc>
+<found_in>
+deck
+</found_in>
+<hidden>
+true
+</hidden>
+<trigger>
+none
+</trigger>

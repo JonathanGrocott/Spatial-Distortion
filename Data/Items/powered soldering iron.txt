@@ -1,0 +1,20 @@
+<name>
+powered soldering iron
+</name>
+<takeable>
+false
+</takeable>
+<desc>
+A state-of-the-art soldering iron. It is powered on and ready to use.
+It is small enough to move, but it has been mounted
+to the workstation and would be a pain to take, also it is now hot.
+</desc>
+<found_in>
+electronics lab
+</found_in>
+<hidden>
+true
+</hidden>
+<trigger>
+none
+</trigger>

@@ -53,7 +53,8 @@ int main()
         std::cout << "1) NEW GAME" << std::endl;
         std::cout << "2) LOAD EXISTING GAME" << std::endl;
         std::cout << "3) DISPLAY KEY TO GAME" << std::endl;
-        std::cout << "4) END GAME"<< std::endl;
+	std::cout << "4) EASTER EGG" << std::endl;
+        std::cout << "5) END GAME" << std::endl;
         std::cout << "Enter Option: ";
         std::getline(std::cin, option);
 
@@ -114,12 +115,20 @@ int main()
         }
 
         if(option=="3"){//Key to the game for grader
+		std::ifstream File("Data/Guides/walkthrough.txt");
+		std::cout << std::endl;
+        	std::cout << getFileContents(File) << std::endl; 
+	}
 
-        }
+	if(option=="4") {//Key to find easter egg
+		std::ifstream File("Data/Guides/easter egg.txt");
+		std::cout << std::endl;
+		std::cout << getFileContents(File) << std::endl;
+	}
 
-        if(option=="4"){//exit game
+        if(option=="5"){//exit game
 			
-			quit = true;
+		quit = true;
         }
 
     }while(!quit);//quit game bool

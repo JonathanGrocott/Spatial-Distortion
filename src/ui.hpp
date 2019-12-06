@@ -24,5 +24,6 @@ void exitDisplay(Space* temp);
 void objectsDisp(Space* room, std::unordered_map<std::string, std::tuple<Item*, Space*, player*>>);
 void puzzlesDisp(Space* room, std::unordered_map<std::string, std::tuple<Puzzle*, Space*, player*>>);
 void clearScreen();
+void printFile(std::string);
 
 #endif

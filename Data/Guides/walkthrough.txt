@@ -1,0 +1,66 @@
+SPATIAL DISTORTION FULL WALKTHROUGH
+
+1) Starting from the entry, go north to the prototype room.
+2) In the prototype room:
+	a) use the broken infinity machine
+	b) take the damaged circuit board revealed
+3) Go south to the entry
+4) Go east to the hallway
+5) Go north to reveal the electronics lab
+6) Go south to the hallway
+7) Go east to research lab1
+	a) Solve test tubes puzzle by entering cheat or the following:
+		1 to 2
+		2 to 3
+		3 to 1
+		2 to 3
+		1 to 2
+		2 to 3
+		3 to 1
+		2 to 3
+		1 to 2
+		2 to 3
+		3 to 1
+	b) Take brass key
+8) Go south to research lab2
+9) Go west to hallway2
+10) Go north to the robotics lab:
+	a) Use brass key to unlock the robot puzzle
+	b) Solve robot puzzle by entering cheat or the following:
+		right
+		right
+		right
+		right
+		left
+		right
+	c) Take the flashlight
+11) Go south to hallway2
+12) Go west to the office
+	a) Take electrical components
+13) Teleport research lab2
+14) Go east to the basement
+	a) Use flashlight to reveal lockbox puzzle
+	b) Solve lockbox puzzle by entering 42 or cheat
+	c) Take power cord
+15) Go east to reveal generator room
+16) Teleport electronics lab
+	a) Combine cold soldering iron power cord
+	b) Combine powered soldering iron electrical components damaged circuit board
+	c) Take repaired circuit board
+17) Go east to imaging room
+18) Go east to the power control room
+	a) Use switch
+	b) Solve power draw using cheat or the following:
+		1 and 9
+		2 and 6
+		3 and 9
+		4 and 5
+		5 and 6
+		6 and 7
+		8 and 9
+		7 and 9
+19) Teleport prototype room
+	a) Combine repaired circuit board broken infinity machine
+	b) Use repaired infinity machine
+	c) Loop generator room
+20) Game complete!

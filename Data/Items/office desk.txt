@@ -1,9 +1,6 @@
 <name>
 office desk
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

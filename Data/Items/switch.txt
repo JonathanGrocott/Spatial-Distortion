@@ -1,0 +1,19 @@
+<name>
+switch
+</name>
+<takeable>
+false
+</takeable>
+<desc>
+A heavy duty switch for switching between grid power
+and using the emergency generators.
+</desc>
+<found_in>
+power control room
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

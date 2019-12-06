@@ -1,9 +1,6 @@
 <name>
 lab bench
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

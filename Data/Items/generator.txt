@@ -1,0 +1,22 @@
+<name>
+generator
+</name>
+<takeable>
+false
+</takeable>
+<desc>
+A heavy duty generator. There is a barely
+legible sign plastered on the generator that
+reads, "FOR US- W-TH THE IN---- --CH-NE,
+US- T-E S--TCH IN THE ----- C----- RO-M
+FOR M-XIM-M POW--"
+</desc>
+<found_in>
+generator room
+</found_in>
+<hidden>
+false
+</hidden>
+<trigger>
+none
+</trigger>

@@ -30,5 +30,5 @@ that brings the flashlight to the console.
 robotics lab
 </found_in>
 <hidden>
-false
+true
 </hidden>

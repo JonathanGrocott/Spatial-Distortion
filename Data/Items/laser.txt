@@ -1,9 +1,6 @@
 <name>
 laser
 </name>
-<breakable>
-false
-</breakable>
 <takeable>
 false
 </takeable>

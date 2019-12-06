@@ -1,0 +1,15 @@
+<name>
+repaired circuit board
+</name>
+<takeable>
+false
+</takeable>
+<desc>
+A PCB board that you repaired
+</desc>
+<found_in>
+electronics lab
+</found_in>
+<hidden>
+true
+</hidden>

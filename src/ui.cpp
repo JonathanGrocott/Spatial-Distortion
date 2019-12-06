@@ -107,14 +107,34 @@ void objectsDisp(Space* room, std::unordered_map<std::string, std::tuple<Item*, 
 void puzzlesDisp(Space* room, std::unordered_map<std::string, std::tuple<Puzzle*, Space*, player*>> puzzlesMap){
 	for (auto it = puzzlesMap.begin(); it != puzzlesMap.end(); it++) {
 		if (!(std::get<1>(it->second)->getSpaceName().compare(room->getSpaceName()))) {
-			// If not completed
-			if (std::get<2>(it->second) == nullptr) {
+			// If not completed and not hidden
+			if (std::get<2>(it->second) == nullptr &&
+			    !std::get<0>(it->second)->isHidden()) {
 				std::cout << it->first << std::endl;
 			}
 		}
 	}
 }
 
+/*********************************************************************
+** Description: helper function that clears the screen
+** Input: none
+** Output: none
+*********************************************************************/
+void printFile(std::string location){
+    std::string line;
+    std::ifstream myfile (location);
+    if (myfile.is_open())// comfirm file opened
+	{          
+        while ( myfile.good() )// read to end of file
+		{    
+			std::getline (myfile, line);
+			std::cout << line << std::endl;
+	    }
+		myfile.close();
+    }
+    else std::cout << "Unable to open file" << std::endl; 
+}
 
 /*********************************************************************
 ** Description: helper function that clears the screen
