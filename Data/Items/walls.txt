@@ -5,10 +5,10 @@ walls
 false
 </takeable>
 <desc>
-Unlike the other hallway, this hallway is
-devoid of any artwork. There's an interesting
-pattern on the wallpaper that resembles a
-wave.
+There are three portraits with nametags although
+it seems the actual portaits are gone. On the top,
+there's a placard that says "infinity machine inventors".
+The three placards read: "J.C.", "A.P.", and "D.T."
 </desc>
 <found_in>
 hallway2

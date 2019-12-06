@@ -1,0 +1,19 @@
+<name>
+slime bucket
+</name>
+<takeable>
+true
+</takeable>
+<desc>
+This bucket is filled with a green slime.
+It jiggles with intense vigor in the bucket.
+</desc>
+<found_in>
+washroom
+</found_in>
+<hidden>
+true
+</hidden>
+<trigger>
+none
+</trigger>

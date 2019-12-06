@@ -1,0 +1,19 @@
+<name>
+running sink
+</name>
+<takeable>
+false
+</takeable>
+<desc>
+The sink with broken knobs. There is a green
+slime flowing from the faucet.
+</desc>
+<found_in>
+washroom
+</found_in>
+<hidden>
+true
+</hidden>
+<trigger>
+none
+</trigger>

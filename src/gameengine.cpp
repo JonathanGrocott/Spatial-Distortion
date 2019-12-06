@@ -39,7 +39,7 @@ GameEngine::GameEngine()
 	//initialize command list
 	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
                         "loadgame", "take", "inventory", "use", "combine", "quit", "solve",
-			"clear", "teleport", "look at map"};
+			"clear", "teleport", "look at map", "fill", "pour"};
 
 	//sort commands by size
 	std::sort(this->commandList.begin(), this->commandList.end(), [](const std::string &s1, const std::string &s2) {return s1.size() > s2.size(); });
@@ -59,7 +59,7 @@ GameEngine::GameEngine(std::string savedGame)
 	//initialize command list
 	this->commandList = {"help", "go", "look", "look at", "exit", "savegame", "drop",
                         "loadgame", "take", "inventory", "use", "combine", "quit", "solve",
-			"clear", "teleport", "look at map"};
+			"clear", "teleport", "look at map", "fill", "pour"};
 
 	//sort commands by size
 	std::sort(this->commandList.begin(), this->commandList.end(), [](const std::string &s1, const std::string &s2) {return s1.size() > s2.size(); });
@@ -563,10 +563,19 @@ bool GameEngine::readCommand() {
 								displayObjects();
 							}
 						}
+						std::string temp;
+						std::cout << "Hit enter when done looking...";
+						std::getline(std::cin, temp);
+						displayMenu(false);
 						return true;
 					}
 					else if (listInventory.size() > 0) {
+						displayASCII(listInventory[0]->getItemName());	
 						std::cout << listInventory[0]->getItemDesc() << std::endl;
+						std::string temp;
+						std::cout << "Hit enter when done looking...";
+						std::getline(std::cin, temp);
+						displayMenu(false);
 						return true;
 					}
 					else {
@@ -630,6 +639,13 @@ bool GameEngine::readCommand() {
 				else if(listCommands[0]=="combine") {
 					return combine(input);
 				}
+				else if(listCommands[0]=="fill") {
+					return fill(input);
+				}
+				else if(listCommands[0]=="pour") {
+					return pour(input);
+				}
+				
 			}
 			else {
 				std::cout << "Multiple command keywords were given! Please try again." << std::endl;
@@ -1025,8 +1041,8 @@ void GameEngine::inventoryParser(std::vector<Item*>& listInventory, std::string&
 		//find inventory items in the input
 		for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
 		{
-			if(parser(input, it->first)) {
-				if (std::get<2>(it->second) != nullptr)
+			if (std::get<2>(it->second) != nullptr) {
+				if(parser(input, it->first))
 					listInventory.push_back(std::get<0>(it->second));
 			}
 		}
@@ -1040,7 +1056,7 @@ void GameEngine::roomItemParser(std::vector<Item*>& listRoomObjects, std::string
 			//find objects in the room from input
 		for(auto it = this->itemsMap.begin(); it != this->itemsMap.end(); it++)
 		{
-			if (std::get<2>(it->second) == nullptr) {
+			if (std::get<2>(it->second) == nullptr && !std::get<0>(it->second)->isHidden()) {
 				if(parser(input, it->first)) {
 					if (!(std::get<1>(it->second)->getSpaceName().compare(this->gamePlayer.getCurrentLoc()->getSpaceName()))) {
 						if (!(std::get<0>(it->second)->isTaken())) { 
@@ -1177,9 +1193,9 @@ void GameEngine::infin(){
 	}
 	if(input == "quit")
 	{
-		std::cout << "Im afraid I can't let you actually use any of those loop changes you might get hurt." << std::endl;
+		std::cout << "I\'m afraid I can't let you actually use any of those loop changes you might get hurt." << std::endl;
 		std::cout << "I can't let you actually use you might get hurt." << std::endl;
-		std::cout << "Im afraid I can't l37 you mak3 a*y of thos3 l**p ch@ng3s you might g3t hurt." << std::endl;
+		std::cout << "I\'m afraid I can't l37 you mak3 a*y of thos3 l**p ch@ng3s you might g3t hurt." << std::endl;
 		std::cout << "The building has been returned to 'normal' but you are still trapped." << std::endl;
 	}
 
@@ -1323,6 +1339,30 @@ bool GameEngine::use(std::string& input){
 					displayMenu(false);	
 					return true;
 				}
+				else if(std::find(itemList.begin(), itemList.end(), "sink") != itemList.end()) {
+					if (this->gamePlayer.getCurrentLoc()->getSpaceName() == "washroom") {
+						if (std::get<0>(this->itemsMap.at("running sink"))->isHidden()) {
+							std::cout << "The sink starts flowing with a dark green liquid." << std::endl;
+							std::cout << "The knobs fall off and are no longer usable." << std::endl;
+							std::get<0>(this->itemsMap.at("sink"))->setHidden(true);
+							std::get<0>(this->itemsMap.at("running sink"))->setHidden(false);
+							displayMenu(false);
+							return true;
+						}
+						else {
+							std::cout << "You can no longer turn off the sink!" << std::endl;
+							return false;
+						}
+					}
+				}
+				else if(std::find(itemList.begin(), itemList.end(), "bucket") != itemList.end()) {
+					std::cout << "I didn't quite understand that. Try \"fill bucket\" or \"pour bucket\"." << std::endl;
+					return false;
+				}
+				else if(std::find(itemList.begin(), itemList.end(), "slime bucket") != itemList.end()) {
+					std::cout << "Did you mean \"pour slime bucket\"?" << std::endl;
+					return false;
+				}
 
 			else
 			{
@@ -1426,4 +1466,81 @@ bool GameEngine::combine(std::string& input){
 		std::cout << "Nothing was specified to be combined!" << std::endl;
 		return false;
 	}
+}
+
+/*********************************************************************
+** Description: Fill function for bucket
+** Input:
+** Output: bool
+*********************************************************************/
+bool GameEngine::fill(std::string& input){
+	if (input.size() > 0) {
+		if (parser(input, "bucket")) {	
+			if (std::get<2>(this->itemsMap.at("bucket")) != nullptr) {
+				if (this->gamePlayer.getCurrentLoc()->getSpaceName() == "washroom" &&
+	    	    	    	    !std::get<0>(this->itemsMap.at("running sink"))->isHidden()) {
+					std::cout << "You fill the bucket with the green liquid." << std::endl;
+					std::get<0>(this->itemsMap.at("bucket"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("bucket"))->setTaken(false);
+					this->updateInvent(std::get<0>(this->itemsMap.at("bucket")), nullptr);
+					std::get<0>(this->itemsMap.at("slime bucket"))->setHidden(false);
+					std::get<0>(this->itemsMap.at("slime bucket"))->setTaken(true);
+					this->updateInvent(std::get<0>(this->itemsMap.at("slime bucket")), std::addressof(this->gamePlayer));
+					return true;
+				}
+				else 
+					std::cout << "You need a water source to fill the bucket!" << std::endl;
+			}
+			else
+				std::cout << "You don't have a bucket..." << std::endl;
+		}
+		else 
+			std::cout << "Only buckets can be filled! Please find a bucket." << std::endl;
+	}
+	else 
+		std::cout << "Please specify something to fill" << std::endl;
+	
+	return false;
+}
+
+/*********************************************************************
+** Description: Pour function for bucket
+** Input: string&
+** Output: bool
+*********************************************************************/
+bool GameEngine::pour(std::string& input){
+	if (input.size() > 0) {
+		if (parser(input, "slime bucket")) {	
+			if (std::get<2>(this->itemsMap.at("slime bucket")) != nullptr) {
+				if (this->gamePlayer.getCurrentLoc()->getSpaceName() == "deck" &&
+	    	    	    	    std::get<0>(this->itemsMap.at("hidden message"))->isHidden()) {
+					std::cout << "You attempt to pour the slime into the fountain." << std::endl;
+					std::cout << "The slime reacts violently and dissolves the bucket." << std::endl;
+					std::cout << "The slime bounces around in the fountain and fills it up." << std::endl;
+					std::cout << "A hidden message can be seen in the fountain." << std::endl;
+					std::get<0>(this->itemsMap.at("fountain"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("slime bucket"))->setHidden(true);
+					std::get<0>(this->itemsMap.at("slime bucket"))->setTaken(false);
+					this->updateInvent(std::get<0>(this->itemsMap.at("slime bucket")), nullptr);
+					std::get<0>(this->itemsMap.at("hidden message"))->setHidden(false);
+					return true;
+				}
+				else {
+					std::cout << "You try to pour the slime out, but the slime stays put." << std::endl;
+				}
+			}
+			else
+				std::cout << "You don't have a slime bucket..." << std::endl;
+		}
+		else if(parser(input, "bucket"))
+			std::cout << "Your bucket is empty!" << std::endl;
+		else 
+			std::cout << "You can't pour that!" << std::endl;
+		
+	}
+	else 
+		std::cout << "Please specify something to pour." << std::endl;
+	
+
+	return false;
 }

@@ -51,6 +51,8 @@ class GameEngine
 		void saveGameState();
 		void wincon();
 		void infin();
+		bool fill(std::string&);
+		bool pour(std::string&);
 		//helper functions
 		std::string playerInput();
 		void inventoryParser(std::vector<Item*>&, std::string&);
