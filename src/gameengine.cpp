@@ -1486,6 +1486,7 @@ bool GameEngine::fill(std::string& input){
 					std::get<0>(this->itemsMap.at("slime bucket"))->setHidden(false);
 					std::get<0>(this->itemsMap.at("slime bucket"))->setTaken(true);
 					this->updateInvent(std::get<0>(this->itemsMap.at("slime bucket")), std::addressof(this->gamePlayer));
+					inventory();
 					return true;
 				}
 				else 
@@ -1523,6 +1524,7 @@ bool GameEngine::pour(std::string& input){
 					std::get<0>(this->itemsMap.at("slime bucket"))->setTaken(false);
 					this->updateInvent(std::get<0>(this->itemsMap.at("slime bucket")), nullptr);
 					std::get<0>(this->itemsMap.at("hidden message"))->setHidden(false);
+					displayMenu(false);
 					return true;
 				}
 				else {
