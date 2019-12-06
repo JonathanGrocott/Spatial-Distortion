@@ -263,6 +263,10 @@ void GameEngine::loadGameState(std::string savedGame){
 						}
 						else {
 							std::get<2>(this->puzzleTracker.at(result[0])) = nullptr;
+							if(result[2] == "0") 
+								std::get<0>(this->puzzleTracker.at(result[0]))->setHidden(false);
+							else
+								std::get<0>(this->puzzleTracker.at(result[0]))->setHidden(true);
 						}
 					}
 				}
@@ -344,11 +348,14 @@ void GameEngine::saveGameState(){
 		// save puzzle completion
 		file << "<puzzles>" << std::endl;
 		for (auto it = this->puzzleTracker.begin(); it != this->puzzleTracker.end(); ++it) {
+			// [puzzleName], isSolved, isHidden
 			if(std::get<2>(it->second) == nullptr) {
-				file << it->first << ",false" << std::endl;
+				file << it->first << ",false,";
+				file << std::to_string(std::get<0>(it->second)->isHidden()) << std::endl;
 			}
 			else {
-				file << it->first << ",true" << std::endl;
+				file << it->first << ",true,";
+				file << std::to_string(std::get<0>(it->second)->isHidden()) << std::endl;
 			}
 		}
 		file << "</puzzles>" << std::endl;
@@ -540,7 +547,6 @@ bool GameEngine::readCommand() {
 					inventoryParser(listInventory,input);
 					if (listInventory.size() > 0) {
 						drop(listInventory[0]);
-						displayASCII(listInventory[0]->getItemName());//display ascii
 						displayObjects();
 						return true;	
 					}
@@ -1197,6 +1203,7 @@ void GameEngine::infin(){
 		std::cout << "I can't let you actually use you might get hurt." << std::endl;
 		std::cout << "I\'m afraid I can't l37 you mak3 a*y of thos3 l**p ch@ng3s you might g3t hurt." << std::endl;
 		std::cout << "The building has been returned to 'normal' but you are still trapped." << std::endl;
+		displayMenu(false);
 	}
 
 }
@@ -1285,7 +1292,7 @@ bool GameEngine::use(std::string& input){
 					}
 					else {
 						std::cout << "There is not enough power routed to the infinity machine!" << std::endl;
-						std::cout << "Check the wiring in the power supply room." << std::endl;
+						std::cout << "Check the wiring in the power control room." << std::endl;
 						return false;
 					}
 				}
@@ -1356,11 +1363,17 @@ bool GameEngine::use(std::string& input){
 					}
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "bucket") != itemList.end()) {
-					std::cout << "I didn't quite understand that. Try \"fill bucket\" or \"pour bucket\"." << std::endl;
+					if (std::get<2>(this->itemsMap.at("bucket")) != nullptr)
+						std::cout << "I didn't quite understand that. Try \"fill bucket\" or \"pour bucket\"." << std::endl;
+					else
+						std::cout << "You don't have a bucket..." << std::endl;
 					return false;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "slime bucket") != itemList.end()) {
-					std::cout << "Did you mean \"pour slime bucket\"?" << std::endl;
+					if (std::get<2>(this->itemsMap.at("slime bucket")) != nullptr)
+						std::cout << "Did you mean \"pour slime bucket\"?" << std::endl;
+					else
+						std::cout << "Slime bucket? What's that?" << std::endl;
 					return false;
 				}
 
