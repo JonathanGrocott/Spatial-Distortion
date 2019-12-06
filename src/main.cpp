@@ -41,6 +41,7 @@ std::string getFileContents(std::ifstream& File)
 
 int main()
 {
+    clearScreen();
     std::string option;
 	bool quit=false;
     do{
