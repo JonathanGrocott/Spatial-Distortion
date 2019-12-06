@@ -519,9 +519,7 @@ bool GameEngine::readCommand() {
 				}
 				else if(listCommands[0]=="help"){
 					help();
-					std::cout << "Hit enter when finished reading " << std::endl;
-					std::string input;
-					std::getline(std::cin, input);
+					userConfirmation();
 					displayMenu(true);
 					return true;
 				}
@@ -534,7 +532,10 @@ bool GameEngine::readCommand() {
 					roomItemParser(listRoomObjects, input);
 					if (listRoomObjects.size() > 0) {
 						if (listRoomObjects[0]->isTakeable() && !listRoomObjects[0]->isHidden()) {
+							clearScreen();
 							take(listRoomObjects[0]);
+							userConfirmation();
+							displayMenu(true);
 							return true;
 						}
 						else {
@@ -560,6 +561,7 @@ bool GameEngine::readCommand() {
 					std::vector<Item*> listInventory;
 					inventoryParser(listInventory,input);
 					if (listRoomObjects.size() > 0) {
+						clearScreen();
 						displayASCII(listRoomObjects[0]->getItemName()); //display ascii
 
 						std::cout << listRoomObjects[0]->getItemDesc() << std::endl;
@@ -569,19 +571,16 @@ bool GameEngine::readCommand() {
 								displayObjects();
 							}
 						}
-						std::string temp;
-						std::cout << "Hit enter when done looking...";
-						std::getline(std::cin, temp);
-						displayMenu(false);
+						userConfirmation();
+						displayMenu(true);
 						return true;
 					}
 					else if (listInventory.size() > 0) {
+						clearScreen();
 						displayASCII(listInventory[0]->getItemName());	
 						std::cout << listInventory[0]->getItemDesc() << std::endl;
-						std::string temp;
-						std::cout << "Hit enter when done looking...";
-						std::getline(std::cin, temp);
-						displayMenu(false);
+						userConfirmation();
+						displayMenu(true);
 						return true;
 					}
 					else {
@@ -984,8 +983,6 @@ void GameEngine::take(Item* takenItem) {
 	takenItem->setTaken(true);
 	displayASCII(takenItem->getItemName());
 	std::cout << takenItem->getItemName() << " added to inventory." << std::endl;
-	displayMenu(false);
-
 }
 
 /*********************************************************************
@@ -1270,6 +1267,7 @@ bool GameEngine::use(std::string& input){
 				if(std::find(itemList.begin(), itemList.end(), "broken infinity machine") != itemList.end()
 				&& itemList.size()==1)
 				{
+					clearScreen();
 					std::cout << "You attempt to use the Infinity Machine. But the screen is none functional." << std::endl;
 					if(std::get<0>(this->itemsMap.at("damaged circuit board"))->isHidden()){
 											if(std::get<1>(this->itemsMap.at("damaged circuit board"))->getSpaceName() == "prototype room")
@@ -1280,7 +1278,8 @@ bool GameEngine::use(std::string& input){
 						}
 					
 					}
-					displayMenu(false);
+					userConfirmation();
+					displayMenu(true);
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "repaired infinity machine") != itemList.end()
@@ -1301,10 +1300,12 @@ bool GameEngine::use(std::string& input){
 				{
 					if(this->generatorSwitch == false){
 						this->generatorSwitch = true;
+						clearScreen();
 						if (std::get<0>(this->puzzleTracker.at("power draw"))->isHidden())
 							std::get<0>(this->puzzleTracker.at("power draw"))->setHidden(false);
 						std::cout << "As you flip the switch you hear the generators\nstart up in a distant part of the building."<<std::endl;
-						displayMenu(false);
+						userConfirmation();
+						displayMenu(true);
 					}
 					else{
 						this->generatorSwitch = false;
@@ -1314,6 +1315,7 @@ bool GameEngine::use(std::string& input){
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "flashlight") != itemList.end()) {
+					clearScreen();
 					if (this->gamePlayer.getCurrentLoc()->getSpaceName() == "basement" &&
 					    std::get<2>(this->puzzleTracker.at("lockbox")) == nullptr) {
 						if (std::get<0>(this->puzzleTracker.at("lockbox"))->isHidden()) {
@@ -1326,10 +1328,12 @@ bool GameEngine::use(std::string& input){
 					}
 					else
 						std::cout << "You wave your flashlight around. Nothing eventful happens." << std::endl;
-					displayMenu(false);
+					userConfirmation();
+					displayMenu(true);
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "brass key") != itemList.end()) {
+					clearScreen();
 					if (this->gamePlayer.getCurrentLoc()->getSpaceName() == "robotics lab" &&
 					    std::get<2>(this->puzzleTracker.at("robot")) == nullptr) {
 						if (std::get<0>(this->puzzleTracker.at("robot"))->isHidden()) {
@@ -1343,7 +1347,8 @@ bool GameEngine::use(std::string& input){
 					}
 					else
 						std::cout << "You swing the brass key around wildly seeking answers, but nothing happens." << std::endl;
-					displayMenu(false);	
+					userConfirmation();
+					displayMenu(true);	
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "sink") != itemList.end()) {
@@ -1417,6 +1422,7 @@ bool GameEngine::combine(std::string& input){
 				&& std::find(itemList.begin(), itemList.end(), "electrical components") != itemList.end()
 				&& itemList.size() == 3)
 				{
+					clearScreen();
 					std::get<0>(this->itemsMap.at("repaired circuit board"))->setHidden(false);
 					std::get<0>(this->itemsMap.at("repaired circuit board"))->setTakeable(true);
 
@@ -1429,13 +1435,15 @@ bool GameEngine::combine(std::string& input){
 					this->updateInvent(std::get<0>(this->itemsMap.at("electrical components")), nullptr);
 
 					std::cout << "You use the soldering iron and electrical components to repair the circuit board." << std::endl;
-					displayMenu(false);
+					userConfirmation();
+					displayMenu(true);
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "cold soldering iron") != itemList.end()
 				&& std::find(itemList.begin(), itemList.end(), "power cord") != itemList.end()
 				&& itemList.size() == 2)
 				{
+					clearScreen();
 					std::get<0>(this->itemsMap.at("powered soldering iron"))->setHidden(false);
 					std::get<0>(this->itemsMap.at("cold soldering iron"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("power cord"))->setHidden(true);
@@ -1445,13 +1453,15 @@ bool GameEngine::combine(std::string& input){
 					this->updateInvent(std::get<0>(this->itemsMap.at("cold soldering iron")), nullptr);
 
 					std::cout << "You connect the power cord to the soldering iron. It turns on and is heating up." << std::endl;
-					displayMenu(false);
+					userConfirmation();
+					displayMenu(true);
 					return true;
 				}
 				else if(std::find(itemList.begin(), itemList.end(), "broken infinity machine") != itemList.end()
 				&& std::find(itemList.begin(), itemList.end(), "repaired circuit board") != itemList.end()
 				&& itemList.size() == 2)
 				{
+					clearScreen();
 					std::cout << "As you insert the repaired board, the monitor for the machine lights up." << std::endl;
 					std::get<0>(this->itemsMap.at("repaired circuit board"))->setHidden(true);
 					std::get<0>(this->itemsMap.at("repaired circuit board"))->setTakeable(false);
@@ -1459,7 +1469,8 @@ bool GameEngine::combine(std::string& input){
 					std::get<0>(this->itemsMap.at("repaired infinity machine"))->setHidden(false);
 					this->updateInvent(std::get<0>(this->itemsMap.at("repaired circuit board")), nullptr);
 					this->updateInvent(std::get<0>(this->itemsMap.at("broken infinity machine")), nullptr);
-					displayMenu(false);
+					userConfirmation();
+					displayMenu(true);
 					return true;
 				}
 
@@ -1558,4 +1569,15 @@ bool GameEngine::pour(std::string& input){
 	
 
 	return false;
+}
+
+/*********************************************************************
+** Description: Helper function confimation
+** Input: 
+** Output: 
+*********************************************************************/
+void GameEngine::userConfirmation(){
+	std::cout << "Hit enter to continue... " << std::endl;
+	std::string input;
+	std::getline(std::cin, input);
 }

@@ -59,6 +59,7 @@ class GameEngine
 		void roomItemParser(std::vector<Item*>&, std::string&);
 		void locationParser(std::vector<std::string>&, std::string&);
 		void puzzleParser(std::vector<Puzzle*>&,std::string&);
+		void userConfirmation();
 
 		bool paradox;
 		bool generatorSwitch;
