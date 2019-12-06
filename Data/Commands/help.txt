@@ -9,7 +9,6 @@
                                          Player Commands
 -------------------------------------------------------------------------------------------------------
 help: This is how you got here. Shows all the main commands.
-clear: Cleans up the screen.
 savegame: Saves the current progress of the game to a default file.
 loadgame: Loads up the save progress of the default save file.
 exit or quit: Quits the game. Will prompt to save before quitting.
