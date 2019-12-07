@@ -5,7 +5,7 @@ hidden message
 false
 </takeable>
 <desc>
-The liquid in the fountain spells out J.C.,
+The liquid in the fountain spells out J.G.,
 A.P., and D.T. I wonder what these initials
 stand for. The slime has taken the form of
 a beaver with 467 etched on its body.
