@@ -1,7 +1,7 @@
 There's a hidden easter egg displaying the
 initials of all the team members of spatial distortion in the game.
 
-1) From the entry, go east to the hallway, and north to the washroom.
+1) From the entry, go east to the hallway, and left to the washroom.
 2) Take the bucket
 3) Use the sink
 4) Fill the bucket
